@@ -5,6 +5,8 @@ HELP.md
 /bin/
 .attach_pid*
 
+.vscode/settings.json
+
 ### STS ###
 .apt_generated
 .classpath
