@@ -1,0 +1,10 @@
+language: java
+
+deploy:
+  - provider: codedeploy
+    revision_type: github
+    access_key_id: # AWS acces key
+    secret_access_key: # AWS secret key
+    application: # Nombre de la aplicacion en AWS Codedeploy
+    deployment_group: # Grupo Deployment asociado a la aplicacion AWS Codedeploy
+    region: # Region del EC2
