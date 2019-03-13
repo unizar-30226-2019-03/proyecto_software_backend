@@ -8,3 +8,7 @@ deploy:
     application: # Nombre de la aplicacion en AWS Codedeploy
     deployment_group: # Grupo Deployment asociado a la aplicacion AWS Codedeploy
     region: # Region del EC2
+
+branches:
+  only:
+  - master
