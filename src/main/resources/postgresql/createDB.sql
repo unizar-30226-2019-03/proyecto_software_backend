@@ -2,7 +2,7 @@ CREATE TABLE notification_category (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
-
+ 
 CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
