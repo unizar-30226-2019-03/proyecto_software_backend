@@ -9,17 +9,20 @@ CREATE TABLE notification (
     timestamp TIMESTAMP NOT NULL,
     checked BOOLEAN NOT NULL,
     fk_category INTEGER NOT NULL,
+    fk_user INTEGER NOT NULL,
     CONSTRAINT fk_notification_category FOREIGN KEY (fk_category) REFERENCES notification_category(id) ON DELETE CASCADE,
-    -- CONSTRAINT fk_notification_user FOREIGN KEY (user) REFERENCES users (ID) ON DELETE SET NULL,
+    CONSTRAINT fk_notification_user FOREIGN KEY (user) REFERENCES users (id) ON DELETE SET NULL,
 );
 
 CREATE TABLE message (
-    --No es esta la primary
     id SERIAL,
     text TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL,
-    CONSTRAINT pk_message PRIMARY KEY (id,/* falta lo del alumno y profesor */)
-    -- FALTAN LAS RELACIONES ENVIA
+    fk_teacher INTEGER NOT NULL,
+    fk_alumn INTEGER NOT NULL,
+    CONSTRAINT fk_message_teacher FOREIGN KEY (fk_teacher) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT fk_message_alumn FOREIGN KEY (fk_alumn) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT pk_message PRIMARY KEY (id,fk_alumn,fk_teacher)
 );
 
 CREATE TABLE university (
@@ -53,7 +56,8 @@ CREATE TABLE video_tag (
 CREATE TABLE reproduction_list (
     id SERIAL PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
-    -- falta relacion con usuario
+    fk_user INTEGER NOT NULL,
+    CONSTRAINT fk_reproduction_list_user FOREIGN KEY (fk_user) REFERENCES user(id) ON DELETE CASCADE,
 );
 
 
@@ -61,13 +65,14 @@ CREATE TABLE commentary (
     id SERIAL,
     text TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL,
+    fk_user INTEGER NOT NULL,
     fk_video INTEGER NOT NULL,
     fk_commentary INTEGER,
-    video_timestamp TIMESTAMP NOT NULL,
+    secs_from_beg INTEGER NOT NULL,
     CONSTRAINT fk_commentary_commentary FOREIGN KEY (fk_commentary) REFERENCES commentary(id) ON DELETE SET NULL,
     CONSTRAINT fk_commentary_video FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE,
-    CONSTRAINT pk_commentary PRIMARY KEY (id, fk_video, /* falta lo del usuario */)
-    -- falta relacion con usuario
+    CONSTRAINT fk_commentary_user FOREIGN KEY (fk_user) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT pk_commentary PRIMARY KEY (id, fk_video,fk_user)
 );
 
 CREATE TABLE video_list_relation(
@@ -87,9 +92,27 @@ CREATE TABLE user(
     description TEXT,
     -- Igual es otro tipo
     password BYTEA(60) NOT NULL,
-)
+);
 
---Falta relacion de video con usuario N-M(visualiza)
+CREATE TABLE user_video_vote(
+    fk_user INTEGER,
+    fk_video INTEGER,
+    -- Faltan los atributos
+    CONSTRAINT fk_user_video_vote_video FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_video_vote_user FOREIGN KEY (fk_user) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT pk_user_video_vote PRIMARY KEY (fk_video, fk_user)
+);
+
+CREATE TABLE user_video_watches(
+    fk_user INTEGER,
+    fk_video INTEGER,
+    last_watch_timestamp TIMESTAMP NOT NULL,
+    secs_from_beg INTEGER NOT NULL,
+    CONSTRAINT fk_user_video_watches_video FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE,
+    CONSTRAINT fk_user_video_watches_user FOREIGN KEY (fk_user) REFERENCES user(id) ON DELETE CASCADE,
+    CONSTRAINT pk_user_video_watches PRIMARY KEY (fk_video, fk_user)
+);
+
+
 --Falta relacion alumno con asignatura N-M
 --Falta relacion profesor con asignatura N-M
---Falta relacion video y usuario N-M(vota)
