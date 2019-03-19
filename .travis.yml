@@ -1,14 +1,16 @@
 language: java
 
-deploy:
-  - provider: codedeploy
-    revision_type: github
-    access_key_id: # AWS acces key
-    secret_access_key: # AWS secret key
-    application: # Nombre de la aplicacion en AWS Codedeploy
-    deployment_group: # Grupo Deployment asociado a la aplicacion AWS Codedeploy
-    region: # Region del EC2
-
 branches:
   only:
   - master
+
+
+deploy:
+  - provider: codedeploy
+    revision_type: github
+    access_key_id: ASIAQL4VPKMZIGOF74G4
+    secret_access_key:
+      secure: U/j4DSVNmcFeIZ9YXyzaPv85Uyz/ETUumO+N2GBOGVjjRMZ+WakfDg4mqw5EcazvSqCOMnuzYbRmpodP19UIRCFmeQRyD2jwnHRfJSBtthnFtPvFUMhjEu0S9hm1tM7x/IE5iBiPNnUlMgTfFDPQiniB2H0bjlEUuulzS5VWtt5z1z+yg1VTxZqEsMdS4h4ppFx3ON1Db4Y/mKoO1f7mSbRbH79GMikRzy9YO22fQRtED6pBICqNr9MtqJBgCy3B6IqerJk08NWLzbj2UaK34bEcIhQN8FzfTUgkYQs25yPld7ss7N9OJUAPlr8886qE1sR32ObvvS9+ADKGXodJIIv4JAufgogSLXLbH6F8eX8N+JJa8TuAsedQ08h3g/yGWtAIBZipvG1laNapj/wkR7TCHMb0IT5bUCc571WAbTmMS/w/b8R88tNTrbhOGvP1dILkT1ACEt2wyy9cg18Esp1QK6p8bxoMCWYpSie7i1An8jbBsSWWjWPv8lfIwG7gi3pKs452IdXzpbkqqvayGI/JTRcxJt7Emd6ngUs+++kuokuX9M7FAuS4mmdwiFR7YiJuoL1KWG2m8MMzZ6C4aEif8uzkLZziTNVfFssoLoF7oCSMCCl14DzMONauCfgfy2QQw5NxSPdX6mt+exHVkzT7RlcZLMgoHFWHI5BVXgM=
+    application: unicast_backend
+    deployment_group: unicast_backend
+    region: us-east-1
