@@ -3,7 +3,6 @@ branches:
   only:
   - master
 deploy:
-  matrix:
   - provider: codedeploy
     revision_type: github
     access_key_id: ASIAQL4VPKMZIGOF74G4
