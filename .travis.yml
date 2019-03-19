@@ -1,16 +1,17 @@
 language: java
-
 branches:
   only:
   - master
-
-
 deploy:
+  matrix:
   - provider: codedeploy
     revision_type: github
     access_key_id: ASIAQL4VPKMZIGOF74G4
     secret_access_key:
-      secure: U/j4DSVNmcFeIZ9YXyzaPv85Uyz/ETUumO+N2GBOGVjjRMZ+WakfDg4mqw5EcazvSqCOMnuzYbRmpodP19UIRCFmeQRyD2jwnHRfJSBtthnFtPvFUMhjEu0S9hm1tM7x/IE5iBiPNnUlMgTfFDPQiniB2H0bjlEUuulzS5VWtt5z1z+yg1VTxZqEsMdS4h4ppFx3ON1Db4Y/mKoO1f7mSbRbH79GMikRzy9YO22fQRtED6pBICqNr9MtqJBgCy3B6IqerJk08NWLzbj2UaK34bEcIhQN8FzfTUgkYQs25yPld7ss7N9OJUAPlr8886qE1sR32ObvvS9+ADKGXodJIIv4JAufgogSLXLbH6F8eX8N+JJa8TuAsedQ08h3g/yGWtAIBZipvG1laNapj/wkR7TCHMb0IT5bUCc571WAbTmMS/w/b8R88tNTrbhOGvP1dILkT1ACEt2wyy9cg18Esp1QK6p8bxoMCWYpSie7i1An8jbBsSWWjWPv8lfIwG7gi3pKs452IdXzpbkqqvayGI/JTRcxJt7Emd6ngUs+++kuokuX9M7FAuS4mmdwiFR7YiJuoL1KWG2m8MMzZ6C4aEif8uzkLZziTNVfFssoLoF7oCSMCCl14DzMONauCfgfy2QQw5NxSPdX6mt+exHVkzT7RlcZLMgoHFWHI5BVXgM=
+      secure: N1e5tlfzIDxFZEnORiusK0hMN5HG3RjmgkF5Lo1Al47WWGvUJO8JrV+54u8+K4pJ1GY2DTRvsWVzixaHIIGarfzkNXlJNpCXexsUSZF7AnfQHu9zrVaBGCn1bLXxUS3IK3HTsWMHAWoN3KGZIUCpTJE0/j5tuiati9rzdzIEL8Aa8zxzKey0rljZPlbICYZ29RLhXaldjRLDof7OrYUUxkhOl0oKJ/Uzw6/vC8FAoCjRkqyqbN3rCqU8rJLCpOVJpvHktVvYsQl0+F+tuVQSBs5Q7jwxyXjndiLixBfuwOwVoTUuRW1FCon4LdkAp2MJ0PqnkLZ9B2sE8aeg6qSE1qx6A06HtKG9HmMrwvIhRCwRSosPR7B8wn5FzZ3x7B9HAyXuJygledItdJUOrPl3idZ5fL7adUCGQE/FK+7DJrl6AvSGAtDqqNz7QsKCc08RqM3FyFZjAQxD17bpY4rUgjlkyC2m5tuF76BP4Ky+iku4aws6crMFVRI0JXLUI/nxbpzTKkezyVv8Oht00dREpi3WF90fFK8VrL2yhf7tYfL5Qtyny6GClcZXql3X2UAMDl1ySG+kKplCWa4TIvx5uRoYrGYIH9l0Gn8FnhyRGBuoFe5HmzL5yice+MDKuIPf0KGOgYPmnWl9hipn8QeVbP6Pv7v2oVLVaWfkIjL658c=
     application: unicast_backend
     deployment_group: unicast_backend
     region: us-east-1
+    on:
+      branch: master
+  
