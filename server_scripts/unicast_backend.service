@@ -1,4 +1,5 @@
 # /etc/systemd/system/unicast_backend.service
+# Es necesario añadir Environment="SPRING_DATASOURCE_PASSWORD=..." y Environment="SPRING_DATASOURCE_URL=..." en [Service]
 
 [Unit]
 Description=Unicast Backend REST API
