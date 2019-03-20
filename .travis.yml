@@ -3,18 +3,24 @@
 language: java
 
 jdk:
-- oraclejdk8
+  - oraclejdk8
 
 branches:
   only:
   - master
+
+before_deploy:
+  # - cd ..
+  - zip -r unicast_backend.zip build/libs/unicast_backend-0.0.1-SNAPSHOT.jar appspec.yml || true
+  - mkdir -p "dpl_cd_upload"
+  - mv unicast_backend.zip dpl_cd_upload/unicast_backend.zip || true
 
 deploy:
   - provider: s3
     access_key_id: AKIAJAKXQXPBI62HSU6Q
     secret_access_key:
       secure: HcxkNuzCxDwx+FVVd4TtWdQ4koqfZBNGNbZbP9iW1QjvXDMVrsUDZaSbhRpxuDT0NdLA7SOuR8oxkoVHz4/4mhijATbevyFQ297Vwy4QlOosPIqDoloTEfk/vzjkBk9/mIFy4aBq8LyEaHD2rT3g9C41tlshXunL85duNq8IbXp1Ab1HMYa4XAXMBlBXyo8fzUPIH4zFNcuEd2J/Wz6XbELpjjGItWUiPdtAmK/xNR3GaSkAGPuq83fwawdN0CFIQJj7SIFOGevsTMMAQyN+SjDifEg5JGf5ngB+B28y1GE2dupR9mOwY83/9fLQIAQwClitA1odoA6CIFIlVAlgZgEURc91BjfupI2b0iqBAn0MkkPRtdFNVUOx9y07N3YzvItI+yWwI0RFWAen/vexmk/0zaGDS9MFnVivZkz4Is2+16si/6p8yJlyxNAK3OKC05z+knUyL+Z5WuUGYHZi0cM6iRiMpzagFTgdJXrkfAZfNSjg1mLWj6ZfBDcj89MHMnvSjGMlaj2Z7p8OMxrg5KThYrH+7UU3Rlxf2yTKiNLohWQwwIInbPHrGEcwbQgkeUY5lzdwRf/u2I6OGobheX0LyJQZ3nCN3p4SSWWExxw9d17Jpd6g1mKCt5yN78fEuEobGPlHdFRfV3eOmVMBvf4EscTBAkopDeGWI32gm9M=
-    local_dir: build/libs
+    local_dir: dpl_cd_upload
     skip_cleanup: true
     on:
       repo: unizar-30226-2019-03/proyecto_software_backend
@@ -25,7 +31,7 @@ deploy:
     secret_access_key:
       secure: HcxkNuzCxDwx+FVVd4TtWdQ4koqfZBNGNbZbP9iW1QjvXDMVrsUDZaSbhRpxuDT0NdLA7SOuR8oxkoVHz4/4mhijATbevyFQ297Vwy4QlOosPIqDoloTEfk/vzjkBk9/mIFy4aBq8LyEaHD2rT3g9C41tlshXunL85duNq8IbXp1Ab1HMYa4XAXMBlBXyo8fzUPIH4zFNcuEd2J/Wz6XbELpjjGItWUiPdtAmK/xNR3GaSkAGPuq83fwawdN0CFIQJj7SIFOGevsTMMAQyN+SjDifEg5JGf5ngB+B28y1GE2dupR9mOwY83/9fLQIAQwClitA1odoA6CIFIlVAlgZgEURc91BjfupI2b0iqBAn0MkkPRtdFNVUOx9y07N3YzvItI+yWwI0RFWAen/vexmk/0zaGDS9MFnVivZkz4Is2+16si/6p8yJlyxNAK3OKC05z+knUyL+Z5WuUGYHZi0cM6iRiMpzagFTgdJXrkfAZfNSjg1mLWj6ZfBDcj89MHMnvSjGMlaj2Z7p8OMxrg5KThYrH+7UU3Rlxf2yTKiNLohWQwwIInbPHrGEcwbQgkeUY5lzdwRf/u2I6OGobheX0LyJQZ3nCN3p4SSWWExxw9d17Jpd6g1mKCt5yN78fEuEobGPlHdFRfV3eOmVMBvf4EscTBAkopDeGWI32gm9M=
     bucket: unicast-backend-s3
-    key: unicast_backend-0.0.1-SNAPSHOT.jar
+    key: unicast_backend.zip
     bundle_type: zip
     application: unicast_backend
     deployment_group: unicast
