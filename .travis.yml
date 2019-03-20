@@ -5,12 +5,12 @@ branches:
 deploy:
   - provider: codedeploy
     revision_type: github
-    access_key_id: ASIAQL4VPKMZIGOF74G4
+    access_key_id: AKIAJSUFWDUTKJMJ2Y4A
     secret_access_key:
-      secure: TreTEpiCNV2t0jgznyuA9lUZSCNi1uHpkE3LyhSB042djj8WKEQt3Z8qdkko/ovt1mK3F7F5kkaznS/6lXPJ9clW2yi7Z7bLOy4AxhU37gx7fcB7a752kXfd/vScApkXF2tlitpLVs9LTWlEwCgWa2H9JX2ALwcuiS1PBUVn1sp9LU6UoC/WtTZ2Hjtzer16CDn/558vn3T2vm/BDf1BDf9bozbyT8gS852XDaod33gHh8YIsDiiWJG75GihddqbOCkp6izjauc33sb19X20Z9fd8eYRqKcPZMprh6S8eR1cdnG6kvM7W9vNj6jWlcrVBkYvsK3QrrSnLrh3Gh9ro2opFEb404P283dG+yKdgmME0UJpKk05LD3Snbzt0gHyeWGyLOVTbWnxiJSUiG+kcc79lVudBW0Se/KdtjuvROXUkGkoU+kaVukomBH/ZlANDKcwjF8HkcgDMMXRK3s8Xb0K261ksV3DOe1cyQSRuly0obD0K0Q2mnxdQhEN/o1JY/E1dU1U+F9EoT+X2A6h215SCUSzC3UvC/CBGLP6GMEP09un5u0WZ6jIbRdNTc+oS3TBP6EmbaCA/Jc5+bYaYjfZyz2PURmaQQPcmisIehygrnGWN13XM5/PGL0sBITadsVOO+7AMsyQ9jlSu8lkCS2g9WEEMulnaEhiXbnp7X0=
+      secure: WFYarM7QLl/yuBhGcu6t0GCQrxc5jnjqnMhBDduC19bT1whMatYSSuHaVnY9zfPpGoz2yq4HFhnWvyFiGdyga5pHwod4JyY2qWgcSFU4WnSt3tfwuX4Nk4jIlT6Q8aO0reYmSplscDcIymQmh8wG2KsNB9zKsePsozho6qsfrv0pToCFSDaNoE+VQ6TCEOc/vqn3InorxyRDN+1XoLRZl4KKrBPodxFl9WwxQRJbUZa/YGqFivL+olGpxPsqAXzjxUvNttfOvL784Aqikb9+dAk6/DSUMaZK1jlxaaLgLV+mbPXM5RH/0Q0AecNFH6s+SJrGV7uq1VBHId3/9o0/PCAvUlhl5kOP84NyuzOCT1Lo+OZJAgqfZtP0iX7k8RwON21C+RiyGbnAdVHBCkt/ZLErZ4DxvZq2JPYVfNPOjeKXv5K+znH+2Qbk5TH1L7ZO/n5MRvmMvAZLSIWq4FLZetc+4NItMwl6RjFOVt/1GDRmcC4rFALTPHlxfqHGAOtp++S8ijhq2iueO5d4w+G6NKkYBhpDsg501HjGmRbIxHUW0qK6gVnSPVJiBDd06QmljMcPSGaKX1mof1rV2edZGIVzXEhFT34Dl44VLNQQlqDqLIWge23CyD11w1WvdC/E0rnsX99OYKTEIHOsJNBuhTNixfT1TmQhMJSdySsZhYY=
     application: unicast_backend
     deployment_group: unicast_backend
-    region: us-east-1
+    region: eu-west-3
     on:
       branch: master
   
