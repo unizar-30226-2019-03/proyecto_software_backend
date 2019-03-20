@@ -5,7 +5,7 @@ Description=Unicast Backend REST API
 [Service]
 User=ubuntu
 WorkingDirectory=/home/ubuntu/unicast_backend
-ExecStart=/usr/bin/java -jar /home/ubuntu/unicast_backend/unicast_backend-0.0.1-SNAPSHOT.jar
+ExecStart=/usr/bin/java -jar /home/ubuntu/unicast_backend/unicast_backend-0.0.1-SNAPSHOT.jar --spring.profiles.active=live
 SuccessExitStatus=143
 TimeoutStopSec=10
 Restart=on-failure

@@ -2,13 +2,13 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-UnicastBackendApplication<unicast_backend>",
+            "name": "Spring Unicast Backend",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
             "mainClass": "com.unicast.unicast_backend.UnicastBackendApplication",
             "projectName": "unicast_backend",
-            "args": ""
+            "args": ["--spring.profiles.active=dev"]
         }
     ]
 }
