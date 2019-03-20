@@ -13,4 +13,3 @@ deploy:
     region: eu-west-3
     on:
       branch: master
-  
