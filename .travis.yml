@@ -11,7 +11,7 @@ branches:
 
 # Antes de desplegar se crea un zip con el script de arranque de la app, el .jar y el appspec.yml
 before_deploy:
-  - zip -j unicast_backend.zip build/libs/unicast_backend-0.0.1-SNAPSHOT.jar server_scripts/runapp.sh appspec.yml || true
+  - zip -j unicast_backend.zip build/libs/unicast_backend-0.0.1-SNAPSHOT.jar server_scripts/*.sh appspec.yml || true
   - mkdir -p "dpl_cd_upload"
   - mv unicast_backend.zip dpl_cd_upload/unicast_backend.zip || true
 
