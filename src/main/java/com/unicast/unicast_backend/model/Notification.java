@@ -32,7 +32,7 @@ public class Notification {
     @JoinColumn(name = "fk_category")
     private NotificationCategory category;
     
-    @OneToMany(mappedBy = "notifications")
+    @OneToMany(mappedBy = "notification")
     Set<UserIsNotified> users;
 
 }
