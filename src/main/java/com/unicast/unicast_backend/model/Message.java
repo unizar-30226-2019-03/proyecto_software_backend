@@ -22,7 +22,7 @@ public class Message {
 
     private String text;
     
-    private boolean is_teacher_sender;
+    private boolean isTeacherSender;
     
     private Timestamp timestamp;
     

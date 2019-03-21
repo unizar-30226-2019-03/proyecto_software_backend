@@ -1,7 +1,7 @@
 package com.unicast.unicast_backend.model;
 
 import java.util.Set;
-
+import java.net.URI;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,12 +12,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
+import javax.validation.constraints.Email;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "app_user")
-public class App_User {
+public class User {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +26,10 @@ public class App_User {
 	
 	private String nickname;
 	
+	@Email
 	private String email;
 	
-	private String photo;
+	private URI photo;
 	
 	private String description;
 	
@@ -40,7 +42,7 @@ public class App_User {
     private University university;
 	
 	@OneToMany(mappedBy = "user")
-    Set<Notification_App_User> notifications;
+    Set<UserIsNotified> notifications;
     
     //TODO: Investigar los roles para ver como se hace.
     
@@ -50,12 +52,11 @@ public class App_User {
     @OneToMany(mappedBy = "teacher")
     Set<Message> messages_t;*/
 	
-	
+	/*@ManyToMany
 	@JoinTable(
-			  name = "app_user_subject", 
-			  joinColumns = @JoinColumn(name = "fk_app_user"), 
-			  inverseJoinColumns = @JoinColumn(name = "fk_subject"))
-			Set<Notification> subjects;
-	
+		name = "app_user_subject", 
+		joinColumns = @JoinColumn(name = "fk_app_user"), 
+		inverseJoinColumns = @JoinColumn(name = "fk_subject"))
+	Set<Subject> subjects;*/
 
 }

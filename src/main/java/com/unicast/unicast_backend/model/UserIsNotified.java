@@ -13,10 +13,10 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "notification_app_user")
-public class Notification_App_User {
+public class UserIsNotified {
 	
 	@EmbeddedId
-    Notification_App_User_Key id;
+    UserIsNotifiedKey id;
 	
 	@ManyToOne
     @MapsId("fk_notification")
@@ -26,7 +26,7 @@ public class Notification_App_User {
 	@ManyToOne
     @MapsId("fk_app_user")
     @JoinColumn(name = "fk_app_user")
-    App_User user;
+    User user;
 	
 	private boolean checked;
 	

@@ -23,7 +23,7 @@ public class University {
     private String name;
     
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
-    private Set<App_User> users;
+    private Set<User> users;
     
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
     private Set<Subject> subjects;

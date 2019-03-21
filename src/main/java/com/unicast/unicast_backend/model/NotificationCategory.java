@@ -26,5 +26,4 @@ public class NotificationCategory {
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private Set<Notification> notifications;
 
-
 }

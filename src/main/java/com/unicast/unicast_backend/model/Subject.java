@@ -16,6 +16,7 @@ import lombok.Data;
 @Entity
 @Table(name = "subject")
 public class Subject {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -25,9 +26,10 @@ public class Subject {
     @ManyToOne
     @JoinColumn(name = "fk_university")
     private University university;
-    
-    @ManyToMany(mappedBy = "subjects")
-    Set<App_User> users;
+
+    // TODO: mirar lo de los roles
+    // @ManyToMany(mappedBy = "subjects")
+    // Set<User> users;
     
     
 }

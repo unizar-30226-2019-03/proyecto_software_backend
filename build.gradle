@@ -23,6 +23,10 @@ repositories {
 	mavenCentral()
 }
 
+compileJava {
+	options.compilerArgs << "-Xlint:deprecation"
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'

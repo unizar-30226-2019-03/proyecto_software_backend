@@ -33,7 +33,6 @@ public class Notification {
     private NotificationCategory category;
     
     @OneToMany(mappedBy = "notifications")
-    Set<Notification_App_User> users;
-
+    Set<UserIsNotified> users;
 
 }

@@ -9,12 +9,12 @@ import lombok.Data;
 
 @Data
 @Embeddable
-public class Notification_App_User_Key implements Serializable{
+public class UserIsNotifiedKey implements Serializable{
 	
 	@Column(name = "fk_notification")
-    Long notification_id;
+    Long notificationId;
 	
 	@Column(name = "fk_app_user")
-    Long app_user_id;
+    Long userId;
 	
 }
