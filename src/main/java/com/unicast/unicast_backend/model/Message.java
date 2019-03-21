@@ -1,39 +1,41 @@
 package com.unicast.unicast_backend.model;
 
 import java.sql.Timestamp;
-import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "notification")
-public class Notification {
-   
-    @Id
+@Table(name = "message")
+public class Message {
+	
+	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String text;
-
-    private Timestamp timestamp;
-
-    @ManyToOne
-    @JoinColumn(name = "fk_category")
-    private NotificationCategory category;
     
-    @OneToMany(mappedBy = "notifications")
-    Set<Notification_App_User> users;
-
-
+    private boolean is_teacher_sender;
+    
+    private Timestamp timestamp;
+    
+    
+    
+    //TODO: Investigar sobre roles para saber como hacer esto bien
+    
+    /*@ManyToOne
+    @JoinColumn(name = "fk_teacher")
+    private App_User teacher;
+    
+    @ManyToOne
+    @JoinColumn(name = "fk_alumn")
+    private App_User alumn;*/
+    
 }
