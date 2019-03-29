@@ -11,6 +11,11 @@ branches:
   only:
   - master
 
+services:
+  - postgresql
+
+before_script: travis_scripts/create_database.sh
+
 script: ./gradlew check --info
 
 # Antes de desplegar se crea un zip con el script de arranque de la app, el .jar y el appspec.yml

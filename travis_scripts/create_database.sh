@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+psql -c "CREATE DATABASE unicast_backend;" -U postgres
+psql -c "CREATE USER unicast_backend WITH PASSWORD 'unicast_backend';" -U postgres
+psql -c "GRANT ALL ON SCHEMA public TO unicast_backend;" -U postgres
+psql -c "GRANT ALL ON ALL TABLES IN SCHEMA public TO unicast_backend;" -U postgres
+psql -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public TO unicast_backend;" -U postgres
