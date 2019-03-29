@@ -1,17 +1,16 @@
 package com.unicast.unicast_backend.principal;
 
-import java.util.List;
 import java.util.ArrayList;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import com.unicast.unicast_backend.persistance.model.Role;
-import com.unicast.unicast_backend.persistance.model.Privilege;
-
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.List;
 
+import com.unicast.unicast_backend.persistance.model.Privilege;
+import com.unicast.unicast_backend.persistance.model.Role;
 import com.unicast.unicast_backend.persistance.model.User;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserDetailsImpl implements UserDetails {
 	private User user;

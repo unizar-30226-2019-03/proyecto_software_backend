@@ -1,20 +1,15 @@
 package com.unicast.unicast_backend.configuration;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
-import com.unicast.unicast_backend.persistance.repository.PrivilegeRepository;
-import com.unicast.unicast_backend.persistance.repository.RoleRepository;
-import com.unicast.unicast_backend.persistance.repository.UserRepository;
 import com.unicast.unicast_backend.persistance.model.Privilege;
 import com.unicast.unicast_backend.persistance.model.Role;
-import com.unicast.unicast_backend.persistance.model.User;
+import com.unicast.unicast_backend.persistance.repository.PrivilegeRepository;
+import com.unicast.unicast_backend.persistance.repository.RoleRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,16 +19,10 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     boolean alreadySetup = false;
  
     @Autowired
-    private UserRepository userRepository;
-  
-    @Autowired
     private RoleRepository roleRepository;
   
     @Autowired
     private PrivilegeRepository privilegeRepository;
-  
-    @Autowired
-    private PasswordEncoder passwordEncoder;
   
     @Override
     @Transactional
