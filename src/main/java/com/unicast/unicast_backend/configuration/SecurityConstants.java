@@ -6,10 +6,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SecurityConstants {
 
-    public SecurityConstants(@Value("${unicast.security.jwt-secret}") String secret) {
-        JWT_SECRET = secret;
-    }
-
     public final String AUTH_LOGIN_URL = "/api/authenticate";
     public final Integer TOKEN_TTL_MS = 10 * 24 * 3600 * 1000;
 
@@ -21,4 +17,9 @@ public class SecurityConstants {
     public final String TOKEN_TYPE = "JWT";
     public final String TOKEN_ISSUER = "unicast-api";
     public final String TOKEN_AUDIENCE = "unicast-clients";
+
+    public SecurityConstants(@Value("${unicast.security.jwt-secret}") String secret) {
+        JWT_SECRET = secret;
+    }
+
 }
