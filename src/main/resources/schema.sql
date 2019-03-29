@@ -20,13 +20,13 @@ CREATE TABLE university (
 
 CREATE TABLE app_user (
     id SERIAL PRIMARY KEY,
-    nickname VARCHAR(100) UNIQUE NOT NULL,
+    username VARCHAR(100) UNIQUE NOT NULL,
     photo VARCHAR(1000),
     email VARCHAR(255),
     description TEXT,
     enabled BOOLEAN NOT NULL,
     -- Igual es otro tipo, incluye hash de pass y salt
-    password BYTEA NOT NULL,
+    password VARCHAR(80) NOT NULL,
     fk_university INTEGER,
     CONSTRAINT fk_app_user_university FOREIGN KEY (fk_university) REFERENCES university(id) ON DELETE SET NULL
 );

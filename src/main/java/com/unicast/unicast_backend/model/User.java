@@ -24,7 +24,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 	
-	private String nickname;
+	private String username;
 	
 	@Email
 	private String email;
@@ -35,7 +35,7 @@ public class User {
 	
 	private boolean enabled;
 	
-	private byte[] password;
+	private String password;
 	
 	@ManyToOne
     @JoinColumn(name = "fk_university")

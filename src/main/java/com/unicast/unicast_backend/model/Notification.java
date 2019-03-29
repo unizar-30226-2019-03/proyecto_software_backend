@@ -19,9 +19,9 @@ import lombok.Data;
 @Entity
 @Table(name = "notification")
 public class Notification {
-   
+
     @Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     private String text;
@@ -31,7 +31,7 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "fk_category")
     private NotificationCategory category;
-    
+
     @OneToMany(mappedBy = "notification")
     Set<UserIsNotified> users;
 
