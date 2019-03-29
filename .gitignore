@@ -5,6 +5,7 @@ HELP.md
 /bin/
 .attach_pid*
 
+eclipse-formatter.xml
 .vscode/settings.json
 
 ### STS ###
