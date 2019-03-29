@@ -1,4 +1,4 @@
-package com.unicast.unicast_backend.model;
+package com.unicast.unicast_backend.persistance.model;
 
 import java.sql.Timestamp;
 

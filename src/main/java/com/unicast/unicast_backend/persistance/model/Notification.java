@@ -1,7 +1,7 @@
-package com.unicast.unicast_backend.model;
+package com.unicast.unicast_backend.persistance.model;
 
 import java.sql.Timestamp;
-import java.util.Set;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -33,6 +33,6 @@ public class Notification {
     private NotificationCategory category;
 
     @OneToMany(mappedBy = "notification")
-    Set<UserIsNotified> users;
+    private Collection<UserIsNotified> users;
 
 }

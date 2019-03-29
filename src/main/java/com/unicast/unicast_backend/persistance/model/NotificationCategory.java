@@ -1,6 +1,6 @@
-package com.unicast.unicast_backend.model;
+package com.unicast.unicast_backend.persistance.model;
 
-import java.util.Set;
+import java.util.Collection;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,6 +24,6 @@ public class NotificationCategory {
     private String name;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private Set<Notification> notifications;
+    private Collection<Notification> notifications;
 
 }

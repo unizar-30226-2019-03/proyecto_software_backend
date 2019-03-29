@@ -6,8 +6,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.unicast.unicast_backend.repository.UserRepository;
-import com.unicast.unicast_backend.model.User;
+import com.unicast.unicast_backend.persistance.repository.UserRepository;
+import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 
 @Service

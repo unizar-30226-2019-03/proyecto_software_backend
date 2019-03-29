@@ -1,4 +1,4 @@
-package com.unicast.unicast_backend.model;
+package com.unicast.unicast_backend.persistance.model;
 
 import javax.persistence.EmbeddedId;
 
@@ -16,17 +16,17 @@ import lombok.Data;
 public class UserIsNotified {
 	
 	@EmbeddedId
-    UserIsNotifiedKey id;
+    private UserIsNotifiedKey id;
 	
 	@ManyToOne
     @MapsId("fk_notification")
     @JoinColumn(name = "fk_notification")
-    Notification notification;
+    private Notification notification;
 	
 	@ManyToOne
     @MapsId("fk_app_user")
     @JoinColumn(name = "fk_app_user")
-    User user;
+    private User user;
 	
 	private boolean checked;
 	

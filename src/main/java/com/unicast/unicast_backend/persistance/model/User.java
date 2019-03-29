@@ -1,6 +1,6 @@
-package com.unicast.unicast_backend.model;
+package com.unicast.unicast_backend.persistance.model;
 
-import java.util.Set;
+import java.util.Collection;
 import java.net.URI;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,8 +42,18 @@ public class User {
     private University university;
 	
 	@OneToMany(mappedBy = "user")
-    Set<UserIsNotified> notifications;
-    
+    private Collection<UserIsNotified> notifications;
+	
+	@ManyToMany
+	@JoinTable(
+		name = "role_app_user",
+		joinColumns = @JoinColumn(
+			name = "fk_app_user", referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(
+				name = "fk_role", referencedColumnName = "id"))
+
+	private Collection<Role> roles;
+
     //TODO: Investigar los roles para ver como se hace.
     
     /*@OneToMany(mappedBy = "alumn")

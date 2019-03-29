@@ -1,4 +1,4 @@
-package com.unicast.unicast_backend.model;
+package com.unicast.unicast_backend.persistance.model;
 
 import java.io.Serializable;
 
@@ -12,9 +12,9 @@ import lombok.Data;
 public class UserIsNotifiedKey implements Serializable{
 	
 	@Column(name = "fk_notification")
-    Long notificationId;
+    private Long notificationId;
 	
 	@Column(name = "fk_app_user")
-    Long userId;
+    private Long userId;
 	
 }

@@ -1,6 +1,6 @@
-package com.unicast.unicast_backend.model;
+package com.unicast.unicast_backend.persistance.model;
 
-import java.util.Set;
+import java.util.Collection;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -23,8 +23,8 @@ public class University {
     private String name;
     
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
-    private Set<User> users;
+    private Collection<User> users;
     
     @OneToMany(mappedBy = "university", cascade = CascadeType.ALL)
-    private Set<Subject> subjects;
+    private Collection<Subject> subjects;
 }
