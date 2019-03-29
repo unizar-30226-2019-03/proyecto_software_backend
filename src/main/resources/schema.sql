@@ -21,7 +21,7 @@ CREATE TABLE university (
 CREATE TABLE app_user (
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
-    photo VARCHAR(1000),
+    photo_path VARCHAR(1000),
     email VARCHAR(255),
     description TEXT,
     enabled BOOLEAN NOT NULL,
@@ -43,12 +43,11 @@ CREATE TABLE message (
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
     timestamp TIMESTAMP NOT NULL,
-    fk_teacher INTEGER NOT NULL,
-    fk_alumn INTEGER NOT NULL,
-    is_teacher_sender BOOLEAN NOT NULL,
-    CHECK (fk_teacher != fk_alumn),
-    CONSTRAINT fk_message_teacher FOREIGN KEY (fk_teacher) REFERENCES app_user(id) ON DELETE CASCADE,
-    CONSTRAINT fk_message_alumn FOREIGN KEY (fk_alumn) REFERENCES app_user(id) ON DELETE CASCADE
+    fk_receiver INTEGER NOT NULL,
+    fk_sender INTEGER NOT NULL,
+    CHECK (fk_receiver != fk_sender),
+    CONSTRAINT fk_message_teacher FOREIGN KEY (fk_receiver) REFERENCES app_user(id) ON DELETE CASCADE,
+    CONSTRAINT fk_message_alumn FOREIGN KEY (fk_sender) REFERENCES app_user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE subject (
@@ -62,6 +61,7 @@ CREATE TABLE video (
     id SERIAL PRIMARY KEY,
     title VARCHAR(200) NOT NULL,
     description TEXT NOT NULL,
+    s3_path VARCHAR(1000),
     timestamp TIMESTAMP NOT NULL,
     fk_subject INTEGER NOT NULL,
     CONSTRAINT fk_video_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE
@@ -70,8 +70,6 @@ CREATE TABLE video (
 CREATE TABLE video_tag (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
-    fk_video INTEGER NOT NULL,
-    CONSTRAINT fk_video_tag FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE
 );
 
 CREATE TABLE comment (
@@ -157,4 +155,12 @@ CREATE TABLE app_user_subject (
     CONSTRAINT fk_app_user_subject_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE,
     CONSTRAINT fk_app_user_subject_app_user FOREIGN KEY (fk_app_user) REFERENCES app_user(id) ON DELETE CASCADE,
     CONSTRAINT pk_app_user_subject PRIMARY KEY (fk_subject, fk_app_user)
+);
+
+CREATE TABLE video_video_tag (
+    fk_video INTEGER,
+    fk_video_tag INTEGER,
+    CONSTRAINT fk_video_video_tag_video FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE,
+    CONSTRAINT fk_video_video_tag_video_tag FOREIGN KEY (fk_video_tag) REFERENCES video_tag(id) ON DELETE CASCADE,
+    CONSTRAINT pk_video_video_tag PRIMARY KEY (fk_video, fk_video_tag)
 );

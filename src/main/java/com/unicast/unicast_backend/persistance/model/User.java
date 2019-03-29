@@ -3,6 +3,7 @@ package com.unicast.unicast_backend.persistance.model;
 import java.net.URI;
 import java.util.Collection;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,6 +32,7 @@ public class User {
 	@Email
 	private String email;
 	
+	@Column(name = "photo_path")
 	private URI photo;
 	
 	private String description;
@@ -46,6 +48,20 @@ public class User {
 	@OneToMany(mappedBy = "user")
     private Collection<UserIsNotified> notifications;
 	
+	@OneToMany(mappedBy = "receiver")
+	private Collection<Message> messagesAsReceiver;
+	
+	@OneToMany(mappedBy = "sender")
+	private Collection<Message> messagesAsSender;
+	
+	// Vale tanto para alumnos como para profesores, cambiara segun el rol que tenga este usuario
+	@ManyToMany
+	@JoinTable(
+		name = "app_user_subject", 
+		joinColumns = @JoinColumn(name = "fk_app_user"), 
+		inverseJoinColumns = @JoinColumn(name = "fk_subject"))
+	private Collection<Subject> subjects;
+
 	@ManyToMany
 	@JoinTable(
 		name = "role_app_user",
@@ -53,22 +69,6 @@ public class User {
 			name = "fk_app_user", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(
 				name = "fk_role", referencedColumnName = "id"))
-
 	private Collection<Role> roles;
-
-    //TODO: Investigar los roles para ver como se hace.
-    
-    /*@OneToMany(mappedBy = "alumn")
-    Set<Message> mesagges_a;
-    
-    @OneToMany(mappedBy = "teacher")
-    Set<Message> messages_t;*/
-	
-	/*@ManyToMany
-	@JoinTable(
-		name = "app_user_subject", 
-		joinColumns = @JoinColumn(name = "fk_app_user"), 
-		inverseJoinColumns = @JoinColumn(name = "fk_subject"))
-	Set<Subject> subjects;*/
 
 }

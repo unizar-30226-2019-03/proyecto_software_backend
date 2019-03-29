@@ -1,30 +1,34 @@
 package com.unicast.unicast_backend.persistance.model;
 
-import java.util.Collection;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "university")
-public class University {
+@Table(name = "video")
+public class Video {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String name;
+    private String title;
+
+    private String description;
+
+    private Timestamp timestamp;
     
-    @OneToMany(mappedBy = "university")
-    private Collection<User> users;
+    @ManyToOne
+    @JoinColumn(name = "fk_subject")
+    private Subject subject;
     
-    @OneToMany(mappedBy = "university")
-    private Collection<Subject> subjects;
 }
