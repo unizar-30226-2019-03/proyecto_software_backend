@@ -117,6 +117,10 @@ CREATE TABLE video_list (
 CREATE TABLE app_user_video_vote (
     fk_app_user INTEGER,
     fk_video INTEGER,
+    likes INTEGER,
+    dislikes INTEGER,
+    clarity INTEGER,
+    quality INTEGER,
     CONSTRAINT fk_app_user_video_vote_video FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE,
     CONSTRAINT fk_app_user_video_vote_app_user FOREIGN KEY (fk_app_user) REFERENCES app_user(id) ON DELETE CASCADE,
     CONSTRAINT pk_app_user_video_vote PRIMARY KEY (fk_video, fk_app_user)

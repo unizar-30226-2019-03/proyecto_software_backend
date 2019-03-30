@@ -6,7 +6,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.ManyToMany;
+import java.util.Set;
+
 
 import lombok.Data;
 
@@ -26,8 +30,9 @@ public class Subject {
     private University university;
 
     // TODO: mirar lo de los roles
-    // @ManyToMany(mappedBy = "subjects")
-    // Set<User> users;
-    
-    
+    @ManyToMany(mappedBy = "subjects")
+    Set<User> users;
+
+    @OneToMany(mappedBy = "subject")
+    Set<Video> videos;
 }

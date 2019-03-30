@@ -2,6 +2,7 @@ package com.unicast.unicast_backend.persistance.model;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -46,13 +47,19 @@ public class User {
     private University university;
 	
 	@OneToMany(mappedBy = "user")
-    private Collection<UserIsNotified> notifications;
+	private Collection<UserIsNotified> notifications;
+	
+	@OneToMany(mappedBy = "user")
+    private Collection<Comment> comments;
 	
 	@OneToMany(mappedBy = "receiver")
 	private Collection<Message> messagesAsReceiver;
 	
 	@OneToMany(mappedBy = "sender")
 	private Collection<Message> messagesAsSender;
+
+	@OneToMany(mappedBy = "user")
+	private Collection<ReproductionList> reproductionLists;
 	
 	// Vale tanto para alumnos como para profesores, cambiara segun el rol que tenga este usuario
 	@ManyToMany
@@ -70,5 +77,11 @@ public class User {
 			inverseJoinColumns = @JoinColumn(
 				name = "fk_role", referencedColumnName = "id"))
 	private Collection<Role> roles;
+
+	@OneToMany(mappedBy = "user")
+	private Set<Display> setDisplays;
+	
+	@OneToMany(mappedBy = "user")
+    private Set<Vote> votes;
 
 }
