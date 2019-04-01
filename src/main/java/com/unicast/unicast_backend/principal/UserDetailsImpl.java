@@ -13,6 +13,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public class UserDetailsImpl implements UserDetails {
+	private static final long serialVersionUID = 1L;
+
 	private User user;
 
 	public UserDetailsImpl(User user) {

@@ -9,7 +9,8 @@ import lombok.Data;
 
 @Data
 @Embeddable
-public class ContainsKey implements Serializable{
+public class ContainsKey implements Serializable {
+    private static final long serialVersionUID = 1L;
 	
 	@Column(name = "fk_video")
     private Long videoId;
