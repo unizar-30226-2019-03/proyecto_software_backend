@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UniversityRepository extends JpaRepository<University, Long> {
     University findById(String id);
-    University findByname(String name);
+    University findByName(String name);
 }
