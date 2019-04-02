@@ -35,7 +35,6 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.postgresql:postgresql'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.apache.commons:commons-lang3'
 	compile 'io.jsonwebtoken:jjwt-api:0.10.5'
 	runtime 'io.jsonwebtoken:jjwt-impl:0.10.5'
