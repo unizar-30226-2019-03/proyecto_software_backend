@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface VideoTagRepository extends JpaRepository<VideoTag, Long> {
  
     VideoTag findByName(String name);
-    VideoTag findById(String Id);
 }

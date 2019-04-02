@@ -9,6 +9,4 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 @RepositoryRestResource(collectionResourceRel = "notification", path = "notifications")
 public interface NotificationRepository extends PagingAndSortingRepository<Notification, Long> {
 
-	Notification findById(@Param("id") String id);
-
 }
