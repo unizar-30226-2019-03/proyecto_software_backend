@@ -1,22 +1,20 @@
 package com.unicast.unicast_backend.persistance.model;
 
-import java.sql.Timestamp;
-
 import java.net.URI;
+import java.sql.Timestamp;
+import java.util.Collection;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.ManyToMany;
-import javax.persistence.JoinTable;
 import javax.persistence.Table;
-
-import java.util.Set;
-import java.util.Collection;
 
 import lombok.Data;
 
@@ -35,6 +33,7 @@ public class Video {
 
     private Timestamp timestamp;
     
+    @Column(name = "s3_path")
     private URI s3Path;
     
     @ManyToOne
@@ -42,16 +41,16 @@ public class Video {
     private Subject subject;
 
     @OneToMany(mappedBy = "video")
-    private Set<Comment> comments;
+    private Collection<Comment> comments;
 
     @OneToMany(mappedBy = "video")
-    private Set<Contains> videoLists;
+    private Collection<Contains> videoLists;
 
     @OneToMany(mappedBy = "video")
-    private Set<Display> setDisplays;
+    private Collection<Display> collectionDisplays;
 
     @OneToMany(mappedBy = "video")
-    private Set<Vote> votes;
+    private Collection<Vote> votes;
     
     @ManyToMany
 	@JoinTable(

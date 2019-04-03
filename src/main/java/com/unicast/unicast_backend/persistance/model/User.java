@@ -2,7 +2,6 @@ package com.unicast.unicast_backend.persistance.model;
 
 import java.net.URI;
 import java.util.Collection;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -79,9 +78,9 @@ public class User {
 	private Collection<Role> roles;
 
 	@OneToMany(mappedBy = "user")
-	private Set<Display> setDisplays;
+	private Collection<Display> collectionDisplays;
 	
 	@OneToMany(mappedBy = "user")
-    private Set<Vote> votes;
+    private Collection<Vote> votes;
 
 }
