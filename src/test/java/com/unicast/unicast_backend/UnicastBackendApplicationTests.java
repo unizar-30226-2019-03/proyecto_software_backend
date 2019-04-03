@@ -148,7 +148,9 @@ public class UnicastBackendApplicationTests {
 
 		List<Subject> subjects = new ArrayList<>();
 		subjects.add(createTestSubject());
-		subjects.add(createTestSubject());
+		Subject testSubject = createTestSubject();
+		testSubject.setName("NOMBRE TEST 2 SUBJECT");
+		subjects.add(testSubject);
 		subjectRepository.saveAll(subjects);
 
 		User user = createTestUser();
@@ -292,7 +294,9 @@ public class UnicastBackendApplicationTests {
 
 		List<VideoTag> videoTags = new ArrayList<>();
 		videoTags.add(createTestVideoTag());
-		videoTags.add(createTestVideoTag());
+		VideoTag videoTagTest = createTestVideoTag();
+		videoTagTest.setName("NOMBRE VIDEOTAG TEST 2");
+		videoTags.add(videoTagTest);
 		videoTagRepository.saveAll(videoTags);
 		
 		Video video = createTestVideo();
