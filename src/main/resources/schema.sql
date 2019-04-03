@@ -52,14 +52,14 @@ CREATE TABLE message (
 
 CREATE TABLE subject (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) UNIQUE NOT NULL,
     fk_university INTEGER,
     CONSTRAINT fk_subject_university FOREIGN KEY (fk_university) REFERENCES university(id) ON DELETE SET NULL
 );
 
 CREATE TABLE video (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(200) NOT NULL,
+    title VARCHAR(200) UNIQUE NOT NULL,
     description TEXT NOT NULL,
     s3_path VARCHAR(1000),
     timestamp TIMESTAMP NOT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE video (
 
 CREATE TABLE video_tag (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE comment (
