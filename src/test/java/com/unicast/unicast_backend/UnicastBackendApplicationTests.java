@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.unicast.unicast_backend.persistance.model.Comment;
 import com.unicast.unicast_backend.persistance.model.Message;
@@ -136,6 +138,175 @@ public class UnicastBackendApplicationTests {
 		assertEquals(university, universityBD);
 
 		universityRepository.delete(university);
+	}
+
+	@Test
+	@Transactional
+	public void testUser() throws URISyntaxException {
+		University university = createTestUniversity();
+		universityRepository.save(university);
+
+		List<Subject> subjects = new ArrayList<>();
+		subjects.add(createTestSubject());
+		subjects.add(createTestSubject());
+		subjectRepository.saveAll(subjects);
+
+		User user = createTestUser();
+		userRepository.save(user);
+
+		final String testName = "#144881: TEST NAME";
+		user.setUsername(testName);
+		userRepository.save(user);
+
+		User UserBD = userRepository.findByUsername(testName);
+
+		assertEquals(user, UserBD);
+
+		universityRepository.delete(university);
+		subjectRepository.deleteInBatch(subjects);
+		userRepository.delete(user);
+	}
+
+	@Test
+	@Transactional
+	public void testSubject() {
+		University university = createTestUniversity();
+		universityRepository.save(university);
+		
+		Subject subject = createTestSubject();
+		subject.setUniversity(university);
+		subjectRepository.save(subject);
+
+		Subject subjectBD = subjectRepository.findById(subject.getId()).get();
+
+		assertEquals(subject, subjectBD);
+
+		subjectRepository.delete(subject);
+		universityRepository.delete(university);
+	}
+
+	@Test
+	@Transactional
+	public void testVideoTag() {
+		VideoTag videoTag = createTestVideoTag();
+		videoTagRepository.save(videoTag);
+
+		final String testName = "#144881: TEST NAME";
+		videoTag.setName(testName);
+		videoTagRepository.save(videoTag);
+
+		VideoTag videoTagBD = videoTagRepository.findByName(testName);
+
+		assertEquals(videoTag, videoTagBD);
+
+		videoTagRepository.delete(videoTag);
+	}
+
+	@Test
+	@Transactional
+	public void testReproductionList() throws URISyntaxException {
+		User user = createTestUser();
+		userRepository.save(user);
+
+		ReproductionList reproductionList = createTestReproductionList();
+		reproductionList.setUser(user);
+		reproductionListRepository.save(reproductionList);
+
+		final String testName = "#144881: TEST NAME";
+		reproductionList.setName(testName);
+		reproductionListRepository.save(reproductionList);
+
+		ReproductionList reproductionListBD = reproductionListRepository.findByName(testName).get(0);
+
+		assertEquals(reproductionList, reproductionListBD);
+
+		userRepository.delete(user);
+		reproductionListRepository.delete(reproductionList);
+	}
+
+	@Test
+	@Transactional
+	public void testMessage() throws URISyntaxException {
+		User sender = createTestUser();
+		userRepository.save(sender);
+
+		User receiver = createTestUser();
+		receiver.setUsername("UsernameTestReceiver");
+		userRepository.save(receiver);
+
+		Message message = createTestMessage();
+		message.setSender(sender);
+		message.setReceiver(receiver);
+		messageRepository.save(message);
+
+		final String testName = "#144881: TEST NAME";
+		message.setText(testName);
+		messageRepository.save(message);
+
+		Message messageBD = messageRepository.findById(message.getId()).get();
+
+		assertEquals(message, messageBD);
+
+		userRepository.delete(sender);
+		userRepository.delete(receiver);
+		messageRepository.delete(message);
+	}
+
+	@Test
+	@Transactional
+	public void testComment() throws URISyntaxException {
+		Subject subject = createTestSubject();
+		subjectRepository.save(subject);
+
+		Video video = createTestVideo();
+		video.setSubject(subject);
+		videoRepository.save(video);
+
+		User user = createTestUser();
+		userRepository.save(user);
+
+		Comment comment = createTestComment();
+		comment.setVideo(video);
+		comment.setUser(user);
+		commentRepository.save(comment);
+
+		final String testName = "#144881: TEST NAME";
+		comment.setText(testName);
+		commentRepository.save(comment);
+
+		Comment commentBD = commentRepository.findById(comment.getId()).get();
+
+		assertEquals(comment, commentBD);
+
+		subjectRepository.delete(subject);
+		userRepository.delete(user);
+		videoRepository.delete(video);
+		commentRepository.delete(comment);
+	}
+
+	@Test
+	@Transactional
+	public void testVideo() throws URISyntaxException {
+		Subject subject = createTestSubject();
+		subjectRepository.save(subject);
+
+		List<VideoTag> videoTags = new ArrayList<>();
+		videoTags.add(createTestVideoTag());
+		videoTags.add(createTestVideoTag());
+		videoTagRepository.saveAll(videoTags);
+		
+		Video video = createTestVideo();
+		video.setSubject(subject);
+		video.setTags(videoTags);
+		videoRepository.save(video);
+
+		Video VideoBD = videoRepository.findById(video.getId()).get();
+
+		assertEquals(video, VideoBD);
+
+		videoTagRepository.deleteInBatch(videoTags);
+		videoRepository.delete(video);
+		subjectRepository.delete(subject);
 	}
 
 	private User createTestUser() throws URISyntaxException {
