@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Data
@@ -30,5 +32,10 @@ public class University {
 
 	public void setName(String string) {
         this.name = string;
-	}
+    }
+    
+    @JsonIgnore
+    public Collection<Subject> getSubjects(){
+        return this.subjects;
+    }
 }
