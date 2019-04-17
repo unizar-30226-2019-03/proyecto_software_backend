@@ -61,7 +61,7 @@ public class ReproductionListController {
 
 
     @RequestMapping(value = "/reprodlist/anyadir", method = RequestMethod.POST)
-    public void deleteReproductionList(@RequestParam ReproductionList repList) throws IllegalStateException, IOException {
+    public void deleteReproductionList(@RequestParam ReproductionList repList) throws Exception {
         // Guarda una lista con todas de todas las listas de reproduccion del usuario  
         List<ReproductionList> reproductionsList = repo.findAll();
         try{
