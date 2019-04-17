@@ -11,4 +11,5 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @RepositoryRestResource(collectionResourceRel = "university", path = "universities")
 public interface UniversityRepository extends JpaRepository<University, Long>{
+    University findByName(String name);
 }
