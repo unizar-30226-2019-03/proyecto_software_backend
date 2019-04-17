@@ -27,4 +27,8 @@ public class University {
     
     @OneToMany(mappedBy = "university")
     private Collection<Subject> subjects;
+
+	public void setName(String string) {
+        this.name = string;
+	}
 }
