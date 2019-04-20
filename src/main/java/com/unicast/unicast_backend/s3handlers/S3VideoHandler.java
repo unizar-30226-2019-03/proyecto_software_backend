@@ -10,10 +10,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.google.common.io.Files;
 
 @Component
 public final class S3VideoHandler {
@@ -31,7 +29,6 @@ public final class S3VideoHandler {
         final AmazonS3Client s3 = (AmazonS3Client) AmazonS3ClientBuilder.defaultClient();
         final String s3Key = VIDEO_FOLDER + "/vid" + RandomStringUtils.randomAlphanumeric(VIDEO_KEY_LENGTH);
         // TODO: excepcion sin tratar
-        System.out.println(s3Constants.BUCKET_NAME);
         s3.putObject(s3Constants.BUCKET_NAME, s3Key, videoFile);
 
         return new URI(s3.getResourceUrl(s3Constants.BUCKET_NAME, s3Key));
