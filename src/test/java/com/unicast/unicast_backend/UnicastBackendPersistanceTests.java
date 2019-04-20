@@ -43,7 +43,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UnicastBackendApplicationTests {
+public class UnicastBackendPersistanceTests {
 
 	@Autowired
 	private CommentRepository commentRepository;
