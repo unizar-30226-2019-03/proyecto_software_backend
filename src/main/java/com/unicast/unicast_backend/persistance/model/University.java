@@ -27,15 +27,8 @@ public class University {
     @OneToMany(mappedBy = "university")
     private Collection<User> users;
     
+    @JsonIgnore
     @OneToMany(mappedBy = "university")
     private Collection<Subject> subjects;
 
-	public void setName(String string) {
-        this.name = string;
-    }
-    
-    @JsonIgnore
-    public Collection<Subject> getSubjects(){
-        return this.subjects;
-    }
 }

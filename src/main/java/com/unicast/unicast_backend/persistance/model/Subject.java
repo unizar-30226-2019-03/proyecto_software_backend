@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Data
@@ -33,6 +35,7 @@ public class Subject {
     @ManyToMany(mappedBy = "subjects")
     private Collection<User> users;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "subject")
     private Collection<Video> videos;
 }
