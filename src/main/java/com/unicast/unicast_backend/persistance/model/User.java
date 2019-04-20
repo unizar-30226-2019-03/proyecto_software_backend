@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,6 +18,8 @@ import javax.persistence.Table;
 import javax.validation.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 import lombok.Data;
 
@@ -41,13 +44,9 @@ public class User {
 	
 	private boolean enabled;
 	
+	@JsonProperty(access = Access.WRITE_ONLY)
 	private String password;
 
-	@JsonIgnore
-	public Collection<Vote> getVotes(){
-		return this.votes;
-	}
-	
 	@ManyToOne
     @JoinColumn(name = "fk_university")
     private University university;
@@ -75,7 +74,7 @@ public class User {
 		inverseJoinColumns = @JoinColumn(name = "fk_subject"))
 	private Collection<Subject> subjects;
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 		name = "role_app_user",
 		joinColumns = @JoinColumn(
@@ -87,7 +86,8 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private Collection<Display> collectionDisplays;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-    private Collection<Vote> votes;
-
+	private Collection<Vote> votes;
+	
 }
