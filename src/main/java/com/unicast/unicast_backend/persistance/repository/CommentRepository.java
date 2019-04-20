@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 // Comentario devuelto por el id 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
-    Comment findByName(long id);
 }
