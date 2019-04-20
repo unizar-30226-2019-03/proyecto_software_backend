@@ -16,6 +16,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Data;
 
 @Data
@@ -40,6 +42,11 @@ public class User {
 	private boolean enabled;
 	
 	private String password;
+
+	@JsonIgnore
+	public Collection<Vote> getVotes(){
+		return this.votes;
+	}
 	
 	@ManyToOne
     @JoinColumn(name = "fk_university")
