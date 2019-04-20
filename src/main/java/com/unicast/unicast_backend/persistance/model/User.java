@@ -43,10 +43,10 @@ public class User {
 	
 	private String password;
 
-	@JsonIgnore
+	/*@JsonIgnore
 	public Collection<Vote> getVotes(){
 		return this.votes;
-	}
+	}*/
 	
 	@ManyToOne
     @JoinColumn(name = "fk_university")

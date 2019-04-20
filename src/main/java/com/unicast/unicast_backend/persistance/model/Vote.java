@@ -31,7 +31,7 @@ public class Vote {
     
     private int quality;
 
-    private int like;
+    private int likes;
 
-    private int dislike;	
+    private int dislikes;	
 }
