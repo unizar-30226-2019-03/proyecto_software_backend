@@ -1,0 +1,118 @@
+openapi: 3.0.0
+
+info:
+  description: Documento de la API de Unicast
+  version: 1.0.0
+  title: Swagger Unicast
+
+servers:
+  - url: http://ec2-35-181-26-7.eu-west-3.compute.amazonaws.com:8080
+
+tags:
+- name: user
+  description: Operaciones sobre usuario
+- name: video
+  description: Operaciones sobre vídeos
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    NewUser:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+    Video:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+
+paths:
+  /api/public/register:
+    post:
+      tags:
+        - user
+      summary: Registro de un nuevo usuario en el sistema
+      description: Adicion de nuevos usuarios
+      operationId: addUser
+      requestBody:
+          description: Usuario que se va a añadir
+          required: true
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/NewUser'
+              encoding:
+                user:
+                  contentType: application/json
+      responses:
+          200:
+            description: Usuario añadido con exito
+
+  /api/authenticate:
+    post:
+      tags:
+        - user
+      summary: Autentificacion de usuarios
+      description: Login a un usuario
+      operationId: authUser
+      parameters:
+      - in: path
+        name: username
+        description: Usuario a comprobar
+        required: true
+        schema:
+          type: string
+      - in: path
+        name: password
+        description: Contraseña del usuario
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: Devuelve el token en header Authorization
+
+  /videos:
+    post:
+      tags:
+        - video
+      summary: Subida de un nuevo video
+      description: Adicion de nuevo video
+      operationId: addVideo
+      requestBody:
+          description: Video que se va a añadir
+          required: true
+          content:
+            multipart/form-data:
+              schema:
+                type: object
+                properties:
+                  video: 
+                    $ref: '#/components/schemas/Video'
+                  subject_id:
+                    description: Id de la asignatura en la que va el video
+                    type: integer
+                  file:
+                    type: string
+                    format: binary
+              encoding:
+                video:
+                  contentType: application/json
+      responses:
+          200:
+            description: Usuario añadido con exito
+      security:
+        - bearerAuth: []
