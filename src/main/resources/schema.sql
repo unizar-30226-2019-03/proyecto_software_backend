@@ -21,8 +21,8 @@ CREATE TABLE university (
 CREATE TABLE app_user (
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
-    photo_path VARCHAR(1000),
-    email VARCHAR(255),
+    photo_path VARCHAR(1000) UNIQUE,
+    email VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
     enabled BOOLEAN NOT NULL,
     -- Igual es otro tipo, incluye hash de pass y salt
