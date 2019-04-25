@@ -6,9 +6,9 @@ info:
   title: Swagger Unicast
 
 servers:
-  - url: '{protocol}://{host}:{port}/{basePath}'
+  - url: "{protocol}://{host}:{port}/{basePath}"
     variables:
-      host: 
+      host:
         default: ec2-35-181-26-7.eu-west-3.compute.amazonaws.com
       protocol:
         enum:
@@ -17,15 +17,15 @@ servers:
         default: http
       port:
         enum:
-          - '8080'
-          - '80'
-        default: '8080'
+          - "8080"
+          - "80"
+        default: "8080"
       basePath:
         default: api
 
 tags:
-- name: user
-  description: Operaciones sobre usuario
+  - name: user
+    description: Operaciones sobre usuario
 # - name: video
 #   description: Operaciones sobre vídeos
 
@@ -60,43 +60,43 @@ paths:
       description: Adicion de nuevos usuarios
       operationId: addUser
       requestBody:
-          description: Usuario que se va a añadir
-          required: true
-          content:
-            multipart/form-data:
-              schema:
-                type: object
-                properties:
-                  username:
-                    required: true
-                    description: Nombre del nuevo usuario
-                    type: string
-                  password:
-                    required: true
-                    description: Contraseña del nuevo usuario
-                    type: string
-                    format: password
-                  email:
-                    required: true
-                    description: Email del nuevo usuario
-                    type: string
-                    format: email
-                  description:
-                    required: true
-                    description: Descripción para el nuevo usuario
-                    type: string
-                  university_id:
-                    required: true
-                    description: Universidad del usuario
-                    type: 
-                  photo:
-                    required: true
-                    description: Foto del usuario
-                    type: string
-                    format: binary
+        description: Usuario que se va a añadir
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  required: true
+                  description: Nombre del nuevo usuario
+                  type: string
+                password:
+                  required: true
+                  description: Contraseña del nuevo usuario
+                  type: string
+                  format: password
+                email:
+                  required: true
+                  description: Email del nuevo usuario
+                  type: string
+                  format: email
+                description:
+                  required: true
+                  description: Descripción para el nuevo usuario
+                  type: string
+                university_id:
+                  required: true
+                  description: Universidad del usuario
+                  type:
+                photo:
+                  required: true
+                  description: Foto del usuario
+                  type: string
+                  format: binary
       responses:
-          200:
-            description: Usuario añadido con exito
+        200:
+          description: Usuario añadido con exito
 
   /public/authenticate:
     post:
@@ -125,7 +125,6 @@ paths:
       responses:
         200:
           description: Devuelve el token en header Authorization
-
   # /videos:
   #   post:
   #     tags:
@@ -141,7 +140,7 @@ paths:
   #             schema:
   #               type: object
   #               properties:
-  #                 video: 
+  #                 video:
   #                   $ref: '#/components/schemas/Video'
   #                 subject_id:
   #                   description: Id de la asignatura en la que va el video
