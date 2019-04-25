@@ -26,7 +26,7 @@ public class UserController {
     @Autowired
     private SecurityConfiguration securityConfiguration;
 
-    @PostMapping(value = "/api/public/register")
+    @PostMapping(value = "/api/public/register", produces = "application/json", consumes = "multipart/form-data")
     public Resource<User> registerNewUser(@RequestPart("user") User user) {
 
         // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un usuario con nombre/email iguales
