@@ -235,6 +235,7 @@ public class UnicastBackendPersistanceTests {
 		User receiver = createTestUser();
 		receiver.setUsername("UsernameTestReceiver");
 		receiver.setPhoto(new URI("http://s3.amazonaws.com/bucket/photo/2"));
+		receiver.setEmail("asd@asd.com");
 		userRepository.save(receiver);
 
 		Message message = createTestMessage();
