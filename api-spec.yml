@@ -6,7 +6,16 @@ info:
   title: Swagger Unicast
 
 servers:
-  - url: http://ec2-35-181-26-7.eu-west-3.compute.amazonaws.com:8080
+  - url: http://ec2-35-181-26-7.eu-west-3.compute.amazonaws.com:{port}/{basePath}
+    variables:
+      port:
+        enum:
+          - '8080'
+          - '80'
+        default: '8080'
+      basePath:
+        default: api
+
 
 tags:
 - name: user
@@ -37,7 +46,7 @@ components:
           type: string
 
 paths:
-  /api/public/register:
+  /public/register:
     post:
       tags:
         - user
@@ -61,7 +70,7 @@ paths:
           200:
             description: Usuario añadido con exito
 
-  /api/authenticate:
+  /authenticate:
     post:
       tags:
         - user
