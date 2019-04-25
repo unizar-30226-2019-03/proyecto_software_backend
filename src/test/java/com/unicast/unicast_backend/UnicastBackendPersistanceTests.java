@@ -234,6 +234,7 @@ public class UnicastBackendPersistanceTests {
 
 		User receiver = createTestUser();
 		receiver.setUsername("UsernameTestReceiver");
+		receiver.setPhoto(new URI("http://s3.amazonaws.com/bucket/photo/2"));
 		userRepository.save(receiver);
 
 		Message message = createTestMessage();
@@ -318,7 +319,7 @@ public class UnicastBackendPersistanceTests {
 
 		user.setUsername("UsernameTest");
 		user.setEmail("test@test.com");
-		user.setPhoto(new URI("http://s3.amazonaws.com/bucket"));
+		user.setPhoto(new URI("http://s3.amazonaws.com/bucket/photo"));
 		user.setDescription("Description Test");
 		user.setEnabled(true);
 		user.setPassword(passwordEncoder.encode("test"));
@@ -406,7 +407,7 @@ public class UnicastBackendPersistanceTests {
 		video.setTitle("Video test");
 		video.setDescription("Description test");
 		video.setTimestamp(new Timestamp(1000));
-		video.setS3Path(new URI("http://s3.amazonaws.com/bucket"));
+		video.setS3Path(new URI("http://s3.amazonaws.com/bucket/video"));
 
 		return video;
 	}
