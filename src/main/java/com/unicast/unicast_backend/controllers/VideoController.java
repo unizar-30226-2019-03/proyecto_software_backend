@@ -40,12 +40,12 @@ public class VideoController {
     public @ResponseBody Resource<Video> uploadVideo(@RequestPart("file") MultipartFile video,
             @RequestPart("video") Video videoInfo, @RequestPart("subject_id") Long subjectId)
             throws IllegalStateException, IOException, URISyntaxException {
-        URI s3Path = s3VideoHandler.uploadVideo(video);
+        URI videoURL = s3VideoHandler.uploadFile(video);
 
         Subject subject = subjectRepository.findById(subjectId).get();
 
         videoInfo.setSubject(subject);
-        videoInfo.setS3Path(s3Path);
+        videoInfo.setS3Path(videoURL);
         videoInfo.setTimestamp(Timestamp.from(Instant.now()));
 
         videoRepository.save(videoInfo);

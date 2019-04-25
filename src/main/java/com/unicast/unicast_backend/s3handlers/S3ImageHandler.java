@@ -2,17 +2,17 @@ package com.unicast.unicast_backend.s3handlers;
 
 import org.springframework.stereotype.Component;
 
-// TODO: comprobar que el fichero subido sea un video
+// TODO: comprobar que el fichero subido sea una imagen
 
 @Component
-public final class S3VideoHandler extends S3FileHandler {
+public final class S3ImageHandler extends S3FileHandler {
     @Override
     protected String getFilePrefix() {
-        return "vid";
+        return "img";
     }
 
     @Override
     protected String getFileFolder() {
-        return "videos";
+        return "images";
     }
 }

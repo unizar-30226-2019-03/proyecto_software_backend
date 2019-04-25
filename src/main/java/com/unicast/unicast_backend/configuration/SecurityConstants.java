@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SecurityConstants {
 
-    public final String AUTH_LOGIN_URL = "/api/authenticate";
+    public final String AUTH_LOGIN_URL = "/api/public/authenticate";
     public final Integer TOKEN_TTL_MS = 10 * 24 * 3600 * 1000;
 
     public final String JWT_SECRET;

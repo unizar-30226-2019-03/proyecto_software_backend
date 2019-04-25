@@ -6,8 +6,15 @@ info:
   title: Swagger Unicast
 
 servers:
-  - url: http://ec2-35-181-26-7.eu-west-3.compute.amazonaws.com:{port}/{basePath}
+  - url: '{protocol}://{host}:{port}/{basePath}'
     variables:
+      host: 
+        default: ec2-35-181-26-7.eu-west-3.compute.amazonaws.com
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
       port:
         enum:
           - '8080'
@@ -16,12 +23,11 @@ servers:
       basePath:
         default: api
 
-
 tags:
 - name: user
   description: Operaciones sobre usuario
-- name: video
-  description: Operaciones sobre vídeos
+# - name: video
+#   description: Operaciones sobre vídeos
 
 components:
   securitySchemes:
@@ -29,21 +35,21 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-  schemas:
-    NewUser:
-      type: object
-      properties:
-        username:
-          type: string
-        password:
-          type: string
-    Video:
-      type: object
-      properties:
-        title:
-          type: string
-        description:
-          type: string
+  # schemas:
+  #   NewUser:
+  #     type: object
+  #     properties:
+  #       username:
+  #         type: string
+  #       password:
+  #         type: string
+  #   Video:
+  #     type: object
+  #     properties:
+  #       title:
+  #         type: string
+  #       description:
+  #         type: string
 
 paths:
   /public/register:
@@ -61,67 +67,93 @@ paths:
               schema:
                 type: object
                 properties:
-                  user:
-                    $ref: '#/components/schemas/NewUser'
-              encoding:
-                user:
-                  contentType: application/json
+                  username:
+                    required: true
+                    description: Nombre del nuevo usuario
+                    type: string
+                  password:
+                    required: true
+                    description: Contraseña del nuevo usuario
+                    type: string
+                    format: password
+                  email:
+                    required: true
+                    description: Email del nuevo usuario
+                    type: string
+                    format: email
+                  description:
+                    required: true
+                    description: Descripción para el nuevo usuario
+                    type: string
+                  university_id:
+                    required: true
+                    description: Universidad del usuario
+                    type: 
+                  photo:
+                    required: true
+                    description: Foto del usuario
+                    type: string
+                    format: binary
       responses:
           200:
             description: Usuario añadido con exito
 
-  /authenticate:
+  /public/authenticate:
     post:
       tags:
         - user
       summary: Autentificacion de usuarios
       description: Login a un usuario
       operationId: authUser
-      parameters:
-      - in: path
-        name: username
-        description: Usuario a comprobar
+      requestBody:
+        description: Usuario que se va a añadir
         required: true
-        schema:
-          type: string
-      - in: path
-        name: password
-        description: Contraseña del usuario
-        required: true
-        schema:
-          type: string
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                username:
+                  required: true
+                  description: Nombre del usuario a comprobar
+                  type: string
+                password:
+                  required: true
+                  description: Contraseña del nuevo usuario
+                  type: string
+                  format: password
       responses:
         200:
           description: Devuelve el token en header Authorization
 
-  /videos:
-    post:
-      tags:
-        - video
-      summary: Subida de un nuevo video
-      description: Adicion de nuevo video
-      operationId: addVideo
-      requestBody:
-          description: Video que se va a añadir
-          required: true
-          content:
-            multipart/form-data:
-              schema:
-                type: object
-                properties:
-                  video: 
-                    $ref: '#/components/schemas/Video'
-                  subject_id:
-                    description: Id de la asignatura en la que va el video
-                    type: integer
-                  file:
-                    type: string
-                    format: binary
-              encoding:
-                video:
-                  contentType: application/json
-      responses:
-          200:
-            description: Usuario añadido con exito
-      security:
-        - bearerAuth: []
+  # /videos:
+  #   post:
+  #     tags:
+  #       - video
+  #     summary: Subida de un nuevo video
+  #     description: Adicion de nuevo video
+  #     operationId: addVideo
+  #     requestBody:
+  #         description: Video que se va a añadir
+  #         required: true
+  #         content:
+  #           multipart/form-data:
+  #             schema:
+  #               type: object
+  #               properties:
+  #                 video: 
+  #                   $ref: '#/components/schemas/Video'
+  #                 subject_id:
+  #                   description: Id de la asignatura en la que va el video
+  #                   type: integer
+  #                 file:
+  #                   type: string
+  #                   format: binary
+  #             encoding:
+  #               video:
+  #                 contentType: application/json
+  #     responses:
+  #         200:
+  #           description: Usuario añadido con exito
+  #     security:
+  #       - bearerAuth: []
