@@ -61,36 +61,30 @@ paths:
       operationId: addUser
       requestBody:
         description: Usuario que se va a añadir
-        required: true
+        required: [username, password, email, description, university_id, photo]
         content:
           multipart/form-data:
             schema:
               type: object
               properties:
                 username:
-                  required: true
                   description: Nombre del nuevo usuario
                   type: string
                 password:
-                  required: true
                   description: Contraseña del nuevo usuario
                   type: string
                   format: password
                 email:
-                  required: true
                   description: Email del nuevo usuario
                   type: string
                   format: email
                 description:
-                  required: true
                   description: Descripción para el nuevo usuario
                   type: string
                 university_id:
-                  required: true
                   description: Universidad del usuario
                   type:
                 photo:
-                  required: true
                   description: Foto del usuario
                   type: string
                   format: binary
@@ -112,13 +106,12 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
+              required: [username, password]
               properties:
                 username:
-                  required: true
                   description: Nombre del usuario a comprobar
                   type: string
                 password:
-                  required: true
                   description: Contraseña del nuevo usuario
                   type: string
                   format: password
