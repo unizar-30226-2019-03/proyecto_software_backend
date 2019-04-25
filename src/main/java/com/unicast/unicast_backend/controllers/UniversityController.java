@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,7 +24,7 @@ public class UniversityController {
         this.repo = u;
     }
 
-    @RequestMapping(method = RequestMethod.GET, value = "/universities/ordenadas") 
+    @GetMapping(value = "/universities/ordenadas") 
     public @ResponseBody ResponseEntity<?> getUniversities() {
         List<University> producers = repo.findAll((Sort.by(Sort.Direction.ASC, "name")));
 
