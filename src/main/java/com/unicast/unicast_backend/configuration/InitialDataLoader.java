@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
  
-    boolean alreadySetup = false;
+    private boolean alreadySetup = false;
  
     @Autowired
     private RoleRepository roleRepository;
