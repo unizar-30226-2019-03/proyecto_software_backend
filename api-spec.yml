@@ -61,7 +61,7 @@ paths:
       operationId: addUser
       requestBody:
         description: Usuario que se va a añadir
-        required: [username, password, email, description, university_id, photo]
+        required: true
         content:
           multipart/form-data:
             schema:
@@ -83,11 +83,18 @@ paths:
                   type: string
                 university_id:
                   description: Universidad del usuario
-                  type:
+                  type: integer
                 photo:
                   description: Foto del usuario
                   type: string
                   format: binary
+              required:
+                - username
+                - password
+                - email
+                - description
+                - university_id
+                - photo
       responses:
         200:
           description: Usuario añadido con exito
@@ -106,7 +113,6 @@ paths:
           application/x-www-form-urlencoded:
             schema:
               type: object
-              required: [username, password]
               properties:
                 username:
                   description: Nombre del usuario a comprobar
@@ -115,6 +121,9 @@ paths:
                   description: Contraseña del nuevo usuario
                   type: string
                   format: password
+              required: 
+                - username
+                - password
       responses:
         200:
           description: Devuelve el token en header Authorization
