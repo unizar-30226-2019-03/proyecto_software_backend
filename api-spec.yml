@@ -95,6 +95,9 @@ paths:
                 - description
                 - university_id
                 - photo
+            encoding:
+              photo:
+                contentType: image/png, image/jpeg
       responses:
         200:
           description: Usuario añadido con exito
@@ -126,7 +129,64 @@ paths:
                 - password
       responses:
         200:
-          description: Devuelve el token en header Authorization
+          description: Devuelve el token en header Authorization y en el cuerpo
+          content:
+            text/plain:
+              schema:
+                type: string
+                # format: byte
+          headers:
+            Authorization:
+              schema:
+                type: string
+              description: Token JWT a incluir en todas las peticiones
+
+  /user/update:
+    post:
+      tags:
+        - user
+      summary: Actualizacion de un usuario en el sistema
+      description: Actualizacion de usuarios
+      operationId: updateUser
+      requestBody:
+        description: Usuario que se va a actualizar
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  description: Id del usuario
+                  type: integer
+                username:
+                  description: Nombre del usuario a actualizar
+                  type: string
+                password:
+                  description: Contraseña del usuario a actualizar
+                  type: string
+                  format: password
+                email:
+                  description: Email del usuario a actualizar
+                  type: string
+                  format: email
+                description:
+                  description: Descripción para el usuario a actualizar
+                  type: string
+                university_id:
+                  description: Universidad del usuario a actualizar
+                  type: integer
+                photo:
+                  description: Foto del usuario a actualizar
+                  type: string
+                  format: binary
+              required:
+                - user_id
+      responses:
+        200:
+          description: Usuario actualizado con exito
+      security:
+        - bearerAuth: []
   # /videos:
   #   post:
   #     tags:

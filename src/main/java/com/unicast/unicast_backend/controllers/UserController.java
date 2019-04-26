@@ -18,7 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.hateoas.Resource;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -46,8 +48,8 @@ public class UserController {
     @PostMapping(value = "/api/public/register", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> registerNewUser(@RequestParam("username") String username,
             @RequestParam("password") String password, @RequestParam("description") String description,
-            @RequestParam("email") String email, @RequestParam("university_id") Long universityId, @RequestPart("photo") MultipartFile photo)
-            throws IOException, URISyntaxException {
+            @RequestParam("email") String email, @RequestParam("university_id") Long universityId,
+            @RequestPart("photo") MultipartFile photo) throws IOException, URISyntaxException {
 
         // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un
         // usuario con nombre/email iguales
@@ -71,4 +73,49 @@ public class UserController {
         // return res;
         // }
     }
+
+    @PostMapping(value = "/api/user/update", produces = "application/json", consumes = "multipart/form-data")
+    public ResponseEntity<?> updateUser(@RequestParam(name = "user_id", required = true) Long userId,
+            @RequestParam(name = "username", required = false) String username,
+            @RequestParam(name = "password", required = false) String password,
+            @RequestParam(name = "description", required = false) String description,
+            @RequestParam(name = "email", required = false) String email,
+            @RequestParam(name = "university_id", required = false) Long universityId,
+            @RequestPart(name = "photo", required = false) MultipartFile photo) throws IOException, URISyntaxException {
+
+        // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un
+        // usuario con nombre/email iguales
+
+        // try {
+        User user = userRepository.findById(userId).get();
+        if (photo != null && !photo.isEmpty()) {
+            // TODO: borrar foto antigua o lo que sea
+            URI photoURL = s3ImageHandler.uploadFile(photo);
+            user.setPhoto(photoURL);
+        }
+        if (username != null && !username.isEmpty()) {
+            user.setUsername(username);
+        }
+        if (password != null && !username.isEmpty()) {
+            user.setPassword(securityConfiguration.passwordEncoder().encode(password));
+        }
+        if (email != null && !email.isEmpty()) {
+            user.setEmail(email);
+        }
+        if (description != null && !description.isEmpty()) {
+            user.setDescription(description);
+        }
+        if (universityId != null) {
+            user.setUniversity(universityRepository.findById(universityId).get());
+        }
+        // user.setEnabled(true);
+        userRepository.save(user);
+        return ResponseEntity.ok(userAssembler.toResource(user));
+        // } catch (org.springframework.dao.DataIntegrityViolationException e) {
+        // ResponseEntity<String> res = new ResponseEntity("El username ya existe",
+        // HttpStatus.BAD_REQUEST);
+        // return res;
+        // }
+    }
+
 }

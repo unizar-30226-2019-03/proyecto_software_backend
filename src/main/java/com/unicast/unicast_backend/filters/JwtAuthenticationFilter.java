@@ -1,5 +1,7 @@
 package com.unicast.unicast_backend.filters;
 
+import java.io.IOException;
+
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,38 +37,36 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request,
-                                                HttpServletResponse response) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+            throws AuthenticationException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-        
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username,
+                password);
+
         return authenticationManager.authenticate(authenticationToken);
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-                                            FilterChain filterChain, Authentication authentication) {
+            FilterChain filterChain, Authentication authentication) throws IOException {
         UserDetailsImpl user = ((UserDetailsImpl) authentication.getPrincipal());
 
-        List<String> roles = user.getAuthorities()
-            .stream()
-            .map(GrantedAuthority::getAuthority)
-            .collect(Collectors.toList());
+        List<String> roles = user.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
 
         byte[] signingKey = securityConstants.JWT_SECRET.getBytes();
 
-        String token = Jwts.builder()
-            .signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
-            .setHeaderParam("typ", securityConstants.TOKEN_TYPE)
-            .setIssuer(securityConstants.TOKEN_ISSUER)
-            .setAudience(securityConstants.TOKEN_AUDIENCE)
-            .setSubject(user.getUsername())
-            .setExpiration(new Date(System.currentTimeMillis() + securityConstants.TOKEN_TTL_MS))
-            .claim("rol", roles)
-            .compact();
+        String token = Jwts.builder().signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
+                .setHeaderParam("typ", securityConstants.TOKEN_TYPE).setIssuer(securityConstants.TOKEN_ISSUER)
+                .setAudience(securityConstants.TOKEN_AUDIENCE).setSubject(user.getUsername())
+                .setExpiration(new Date(System.currentTimeMillis() + securityConstants.TOKEN_TTL_MS))
+                .claim("rol", roles).compact();
 
         response.addHeader(securityConstants.TOKEN_HEADER, securityConstants.TOKEN_PREFIX + token);
+        response.setContentType("text/plain");
+        response.getWriter().write(token);
+        response.getWriter().flush();
     }
 }
