@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import javax.validation.ConstraintViolationException;
-
 import com.unicast.unicast_backend.assemblers.UserResourceAssembler;
 import com.unicast.unicast_backend.configuration.SecurityConfiguration;
 import com.unicast.unicast_backend.persistance.model.User;
@@ -14,14 +12,8 @@ import com.unicast.unicast_backend.persistance.repository.UserRepository;
 import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.hateoas.Resource;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
