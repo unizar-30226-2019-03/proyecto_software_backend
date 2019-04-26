@@ -25,7 +25,9 @@ servers:
 
 tags:
   - name: user
-    description: Operaciones sobre usuario
+    description: Operaciones sobre usuarios
+  - name: university
+    description: Operaciones sobre universidades
 # - name: video
 #   description: Operaciones sobre vídeos
 
@@ -35,7 +37,78 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-  # schemas:
+  schemas:
+    University:
+      type: object
+      properties:
+        name:
+          type: string
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HalLink'
+            university:
+              $ref: '#/components/schemas/HalLink'
+            users:
+              $ref: '#/components/schemas/HalLink'
+            subjects:
+              $ref: '#/components/schemas/HalLink' 
+      required:
+        - name
+    PaginationPage:
+      type: object
+      properties:
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        number:
+          type: integer
+      required:
+        - size
+        - totalElements
+        - totalPages
+        - number
+    HalLink:
+      type: object
+      properties:
+        href:
+          type: string
+          format: url
+        templated:
+          type: boolean
+      required:
+        - href
+    GetResponse:
+      type: object
+      properties:
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HalLink'
+            profile:
+              $ref: '#/components/schemas/HalLink'
+            search:
+              $ref: '#/components/schemas/HalLink'
+        page:
+          $ref: '#/components/schemas/PaginationPage'
+    UniversityGetResponse:
+      allOf:
+        - type: object
+          properties:
+            _embedded:
+              type: object
+              properties:
+                universities:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/University'
+        - $ref: '#/components/schemas/GetResponse'
+
   #   NewUser:
   #     type: object
   #     properties:
@@ -124,7 +197,7 @@ paths:
                   description: Contraseña del nuevo usuario
                   type: string
                   format: password
-              required: 
+              required:
                 - username
                 - password
       responses:
@@ -187,6 +260,23 @@ paths:
           description: Usuario actualizado con exito
       security:
         - bearerAuth: []
+
+  /universities:
+    get:
+      tags:
+        - university
+      summary: Lista de universidades
+      operationId: getUniversities
+      responses:
+        200:
+          description: Devuelve una lista de universidades
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/UniversityGetResponse'
+      security:
+        - bearerAuth: []
+
   # /videos:
   #   post:
   #     tags:
