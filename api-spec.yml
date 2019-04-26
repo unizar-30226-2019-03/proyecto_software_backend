@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.0.0
+  version: 1.0.2
   title: Swagger Unicast
 
 servers:
@@ -45,17 +45,6 @@ components:
       properties:
         name:
           type: string
-        _links:
-          type: object
-          properties:
-            self:
-              $ref: '#/components/schemas/HalLink'
-            university:
-              $ref: '#/components/schemas/HalLink'
-            users:
-              $ref: '#/components/schemas/HalLink'
-            subjects:
-              $ref: '#/components/schemas/HalLink' 
       required:
         - name
     Subject:
@@ -63,19 +52,6 @@ components:
       properties:
         name:
           type: string
-        _links:
-          type: object
-          properties:
-            self:
-              $ref: '#/components/schemas/HalLink'
-            university:
-              $ref: '#/components/schemas/HalLink'
-            users:
-              $ref: '#/components/schemas/HalLink'
-            subject:
-              $ref: '#/components/schemas/HalLink'
-            videos:
-              $ref: '#/components/schemas/HalLink' 
       required:
         - name
     PaginationPage:
@@ -124,7 +100,7 @@ components:
         universities:
           type: array
           items:
-            $ref: '#/components/schemas/University'
+            $ref: '#/components/schemas/UniversityWithLinks'
     UniversityGetResponse:
       allOf:
         - type: object
@@ -132,13 +108,29 @@ components:
             _embedded:
               $ref: '#/components/schemas/UniversityGetEmbedded'
         - $ref: '#/components/schemas/GetResponse'
+    UniversityWithLinks:
+      allOf:
+        - $ref: '#/components/schemas/University'
+        - type: object
+          properties:
+            _links:
+              type: object
+              properties:
+                self:
+                  $ref: '#/components/schemas/HalLink'
+                university:
+                  $ref: '#/components/schemas/HalLink'
+                users:
+                  $ref: '#/components/schemas/HalLink'
+                subjects:
+                  $ref: '#/components/schemas/HalLink'
     SubjectGetEmbedded:
       type: object
       properties:
         subjects:
           type: array
           items:
-            $ref: '#/components/schemas/Subject'
+            $ref: '#/components/schemas/SubjectWithLinks'
     SubjectGetResponse:
       allOf:
         - type: object
@@ -146,6 +138,24 @@ components:
             _embedded:
               $ref: '#/components/schemas/SubjectGetEmbedded'
         - $ref: '#/components/schemas/GetResponse'
+    SubjectWithLinks:
+      allOf:
+        - $ref: '#/components/schemas/Subject'
+        - type: object
+          properties:
+            _links:
+              type: object
+              properties:
+                self:
+                  $ref: '#/components/schemas/HalLink'
+                university:
+                  $ref: '#/components/schemas/HalLink'
+                users:
+                  $ref: '#/components/schemas/HalLink'
+                subject:
+                  $ref: '#/components/schemas/HalLink'
+                videos:
+                  $ref: '#/components/schemas/HalLink'
 
   #   NewUser:
   #     type: object
@@ -314,6 +324,27 @@ paths:
                 $ref: '#/components/schemas/UniversityGetResponse'
       security:
         - bearerAuth: []
+    post:
+      tags:
+        - university
+      summary: Crear nueva universidad
+      operationId: addUniversity
+      requestBody:
+        description: Universidad a añadir
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/University'
+      responses:
+        201:
+          description: Devuelve la universidad que se ha creado
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/UniversityWithLinks'
+      security:
+        - bearerAuth: []
 
   /subjects:
     get:
@@ -328,6 +359,27 @@ paths:
             application/hal+json:
               schema:
                 $ref: '#/components/schemas/SubjectGetResponse'
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - subject
+      summary: Crear nueva asignatura
+      operationId: addSubject
+      requestBody:
+        description: Asignatura a añadir
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subject'
+      responses:
+        201:
+          description: Devuelve la asignatura que se ha creado
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SubjectWithLinks'
       security:
         - bearerAuth: []
   # /videos:
