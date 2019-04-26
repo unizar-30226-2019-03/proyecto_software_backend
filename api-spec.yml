@@ -346,6 +346,29 @@ paths:
       security:
         - bearerAuth: []
 
+  /universities/{id}:
+    patch:
+      tags: 
+        - university
+      summary: Actualizar una universidad
+      operationId: updateUniversity
+      requestBody:
+        description: Contenido a editar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/University'
+      responses:
+        201:
+          description: Devuelve la universidad que se ha creado
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/UniversityWithLinks'
+      security:
+        - bearerAuth: []
+
   /subjects:
     get:
       tags:
@@ -382,6 +405,30 @@ paths:
                 $ref: '#/components/schemas/SubjectWithLinks'
       security:
         - bearerAuth: []
+
+  /subjects/{id}:
+    patch:
+      tags: 
+        - subject
+      summary: Actualizar una asignatura
+      operationId: updateSubject
+      requestBody:
+        description: Contenido a editar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subject'
+      responses:
+        201:
+          description: Devuelve la asignatura que se ha creado
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SubjectWithLinks'
+      security:
+        - bearerAuth: []
+
   # /videos:
   #   post:
   #     tags:
