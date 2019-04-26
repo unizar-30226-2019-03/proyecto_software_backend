@@ -352,6 +352,14 @@ paths:
         - university
       summary: Actualizar una universidad
       operationId: updateUniversity
+      parameters:
+        - name: id
+          in: path
+          description: Id de la universidad
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         description: Contenido a editar
         required: true
@@ -412,6 +420,14 @@ paths:
         - subject
       summary: Actualizar una asignatura
       operationId: updateSubject
+      parameters:
+        - name: id
+          in: path
+          description: Id de la asignatura
+          required: true
+          schema:
+            type: integer
+            format: int64
       requestBody:
         description: Contenido a editar
         required: true
