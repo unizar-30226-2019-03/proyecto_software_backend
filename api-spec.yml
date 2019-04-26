@@ -134,7 +134,7 @@ paths:
             text/plain:
               schema:
                 type: string
-                # format: byte
+                format: byte
           headers:
             Authorization:
               schema:
