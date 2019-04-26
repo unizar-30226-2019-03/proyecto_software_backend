@@ -28,6 +28,8 @@ tags:
     description: Operaciones sobre usuarios
   - name: university
     description: Operaciones sobre universidades
+  - name: subject
+    description: Operaciones sobre asignaturas
 # - name: video
 #   description: Operaciones sobre vídeos
 
@@ -53,6 +55,26 @@ components:
             users:
               $ref: '#/components/schemas/HalLink'
             subjects:
+              $ref: '#/components/schemas/HalLink' 
+      required:
+        - name
+    Subject:
+      type: object
+      properties:
+        name:
+          type: string
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HalLink'
+            university:
+              $ref: '#/components/schemas/HalLink'
+            users:
+              $ref: '#/components/schemas/HalLink'
+            subject:
+              $ref: '#/components/schemas/HalLink'
+            videos:
               $ref: '#/components/schemas/HalLink' 
       required:
         - name
@@ -96,17 +118,33 @@ components:
               $ref: '#/components/schemas/HalLink'
         page:
           $ref: '#/components/schemas/PaginationPage'
+    UniversityGetEmbedded:
+      type: object
+      properties:
+        universities:
+          type: array
+          items:
+            $ref: '#/components/schemas/University'
     UniversityGetResponse:
       allOf:
         - type: object
           properties:
             _embedded:
-              type: object
-              properties:
-                universities:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/University'
+              $ref: '#/components/schemas/UniversityGetEmbedded'
+        - $ref: '#/components/schemas/GetResponse'
+    SubjectGetEmbedded:
+      type: object
+      properties:
+        subjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subject'
+    SubjectGetResponse:
+      allOf:
+        - type: object
+          properties:
+            _embedded:
+              $ref: '#/components/schemas/SubjectGetEmbedded'
         - $ref: '#/components/schemas/GetResponse'
 
   #   NewUser:
@@ -277,6 +315,21 @@ paths:
       security:
         - bearerAuth: []
 
+  /subjects:
+    get:
+      tags:
+        - subject
+      summary: Lista de asignaturas
+      operationId: getSubjects
+      responses:
+        200:
+          description: Devuelve una lista de asignaturas
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SubjectGetResponse'
+      security:
+        - bearerAuth: []
   # /videos:
   #   post:
   #     tags:
