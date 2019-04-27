@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.0.2
+  version: 1.0.3
   title: Swagger Unicast
 
 servers:
@@ -40,6 +40,11 @@ components:
       scheme: bearer
       bearerFormat: JWT
   schemas:
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
     University:
       type: object
       properties:
@@ -252,10 +257,9 @@ paths:
         200:
           description: Devuelve el token en header Authorization y en el cuerpo
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                format: byte
+                $ref: '#/components/schemas/Token'
           headers:
             Authorization:
               schema:

@@ -64,8 +64,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .claim("rol", roles).compact();
 
         response.addHeader(securityConstants.TOKEN_HEADER, securityConstants.TOKEN_PREFIX + token);
-        response.setContentType("text/plain");
-        response.getWriter().write(token);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"token\":\"" + token + "\"}");
         response.getWriter().flush();
     }
 }
