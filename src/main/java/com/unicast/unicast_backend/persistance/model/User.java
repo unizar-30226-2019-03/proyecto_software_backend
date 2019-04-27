@@ -42,6 +42,7 @@ public class User {
 	
 	private String description;
 	
+	@JsonIgnore
 	private boolean enabled;
 	
 	@JsonProperty(access = Access.WRITE_ONLY)
