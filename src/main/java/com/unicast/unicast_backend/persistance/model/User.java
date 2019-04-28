@@ -89,5 +89,9 @@ public class User {
 	
 	@OneToMany(mappedBy = "user")
 	private Collection<Vote> votes;
+
+	@ManyToOne
+    @JoinColumn(name = "fk_degree")
+    private Degree degree;
 	
 }

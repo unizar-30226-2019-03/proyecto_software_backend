@@ -13,6 +13,11 @@ CREATE TABLE notification (
     CONSTRAINT fk_notification_category FOREIGN KEY (fk_category) REFERENCES notification_category(id) ON DELETE CASCADE
 );
 
+CREATE TABLE degree(
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) UNIQUE NOT NULL
+);
+
 CREATE TABLE university (
     id SERIAL PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL
@@ -28,7 +33,9 @@ CREATE TABLE app_user (
     -- Igual es otro tipo, incluye hash de pass y salt
     password VARCHAR(80) NOT NULL,
     fk_university INTEGER,
-    CONSTRAINT fk_app_user_university FOREIGN KEY (fk_university) REFERENCES university(id) ON DELETE SET NULL
+    CONSTRAINT fk_app_user_university FOREIGN KEY (fk_university) REFERENCES university(id) ON DELETE SET NULL,
+    fk_degree INTEGER,
+    CONSTRAINT fk_app_user_degree FOREIGN KEY (fk_degree) REFERENCES degree(id) ON DELETE SET NULL
 );
 
 CREATE TABLE reproduction_list (
@@ -167,4 +174,22 @@ CREATE TABLE video_video_tag (
     CONSTRAINT fk_video_video_tag_video FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE,
     CONSTRAINT fk_video_video_tag_video_tag FOREIGN KEY (fk_video_tag) REFERENCES video_tag(id) ON DELETE CASCADE,
     CONSTRAINT pk_video_video_tag PRIMARY KEY (fk_video, fk_video_tag)
+);
+
+
+
+CREATE TABLE degree_university(
+    fk_degree INTEGER,
+    fk_university INTEGER,
+    CONSTRAINT fk_degree_university_degree FOREIGN KEY (fk_degree) REFERENCES degree(id) ON DELETE CASCADE,
+    CONSTRAINT fk_degree_university_university FOREIGN KEY (fk_university) REFERENCES university(id) ON DELETE CASCADE,
+    CONSTRAINT pk_degree_university PRIMARY KEY (fk_degree, fk_university)
+);
+
+CREATE TABLE degree_subject(
+    fk_degree INTEGER,
+    fk_subject INTEGER,
+    CONSTRAINT fk_degree_subject_degree FOREIGN KEY (fk_degree) REFERENCES degree(id) ON DELETE CASCADE,
+    CONSTRAINT fk_degree_subject_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE,
+    CONSTRAINT pk_degree_subject PRIMARY KEY (fk_degree, fk_subject)
 );
