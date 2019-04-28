@@ -86,7 +86,6 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private Collection<Display> collectionDisplays;
 	
-	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private Collection<Vote> votes;
 	

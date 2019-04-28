@@ -11,8 +11,10 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 import lombok.Data;
 
@@ -26,6 +28,9 @@ public class Subject {
     private Long id;
 
     private String name;
+    
+    @Transient
+    private Double points;
     
     @ManyToOne
     @JoinColumn(name = "fk_university")
