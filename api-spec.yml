@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.0.0
+  version: 1.0.4
   title: Swagger Unicast
 
 servers:
@@ -25,7 +25,11 @@ servers:
 
 tags:
   - name: user
-    description: Operaciones sobre usuario
+    description: Operaciones sobre usuarios
+  - name: university
+    description: Operaciones sobre universidades
+  - name: subject
+    description: Operaciones sobre asignaturas
 # - name: video
 #   description: Operaciones sobre vídeos
 
@@ -35,7 +39,129 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
-  # schemas:
+  schemas:
+    Token:
+      type: object
+      properties:
+        token:
+          type: string
+    University:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    Subject:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    PaginationPage:
+      type: object
+      properties:
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        number:
+          type: integer
+      required:
+        - size
+        - totalElements
+        - totalPages
+        - number
+    HalLink:
+      type: object
+      properties:
+        href:
+          type: string
+          format: url
+        templated:
+          type: boolean
+      required:
+        - href
+    GetResponse:
+      type: object
+      properties:
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HalLink'
+            profile:
+              $ref: '#/components/schemas/HalLink'
+            search:
+              $ref: '#/components/schemas/HalLink'
+        page:
+          $ref: '#/components/schemas/PaginationPage'
+    UniversityGetEmbedded:
+      type: object
+      properties:
+        universities:
+          type: array
+          items:
+            $ref: '#/components/schemas/UniversityWithLinks'
+    UniversityGetResponse:
+      allOf:
+        - type: object
+          properties:
+            _embedded:
+              $ref: '#/components/schemas/UniversityGetEmbedded'
+        - $ref: '#/components/schemas/GetResponse'
+    UniversityWithLinks:
+      allOf:
+        - $ref: '#/components/schemas/University'
+        - type: object
+          properties:
+            _links:
+              type: object
+              properties:
+                self:
+                  $ref: '#/components/schemas/HalLink'
+                university:
+                  $ref: '#/components/schemas/HalLink'
+                users:
+                  $ref: '#/components/schemas/HalLink'
+                subjects:
+                  $ref: '#/components/schemas/HalLink'
+    SubjectGetEmbedded:
+      type: object
+      properties:
+        subjects:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubjectWithLinks'
+    SubjectGetResponse:
+      allOf:
+        - type: object
+          properties:
+            _embedded:
+              $ref: '#/components/schemas/SubjectGetEmbedded'
+        - $ref: '#/components/schemas/GetResponse'
+    SubjectWithLinks:
+      allOf:
+        - $ref: '#/components/schemas/Subject'
+        - type: object
+          properties:
+            _links:
+              type: object
+              properties:
+                self:
+                  $ref: '#/components/schemas/HalLink'
+                university:
+                  $ref: '#/components/schemas/HalLink'
+                users:
+                  $ref: '#/components/schemas/HalLink'
+                subject:
+                  $ref: '#/components/schemas/HalLink'
+                videos:
+                  $ref: '#/components/schemas/HalLink'
+
   #   NewUser:
   #     type: object
   #     properties:
@@ -124,17 +250,16 @@ paths:
                   description: Contraseña del nuevo usuario
                   type: string
                   format: password
-              required: 
+              required:
                 - username
                 - password
       responses:
         200:
           description: Devuelve el token en header Authorization y en el cuerpo
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                format: byte
+                $ref: '#/components/schemas/Token'
           headers:
             Authorization:
               schema:
@@ -187,6 +312,143 @@ paths:
           description: Usuario actualizado con exito
       security:
         - bearerAuth: []
+
+  /universities:
+    get:
+      tags:
+        - university
+      summary: Lista de universidades
+      operationId: getUniversities
+      responses:
+        200:
+          description: Devuelve una lista de universidades
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/UniversityGetResponse'
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - university
+      summary: Crear nueva universidad
+      operationId: addUniversity
+      requestBody:
+        description: Universidad a añadir
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/University'
+      responses:
+        201:
+          description: Devuelve la universidad que se ha creado
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/UniversityWithLinks'
+      security:
+        - bearerAuth: []
+
+  /universities/{id}:
+    patch:
+      tags: 
+        - university
+      summary: Actualizar una universidad
+      operationId: updateUniversity
+      parameters:
+        - name: id
+          in: path
+          description: Id de la universidad
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Contenido a editar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/University'
+      responses:
+        201:
+          description: Devuelve la universidad que se ha creado
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/UniversityWithLinks'
+      security:
+        - bearerAuth: []
+
+  /subjects:
+    get:
+      tags:
+        - subject
+      summary: Lista de asignaturas
+      operationId: getSubjects
+      responses:
+        200:
+          description: Devuelve una lista de asignaturas
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SubjectGetResponse'
+      security:
+        - bearerAuth: []
+    post:
+      tags:
+        - subject
+      summary: Crear nueva asignatura
+      operationId: addSubject
+      requestBody:
+        description: Asignatura a añadir
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subject'
+      responses:
+        201:
+          description: Devuelve la asignatura que se ha creado
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SubjectWithLinks'
+      security:
+        - bearerAuth: []
+
+  /subjects/{id}:
+    patch:
+      tags: 
+        - subject
+      summary: Actualizar una asignatura
+      operationId: updateSubject
+      parameters:
+        - name: id
+          in: path
+          description: Id de la asignatura
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Contenido a editar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subject'
+      responses:
+        201:
+          description: Devuelve la asignatura que se ha creado
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SubjectWithLinks'
+      security:
+        - bearerAuth: []
+
   # /videos:
   #   post:
   #     tags:

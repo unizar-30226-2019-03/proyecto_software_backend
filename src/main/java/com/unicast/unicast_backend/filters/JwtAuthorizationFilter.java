@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.unicast.unicast_backend.configuration.SecurityConstants;
+import com.unicast.unicast_backend.services.UserDetailsServiceImpl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -32,16 +33,19 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
     private final SecurityConstants securityConstants;
+    private final UserDetailsServiceImpl userDetailsService;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, SecurityConstants securityConstants) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, SecurityConstants securityConstants,
+            UserDetailsServiceImpl userDetailsService) {
         super(authenticationManager);
 
         this.securityConstants = securityConstants;
+        this.userDetailsService = userDetailsService;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws IOException, ServletException {
         UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
         String header = request.getHeader(securityConstants.TOKEN_HEADER);
 
@@ -60,21 +64,17 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             try {
                 byte[] signingKey = securityConstants.JWT_SECRET.getBytes();
 
-                Jws<Claims> parsedToken = Jwts.parser()
-                    .setSigningKey(signingKey)
-                    .parseClaimsJws(token.replace("Bearer ", ""));
+                Jws<Claims> parsedToken = Jwts.parser().setSigningKey(signingKey)
+                        .parseClaimsJws(token.replace("Bearer ", ""));
 
-                String username = parsedToken
-                    .getBody()
-                    .getSubject();
+                String username = parsedToken.getBody().getSubject();
 
-                List<SimpleGrantedAuthority> authorities = ((List<?>) parsedToken.getBody()
-                    .get("rol")).stream()
-                    .map(authority -> new SimpleGrantedAuthority((String) authority))
-                    .collect(Collectors.toList());
+                List<SimpleGrantedAuthority> authorities = ((List<?>) parsedToken.getBody().get("rol")).stream()
+                        .map(authority -> new SimpleGrantedAuthority((String) authority)).collect(Collectors.toList());
 
                 if (StringUtils.isNotEmpty(username)) {
-                    return new UsernamePasswordAuthenticationToken(username, null, authorities);
+                    return new UsernamePasswordAuthenticationToken(this.userDetailsService.loadUserByUsername(username),
+                            null, authorities);
                 }
             } catch (ExpiredJwtException exception) {
                 log.warn("Request to parse expired JWT : {} failed : {}", token, exception.getMessage());
