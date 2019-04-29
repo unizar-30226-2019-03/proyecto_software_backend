@@ -52,6 +52,7 @@ public class User {
     @JoinColumn(name = "fk_university")
     private University university;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private Collection<UserIsNotified> notifications;
 	
@@ -84,9 +85,11 @@ public class User {
 				name = "fk_role", referencedColumnName = "id"))
 	private Collection<Role> roles;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private Collection<Display> collectionDisplays;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
 	private Collection<Vote> votes;
 
