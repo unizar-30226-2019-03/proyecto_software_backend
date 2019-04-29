@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.unicast.unicast_backend.persistance.model.Comment;
+import com.unicast.unicast_backend.persistance.model.Degree;
 import com.unicast.unicast_backend.persistance.model.Message;
 import com.unicast.unicast_backend.persistance.model.Notification;
 import com.unicast.unicast_backend.persistance.model.NotificationCategory;
@@ -21,6 +22,7 @@ import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.Video;
 import com.unicast.unicast_backend.persistance.model.VideoTag;
 import com.unicast.unicast_backend.persistance.repository.CommentRepository;
+import com.unicast.unicast_backend.persistance.repository.DegreeRepository;
 import com.unicast.unicast_backend.persistance.repository.MessageRepository;
 import com.unicast.unicast_backend.persistance.repository.NotificationCategoryRepository;
 import com.unicast.unicast_backend.persistance.repository.NotificationRepository;
@@ -68,6 +70,9 @@ public class UnicastBackendPersistanceTests {
 
 	@Autowired
 	private SubjectRepository subjectRepository;
+
+	@Autowired
+	private DegreeRepository degreeRepository;
 
 	@Autowired
 	private UniversityRepository universityRepository;
@@ -315,6 +320,37 @@ public class UnicastBackendPersistanceTests {
 		subjectRepository.delete(subject);
 	}
 
+	@Test
+	@Transactional
+	public void testDegree() throws URISyntaxException {
+		Degree degree = createTestDegree();
+
+		List<User> users = new ArrayList<>();
+		users.add(createTestUser());
+		userRepository.saveAll(users);
+		List<University> universities = new ArrayList<>();
+		universities.add(createTestUniversity());
+		universityRepository.saveAll(universities);
+		List<Subject> subjects = new ArrayList<>();
+		subjects.add(createTestSubject());
+		subjectRepository.saveAll(subjects);
+		degree.setSubjects(subjects);
+		degree.setUniversities(universities);
+		degree.setUsers(users);
+
+		degreeRepository.save(degree);
+		
+
+		Degree degreeBD = degreeRepository.findById(degree.getId()).get();
+
+		assertEquals(degree, degreeBD);
+
+		/*userRepository.deleteInBatch(users);
+		subjectRepository.deleteInBatch(subjects);
+		universityRepository.deleteInBatch(universities);*/
+
+	}
+
 	private User createTestUser() throws URISyntaxException {
 		User user = new User();
 
@@ -327,6 +363,16 @@ public class UnicastBackendPersistanceTests {
 
 		return user;
 	}
+
+
+	private Degree createTestDegree() throws URISyntaxException {
+		Degree degree = new Degree();
+
+		degree.setName("DegreeTest");
+
+		return degree;
+	}
+
 
 	private VideoTag createTestVideoTag() {
 		VideoTag videoTag = new VideoTag();
