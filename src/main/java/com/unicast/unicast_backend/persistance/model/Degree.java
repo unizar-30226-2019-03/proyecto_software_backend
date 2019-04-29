@@ -32,7 +32,7 @@ public class Degree {
     @OneToMany(mappedBy = "degree")
     private Collection<User> users;
 
-    /*@ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 		name = "degree_university",
 		joinColumns = @JoinColumn(
@@ -41,12 +41,12 @@ public class Degree {
 				name = "fk_university", referencedColumnName = "id"))
     private Collection<University> universities;
     
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(
 		name = "degree_subject",
 		joinColumns = @JoinColumn(
 			name = "fk_degree", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(
 				name = "fk_subject", referencedColumnName = "id"))
-	private Collection<Subject> subjects;*/
+	private Collection<Subject> subjects;
 }

@@ -44,6 +44,6 @@ public class Subject {
     @OneToMany(mappedBy = "subject")
     private Collection<Video> videos;
 
-    /*@ManyToMany(mappedBy = "subjects")
-    private Collection<Degree> degrees;*/
+    @ManyToMany(mappedBy = "subjects")
+    private Collection<Degree> degrees;
 }

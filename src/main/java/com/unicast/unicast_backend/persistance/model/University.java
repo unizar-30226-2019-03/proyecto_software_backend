@@ -36,7 +36,7 @@ public class University {
     @OneToMany(mappedBy = "university")
     private Collection<Subject> subjects;
 
-    /*@ManyToMany(mappedBy = "universities")
-    private Collection<Degree> degrees;*/
+    @ManyToMany(mappedBy = "universities")
+    private Collection<Degree> degrees;
 
 }
