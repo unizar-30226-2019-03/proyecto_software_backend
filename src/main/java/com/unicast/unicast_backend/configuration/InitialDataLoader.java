@@ -1,11 +1,14 @@
 package com.unicast.unicast_backend.configuration;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import com.unicast.unicast_backend.persistance.model.Privilege;
 import com.unicast.unicast_backend.persistance.model.Role;
+import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.repository.PrivilegeRepository;
 import com.unicast.unicast_backend.persistance.repository.RoleRepository;
+import com.unicast.unicast_backend.persistance.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -20,6 +23,12 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
  
     @Autowired
     private RoleRepository roleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private SecurityConfiguration securityConfiguration;
   
     @Autowired
     private PrivilegeRepository privilegeRepository;
@@ -31,6 +40,22 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         if (alreadySetup) {
             return;
         }
+
+
+        // TODO: cambiar y crear la cuenta de admin en condiciones
+        Optional<User> userOpt = userRepository.findById(1L);
+
+        if (!userOpt.isPresent()) {
+            User user = new User();
+            user.setId(1L);
+            user.setUsername("admin");
+            user.setPassword(securityConfiguration.passwordEncoder().encode("password1234"));
+            user.setEmail("a@a.com");
+            user.setDescription("blablabla");
+            user.setEnabled(true);
+            userRepository.save(user);
+        }
+
 
         // TODO: crear privilegios y roles apropiados
         // Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
