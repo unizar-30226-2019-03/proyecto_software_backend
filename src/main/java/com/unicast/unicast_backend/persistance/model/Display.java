@@ -31,7 +31,7 @@ public class Display {
 	
     private Timestamp timestampLastTime;
     
-    private Timestamp secsFromBeg;
+    private Long secsFromBeg;
 	
 	
 }

@@ -5,11 +5,16 @@ import static org.junit.Assert.assertEquals;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.unicast.unicast_backend.persistance.model.Comment;
+import com.unicast.unicast_backend.persistance.model.Contains;
+import com.unicast.unicast_backend.persistance.model.ContainsKey;
 import com.unicast.unicast_backend.persistance.model.Degree;
+import com.unicast.unicast_backend.persistance.model.Display;
+import com.unicast.unicast_backend.persistance.model.DisplayKey;
 import com.unicast.unicast_backend.persistance.model.Message;
 import com.unicast.unicast_backend.persistance.model.Notification;
 import com.unicast.unicast_backend.persistance.model.NotificationCategory;
@@ -19,10 +24,16 @@ import com.unicast.unicast_backend.persistance.model.Role;
 import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.University;
 import com.unicast.unicast_backend.persistance.model.User;
+import com.unicast.unicast_backend.persistance.model.UserIsNotified;
+import com.unicast.unicast_backend.persistance.model.UserIsNotifiedKey;
 import com.unicast.unicast_backend.persistance.model.Video;
 import com.unicast.unicast_backend.persistance.model.VideoTag;
+import com.unicast.unicast_backend.persistance.model.Vote;
+import com.unicast.unicast_backend.persistance.model.VoteKey;
 import com.unicast.unicast_backend.persistance.repository.CommentRepository;
+import com.unicast.unicast_backend.persistance.repository.ContainsRepository;
 import com.unicast.unicast_backend.persistance.repository.DegreeRepository;
+import com.unicast.unicast_backend.persistance.repository.DisplayRepository;
 import com.unicast.unicast_backend.persistance.repository.MessageRepository;
 import com.unicast.unicast_backend.persistance.repository.NotificationCategoryRepository;
 import com.unicast.unicast_backend.persistance.repository.NotificationRepository;
@@ -31,9 +42,11 @@ import com.unicast.unicast_backend.persistance.repository.ReproductionListReposi
 import com.unicast.unicast_backend.persistance.repository.RoleRepository;
 import com.unicast.unicast_backend.persistance.repository.SubjectRepository;
 import com.unicast.unicast_backend.persistance.repository.UniversityRepository;
+import com.unicast.unicast_backend.persistance.repository.UserIsNotifiedRepository;
 import com.unicast.unicast_backend.persistance.repository.UserRepository;
 import com.unicast.unicast_backend.persistance.repository.VideoRepository;
 import com.unicast.unicast_backend.persistance.repository.VideoTagRepository;
+import com.unicast.unicast_backend.persistance.repository.VoteRepository;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,6 +101,19 @@ public class UnicastBackendPersistanceTests {
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
+
+	@Autowired
+	private VoteRepository voteRepository;
+	
+	@Autowired
+	private UserIsNotifiedRepository userIsNotifiedRepository;
+
+	@Autowired
+	private DisplayRepository displayRepository;
+
+	@Autowired
+	private ContainsRepository containsRepository;
+
 
 	@Test
 	public void contextLoads() {
@@ -345,12 +371,232 @@ public class UnicastBackendPersistanceTests {
 
 		assertEquals(degree, degreeBD);
 
-		/*userRepository.deleteInBatch(users);
+		userRepository.deleteInBatch(users);
 		subjectRepository.deleteInBatch(subjects);
-		universityRepository.deleteInBatch(universities);*/
+		universityRepository.deleteInBatch(universities);
+		degreeRepository.delete(degree);
 
 	}
 
+	@Test
+	@Transactional
+	public void testVote() throws URISyntaxException {
+		Vote vote = createTestVote();
+
+		User user = createTestUser();
+
+		Subject subject = createTestSubject();
+		subjectRepository.save(subject);
+
+		List<VideoTag> videoTags = new ArrayList<>();
+		videoTags.add(createTestVideoTag());
+		VideoTag videoTagTest = createTestVideoTag();
+		videoTagTest.setName("NOMBRE VIDEOTAG TEST 2");
+		videoTags.add(videoTagTest);
+		videoTagRepository.saveAll(videoTags);
+		
+		Video video = createTestVideo();
+		video.setSubject(subject);
+		video.setTags(videoTags);
+		videoRepository.save(video);
+
+		userRepository.save(user);
+		videoRepository.save(video);
+		
+		VoteKey voteId = new VoteKey();
+
+		voteId.setUserId(user.getId());
+		voteId.setVideoId(video.getId());
+
+		vote.setId(voteId);
+		vote.setUser(user);
+		vote.setVideo(video);
+
+		voteRepository.save(vote);
+
+		Vote voteDB = voteRepository.findById(vote.getId()).get();
+
+		assertEquals(vote, voteDB);
+
+		subjectRepository.delete(subject);
+		userRepository.delete(user);
+		videoRepository.delete(video);
+		voteRepository.delete(vote);
+		videoTagRepository.deleteInBatch(videoTags);
+ 	}
+
+	private Vote createTestVote() {
+		Vote v = new Vote();
+		
+		v.setClarity(8);
+		v.setDislikes(34);
+		v.setLikes(45);
+		v.setQuality(23);
+		return v;
+	}
+
+	private UserIsNotified createTestUserIsNotified() {
+		UserIsNotified u = new UserIsNotified();	
+		u.setChecked(true);
+
+		return u;
+	}
+
+	@Test
+	@Transactional
+	public void testUserIsNotified() throws URISyntaxException {
+		NotificationCategory notificationCategory = createTestNotificationCategory();
+		notificationCategoryRepository.save(notificationCategory);
+		UserIsNotified userIsNotified = createTestUserIsNotified();
+		User user = createTestUser();
+		Notification notification = createTestNotification();
+		notification.setCategory(notificationCategory);
+		userRepository.save(user);
+		notificationRepository.save(notification);
+		
+		userIsNotified.setUser(user);
+		userIsNotified.setNotification(notification);
+
+		UserIsNotifiedKey key = new UserIsNotifiedKey();
+		key.setNotificationId(notification.getId());
+		key.setUserId(user.getId());
+
+		userIsNotified.setId(key);
+
+		userIsNotifiedRepository.save(userIsNotified);
+
+		UserIsNotified userIsNotifiedBD = userIsNotifiedRepository.findById(userIsNotified.getId()).get();
+
+		assertEquals(userIsNotified, userIsNotifiedBD);
+
+		userIsNotifiedRepository.delete(userIsNotified);
+		userRepository.delete(user);
+		notificationRepository.delete(notification);
+		notificationCategoryRepository.delete(notificationCategory);
+	}
+
+	private Display createDisplayTest() {
+		Display d = new Display();
+		Timestamp t = Timestamp.from(Instant.now());
+		d.setSecsFromBeg(200L);
+		d.setTimestampLastTime(t);
+		return d;
+	}
+
+
+	@Test
+	@Transactional
+	public void testDisplay() throws URISyntaxException {
+		Display display = createDisplayTest();
+
+		User user = createTestUser();
+		userRepository.save(user);
+
+		Subject subject = createTestSubject();
+		subjectRepository.save(subject);
+
+		List<VideoTag> videoTags = new ArrayList<>();
+		videoTags.add(createTestVideoTag());
+		VideoTag videoTagTest = createTestVideoTag();
+		videoTagTest.setName("NOMBRE VIDEOTAG TEST 2");
+		videoTags.add(videoTagTest);
+		videoTagRepository.saveAll(videoTags);
+		
+		Video video = createTestVideo();
+		video.setSubject(subject);
+		video.setTags(videoTags);
+		videoRepository.save(video);
+		
+		display.setUser(user);
+		display.setVideo(video);
+
+		DisplayKey key = new DisplayKey();
+		key.setUserId(user.getId());
+		key.setVideoId(video.getId());
+
+		display.setId(key);
+
+		displayRepository.save(display);
+
+		Display displayBD = displayRepository.findById(display.getId()).get();
+
+		assertEquals(display, displayBD);
+
+
+		subjectRepository.delete(subject);
+		userRepository.delete(user);
+		videoRepository.delete(video);
+		displayRepository.delete(display);
+		videoTagRepository.deleteInBatch(videoTags);
+	}
+
+
+	private Contains createTestContains(){
+		Contains c = new Contains();
+		c.setPosition(23);
+
+		return c;
+	}
+
+	@Test
+	@Transactional
+	public void testContains() throws URISyntaxException {
+		Contains contains = createTestContains();
+
+		Subject subject = createTestSubject();
+		subjectRepository.save(subject);
+
+		List<VideoTag> videoTags = new ArrayList<>();
+		videoTags.add(createTestVideoTag());
+		VideoTag videoTagTest = createTestVideoTag();
+		videoTagTest.setName("NOMBRE VIDEOTAG TEST 2");
+		videoTags.add(videoTagTest);
+		videoTagRepository.saveAll(videoTags);
+		
+		Video video = createTestVideo();
+		video.setSubject(subject);
+		video.setTags(videoTags);
+		videoRepository.save(video);
+
+		User user = createTestUser();
+		userRepository.save(user);
+
+		ReproductionList reproductionList = createTestReproductionList();
+		reproductionList.setUser(user);
+		reproductionListRepository.save(reproductionList);
+
+		final String testName = "#144881: TEST NAME";
+		reproductionList.setName(testName);
+		reproductionListRepository.save(reproductionList);
+
+		contains.setVideo(video);
+		contains.setList(reproductionList);
+
+		ContainsKey key = new ContainsKey();
+		key.setListId(reproductionList.getId());
+		key.setVideoId(video.getId());
+
+		contains.setId(key);
+
+		containsRepository.save(contains);
+
+		
+
+		Contains containsBD = containsRepository.findById(contains.getId()).get();
+
+		assertEquals(contains,containsBD);
+
+		subjectRepository.delete(subject);
+		userRepository.delete(user);
+		videoRepository.delete(video);
+		containsRepository.delete(contains);
+		videoTagRepository.deleteInBatch(videoTags);
+		reproductionListRepository.delete(reproductionList);
+
+	}
+
+
+	
 	private User createTestUser() throws URISyntaxException {
 		User user = new User();
 
