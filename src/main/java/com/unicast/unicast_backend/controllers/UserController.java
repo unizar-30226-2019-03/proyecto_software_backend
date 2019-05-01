@@ -93,8 +93,6 @@ public class UserController {
 
         // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un
         // usuario con nombre/email iguales
-        
-        // TODO: en vez de ResponseEntity.ok hacer que sea 201
 
         // try {
         // User user = userRepository.findByUsername(userAuth.getUsername());
