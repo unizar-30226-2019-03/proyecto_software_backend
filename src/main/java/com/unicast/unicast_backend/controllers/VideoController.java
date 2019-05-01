@@ -15,6 +15,7 @@ import com.unicast.unicast_backend.principal.UserDetailsImpl;
 import com.unicast.unicast_backend.s3handlers.S3VideoHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -58,6 +59,8 @@ public class VideoController {
 
         videoRepository.save(video);
 
-        return ResponseEntity.ok(videoAsssembler.toResource(video));
+        Resource<Video> resourceVideo = videoAsssembler.toResource(video);
+
+        return ResponseEntity.created(new URI(resourceVideo.getId().expand().getHref())).body(resourceVideo);
     }
 }

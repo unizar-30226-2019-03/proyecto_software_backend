@@ -595,8 +595,6 @@ public class UnicastBackendPersistanceTests {
 
 	}
 
-
-	
 	private User createTestUser() throws URISyntaxException {
 		User user = new User();
 

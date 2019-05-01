@@ -13,6 +13,7 @@ import com.unicast.unicast_backend.principal.UserDetailsImpl;
 import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,24 +46,35 @@ public class UserController {
     public ResponseEntity<?> registerNewUser(@RequestParam("username") String username,
             @RequestParam("password") String password, @RequestParam("description") String description,
             @RequestParam("email") String email, @RequestParam("university_id") Long universityId,
-            @RequestPart("photo") MultipartFile photo) throws IOException, URISyntaxException {
+            @RequestPart("photo") MultipartFile photo) {
 
         // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un
         // usuario con nombre/email iguales
 
-        // try {
-        URI photoURL = s3ImageHandler.uploadFile(photo);
+        try {
+            URI photoURL = s3ImageHandler.uploadFile(photo);
 
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(securityConfiguration.passwordEncoder().encode(password));
-        user.setEmail(email);
-        user.setDescription(description);
-        user.setPhoto(photoURL);
-        user.setUniversity(universityRepository.findById(universityId).get());
-        user.setEnabled(true);
-        userRepository.save(user);
-        return ResponseEntity.ok(userAssembler.toResource(user));
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(securityConfiguration.passwordEncoder().encode(password));
+            user.setEmail(email);
+            user.setDescription(description);
+            user.setPhoto(photoURL);
+            user.setUniversity(universityRepository.findById(universityId).get());
+            user.setEnabled(true);
+            userRepository.save(user);
+
+            Resource<User> resourceUser = userAssembler.toResource(user);
+
+            return ResponseEntity.created(new URI(resourceUser.getId().expand().getHref()))
+                    .body(userAssembler.toResource(user));
+        } catch (IOException ioE) {
+            // TODO: hacer algo
+            return ResponseEntity.badRequest().build();
+        } catch (URISyntaxException uriE) {
+            // TODO: hacer algo            
+            return ResponseEntity.badRequest().build();
+        }
         // } catch (org.springframework.dao.DataIntegrityViolationException e) {
         // ResponseEntity<String> res = new ResponseEntity("El username ya existe",
         // HttpStatus.BAD_REQUEST);
@@ -81,11 +93,13 @@ public class UserController {
 
         // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un
         // usuario con nombre/email iguales
+        
+        // TODO: en vez de ResponseEntity.ok hacer que sea 201
 
         // try {
         // User user = userRepository.findByUsername(userAuth.getUsername());
         User user = userAuth.getUser();
-        
+
         if (photo != null && !photo.isEmpty()) {
             // TODO: borrar foto antigua o lo que sea
             URI photoURL = s3ImageHandler.uploadFile(photo);
@@ -117,8 +131,9 @@ public class UserController {
     }
 
     @GetMapping(value = "/api/user/{id}", produces = "application/json")
-    public ResponseEntity<?> getUser(@PathVariable(value="id") Long id) throws IOException, URISyntaxException {
+    public ResponseEntity<?> getUser(@PathVariable(value = "id") Long id) {
         User user = userRepository.findById(id).get();
+
         return ResponseEntity.ok(userAssembler.toResource(user));
     }
 

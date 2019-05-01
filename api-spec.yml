@@ -234,7 +234,7 @@ paths:
               photo:
                 contentType: image/png, image/jpeg
       responses:
-        200:
+        201:
           description: Usuario añadido con exito
 
   /public/authenticate:
@@ -508,7 +508,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/VideoToUpload'
       responses:
-        200:
+        201:
           description: Video añadido con exito
       security:
         - bearerAuth: []
