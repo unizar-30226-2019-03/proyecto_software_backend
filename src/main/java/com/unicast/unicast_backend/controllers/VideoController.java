@@ -11,13 +11,15 @@ import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.Video;
 import com.unicast.unicast_backend.persistance.repository.SubjectRepository;
 import com.unicast.unicast_backend.persistance.repository.VideoRepository;
+import com.unicast.unicast_backend.principal.UserDetailsImpl;
 import com.unicast.unicast_backend.s3handlers.S3VideoHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,20 +38,26 @@ public class VideoController {
     @Autowired
     private S3VideoHandler s3VideoHandler;
 
-    @PostMapping(value = "/videos", produces = "application/json", consumes = "multipart/form-data")
-    public @ResponseBody Resource<Video> uploadVideo(@RequestPart("file") MultipartFile video,
-            @RequestPart("video") Video videoInfo, @RequestPart("subject_id") Long subjectId)
+    @PostMapping(value = "/api/upload/video", produces = "application/json", consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
+            @RequestPart("file") MultipartFile videoFile, @RequestParam("title") String title,
+            @RequestParam("description") String description, @RequestParam("subject_id") Long subjectId)
             throws IllegalStateException, IOException, URISyntaxException {
-        URI videoURL = s3VideoHandler.uploadFile(video);
+        // TODO: gestionar tags
+        Video video = new Video();
+
+        URI videoURL = s3VideoHandler.uploadFile(videoFile);
 
         Subject subject = subjectRepository.findById(subjectId).get();
 
-        videoInfo.setSubject(subject);
-        videoInfo.setS3Path(videoURL);
-        videoInfo.setTimestamp(Timestamp.from(Instant.now()));
+        video.setTitle(title);
+        video.setDescription(description);
+        video.setSubject(subject);
+        video.setS3Path(videoURL);
+        video.setTimestamp(Timestamp.from(Instant.now()));
 
-        videoRepository.save(videoInfo);
+        videoRepository.save(video);
 
-        return videoAsssembler.toResource(videoInfo);
+        return ResponseEntity.ok(videoAsssembler.toResource(video));
     }
 }

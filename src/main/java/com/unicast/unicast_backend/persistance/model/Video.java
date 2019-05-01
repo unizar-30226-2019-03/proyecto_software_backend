@@ -44,12 +44,6 @@ public class Video {
     private Collection<Comment> comments;
 
     @OneToMany(mappedBy = "video")
-    private Collection<Contains> videoLists;
-
-    @OneToMany(mappedBy = "video")
-    private Collection<Display> collectionDisplays;
-
-    @OneToMany(mappedBy = "video")
     private Collection<Vote> votes;
     
     @ManyToMany

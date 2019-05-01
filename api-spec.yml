@@ -30,8 +30,8 @@ tags:
     description: Operaciones sobre universidades
   - name: subject
     description: Operaciones sobre asignaturas
-# - name: video
-#   description: Operaciones sobre vídeos
+  - name: video
+    description: Operaciones sobre vídeos
 
 components:
   securitySchemes:
@@ -45,8 +45,30 @@ components:
       properties:
         token:
           type: string
+      required:
+        - token
+    VideoToUpload:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+        title:
+          type: string
+        description:
+          type: string
+        subject_id:
+          type: integer
+          format: int64
+      required:
+        - file
+        - title
+        - description
+        - subject_id
     University:
       type: object
+      discriminator:
+        propertyName: name
       properties:
         name:
           type: string
@@ -54,6 +76,8 @@ components:
         - name
     Subject:
       type: object
+      discriminator:
+        propertyName: name
       properties:
         name:
           type: string
@@ -108,11 +132,11 @@ components:
             $ref: '#/components/schemas/UniversityWithLinks'
     UniversityGetResponse:
       allOf:
+        - $ref: '#/components/schemas/GetResponse'
         - type: object
           properties:
             _embedded:
               $ref: '#/components/schemas/UniversityGetEmbedded'
-        - $ref: '#/components/schemas/GetResponse'
     UniversityWithLinks:
       allOf:
         - $ref: '#/components/schemas/University'
@@ -138,11 +162,11 @@ components:
             $ref: '#/components/schemas/SubjectWithLinks'
     SubjectGetResponse:
       allOf:
+        - $ref: '#/components/schemas/GetResponse'
         - type: object
           properties:
             _embedded:
               $ref: '#/components/schemas/SubjectGetEmbedded'
-        - $ref: '#/components/schemas/GetResponse'
     SubjectWithLinks:
       allOf:
         - $ref: '#/components/schemas/Subject'
@@ -161,21 +185,6 @@ components:
                   $ref: '#/components/schemas/HalLink'
                 videos:
                   $ref: '#/components/schemas/HalLink'
-
-  #   NewUser:
-  #     type: object
-  #     properties:
-  #       username:
-  #         type: string
-  #       password:
-  #         type: string
-  #   Video:
-  #     type: object
-  #     properties:
-  #       title:
-  #         type: string
-  #       description:
-  #         type: string
 
 paths:
   /public/register:
@@ -281,9 +290,6 @@ paths:
             schema:
               type: object
               properties:
-                user_id:
-                  description: Id del usuario
-                  type: integer
                 username:
                   description: Nombre del usuario a actualizar
                   type: string
@@ -305,8 +311,6 @@ paths:
                   description: Foto del usuario a actualizar
                   type: string
                   format: binary
-              required:
-                - user_id
       responses:
         200:
           description: Usuario actualizado con exito
@@ -449,34 +453,63 @@ paths:
       security:
         - bearerAuth: []
 
-  # /videos:
-  #   post:
-  #     tags:
-  #       - video
-  #     summary: Subida de un nuevo video
-  #     description: Adicion de nuevo video
-  #     operationId: addVideo
-  #     requestBody:
-  #         description: Video que se va a añadir
-  #         required: true
-  #         content:
-  #           multipart/form-data:
-  #             schema:
-  #               type: object
-  #               properties:
-  #                 video:
-  #                   $ref: '#/components/schemas/Video'
-  #                 subject_id:
-  #                   description: Id de la asignatura en la que va el video
-  #                   type: integer
-  #                 file:
-  #                   type: string
-  #                   format: binary
-  #             encoding:
-  #               video:
-  #                 contentType: application/json
-  #     responses:
-  #         200:
-  #           description: Usuario añadido con exito
-  #     security:
-  #       - bearerAuth: []
+  # TODO: documentar respuestas en todo lo de usuarios
+  /user/{id}:
+    get:
+      tags: 
+        - user
+      summary: Obtener un usuario
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          description: Id del usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+    
+      responses:
+        200:
+          description: Devuelve el usuario con el id dado
+          #content:
+          #  application/hal+json:
+          #    schema:
+          #      $ref: '#/components/schemas/SubjectWithLinks'
+      security:
+        - bearerAuth: []
+
+  # TODO: Aqui faltaria documentar respuesta, pero este endpoint lo cambiaremos por
+  # sistema de recomendaciones (?)
+  /videos:
+    get:
+      tags:
+        - video
+      summary: Lista de videos
+      operationId: getVideos
+      responses:
+        200:
+          description: Devuelve una lista de videos
+      security:
+        - bearerAuth: []
+
+  /upload/video:
+    post:
+      tags:
+        - video
+      summary: Subida de un nuevo video
+      description: Adicion de nuevo video
+      operationId: addVideo
+      requestBody:
+          description: Video que se va a añadir
+          required: true
+          content:
+            multipart/form-data:
+              schema:
+                $ref: '#/components/schemas/VideoToUpload'
+      responses:
+        200:
+          description: Video añadido con exito
+      security:
+        - bearerAuth: []
+      

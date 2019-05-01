@@ -9,10 +9,14 @@ import com.unicast.unicast_backend.configuration.SecurityConfiguration;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.repository.UniversityRepository;
 import com.unicast.unicast_backend.persistance.repository.UserRepository;
+import com.unicast.unicast_backend.principal.UserDetailsImpl;
 import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -67,7 +71,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/api/user/update", produces = "application/json", consumes = "multipart/form-data")
-    public ResponseEntity<?> updateUser(@RequestParam(name = "user_id", required = true) Long userId,
+    public ResponseEntity<?> updateUser(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam(name = "username", required = false) String username,
             @RequestParam(name = "password", required = false) String password,
             @RequestParam(name = "description", required = false) String description,
@@ -79,7 +83,9 @@ public class UserController {
         // usuario con nombre/email iguales
 
         // try {
-        User user = userRepository.findById(userId).get();
+        // User user = userRepository.findByUsername(userAuth.getUsername());
+        User user = userAuth.getUser();
+        
         if (photo != null && !photo.isEmpty()) {
             // TODO: borrar foto antigua o lo que sea
             URI photoURL = s3ImageHandler.uploadFile(photo);
@@ -101,13 +107,19 @@ public class UserController {
             user.setUniversity(universityRepository.findById(universityId).get());
         }
         // user.setEnabled(true);
-        userRepository.save(user);
+        // userRepository.save(user);
         return ResponseEntity.ok(userAssembler.toResource(user));
         // } catch (org.springframework.dao.DataIntegrityViolationException e) {
         // ResponseEntity<String> res = new ResponseEntity("El username ya existe",
         // HttpStatus.BAD_REQUEST);
         // return res;
         // }
+    }
+
+    @GetMapping(value = "/api/user/{id}", produces = "application/json")
+    public ResponseEntity<?> getUser(@PathVariable(value="id") Long id) throws IOException, URISyntaxException {
+        User user = userRepository.findById(id).get();
+        return ResponseEntity.ok(userAssembler.toResource(user));
     }
 
 }
