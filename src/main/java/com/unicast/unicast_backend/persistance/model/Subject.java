@@ -23,25 +23,24 @@ import lombok.Data;
 @Table(name = "subject")
 public class Subject {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
-    
+
     @Transient
     private Double points;
-    
+
     @ManyToOne
     @JoinColumn(name = "fk_university")
     private University university;
 
     // TODO: mirar lo de los roles
-	@ManyToMany
-    @JoinTable(
-		name = "app_user_subject", 
-		joinColumns = @JoinColumn(name = "fk_subject"), 
-		inverseJoinColumns = @JoinColumn(name = "fk_app_user"))
+    @ManyToMany
+    @JoinTable(name = "app_user_subject", 
+        joinColumns = @JoinColumn(name = "fk_subject"), 
+        inverseJoinColumns = @JoinColumn(name = "fk_app_user"))
     private Collection<User> users;
 
     @JsonIgnore
