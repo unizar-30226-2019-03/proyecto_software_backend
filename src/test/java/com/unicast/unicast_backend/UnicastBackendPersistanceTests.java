@@ -598,7 +598,9 @@ public class UnicastBackendPersistanceTests {
 	private User createTestUser() throws URISyntaxException {
 		User user = new User();
 
-		user.setUsername("UsernameTest");
+		user.setUsername("UsernameTest32432dscdf");
+		user.setName("UsernameTestasdasdsad");
+		user.setSurnames("Sasdasduahe4nafdsono3nofn10nf");
 		user.setEmail("test@test.com");
 		user.setPhoto(new URI("http://s3.amazonaws.com/bucket/photo"));
 		user.setDescription("Description Test");
