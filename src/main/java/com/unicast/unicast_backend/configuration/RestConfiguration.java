@@ -7,6 +7,7 @@ import com.unicast.unicast_backend.persistance.model.Video;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.data.rest.core.mapping.RepositoryDetectionStrategy.RepositoryDetectionStrategies;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 
 @Configuration
@@ -18,5 +19,6 @@ public class RestConfiguration implements RepositoryRestConfigurer {
         config.exposeIdsFor(Video.class);
         config.exposeIdsFor(University.class);
         config.exposeIdsFor(Subject.class);
+        config.setRepositoryDetectionStrategy(RepositoryDetectionStrategies.ANNOTATED);
     }
 }
