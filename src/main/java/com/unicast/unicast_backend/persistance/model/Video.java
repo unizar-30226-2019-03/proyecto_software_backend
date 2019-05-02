@@ -22,7 +22,9 @@ import lombok.Data;
 @Entity
 @Table(name = "video")
 public class Video {
-	
+    
+    // TODO: meter quien ha subido el video
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
