@@ -3,10 +3,13 @@ package com.unicast.unicast_backend.controllers;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import com.unicast.unicast_backend.assemblers.UserResourceAssembler;
 import com.unicast.unicast_backend.configuration.SecurityConfiguration;
 import com.unicast.unicast_backend.persistance.model.User;
+import com.unicast.unicast_backend.persistance.repository.DegreeRepository;
+import com.unicast.unicast_backend.persistance.repository.SubjectRepository;
 import com.unicast.unicast_backend.persistance.repository.UniversityRepository;
 import com.unicast.unicast_backend.persistance.repository.UserRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
@@ -16,8 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -34,6 +35,12 @@ public class UserController {
     private UniversityRepository universityRepository;
 
     @Autowired
+    private DegreeRepository degreeRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
+
+    @Autowired
     private UserResourceAssembler userAssembler;
 
     @Autowired
@@ -43,9 +50,10 @@ public class UserController {
     private S3ImageHandler s3ImageHandler;
 
     @PostMapping(value = "/api/public/register", produces = "application/json", consumes = "multipart/form-data")
-    public ResponseEntity<?> registerNewUser(@RequestParam("username") String username,
-            @RequestParam("password") String password, @RequestParam("description") String description,
-            @RequestParam("email") String email, @RequestParam("university_id") Long universityId,
+    public ResponseEntity<?> registerNewUser(@RequestParam("username") String username,@RequestParam("name") String name,
+            @RequestParam("surnames") String surnames,@RequestParam("password") String password, @RequestParam("description") String description,
+            @RequestParam("email") String email, @RequestParam("university_id") Long universityId,@RequestParam("degree") Long degreeId,
+            @RequestParam("subjects") List<Long> subjectsIds,
             @RequestPart("photo") MultipartFile photo) {
 
         // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un
@@ -56,12 +64,20 @@ public class UserController {
 
             User user = new User();
             user.setUsername(username);
+            user.setName(name);
+            user.setSurnames(surnames);
+            user.setDegree(degreeRepository.findById(degreeId).get());
             user.setPassword(securityConfiguration.passwordEncoder().encode(password));
             user.setEmail(email);
             user.setDescription(description);
             user.setPhoto(photoURL);
             user.setUniversity(universityRepository.findById(universityId).get());
             user.setEnabled(true);
+
+
+            // List<Subject> subjects = subjectRepository.findAllById(ids);
+
+            // user.set
             userRepository.save(user);
 
             Resource<User> resourceUser = userAssembler.toResource(user);
@@ -82,7 +98,7 @@ public class UserController {
         // }
     }
 
-    @PostMapping(value = "/api/user/update", produces = "application/json", consumes = "multipart/form-data")
+    @PostMapping(value = "/api/users/update", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> updateUser(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam(name = "username", required = false) String username,
             @RequestParam(name = "password", required = false) String password,
@@ -127,12 +143,4 @@ public class UserController {
         // return res;
         // }
     }
-
-    @GetMapping(value = "/api/user/{id}", produces = "application/json")
-    public ResponseEntity<?> getUser(@PathVariable(value = "id") Long id) {
-        User user = userRepository.findById(id).get();
-
-        return ResponseEntity.ok(userAssembler.toResource(user));
-    }
-
 }

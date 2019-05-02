@@ -33,6 +33,10 @@ public class User {
     private Long id;
 	
 	private String username;
+
+	private String name;
+
+	private String surnames;
 	
 	@Email
 	private String email;
@@ -56,12 +60,15 @@ public class User {
 	@OneToMany(mappedBy = "user")
 	private Collection<UserIsNotified> notifications;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
     private Collection<Comment> comments;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "receiver")
 	private Collection<Message> messagesAsReceiver;
 	
+	@JsonIgnore
 	@OneToMany(mappedBy = "sender")
 	private Collection<Message> messagesAsSender;
 
@@ -69,11 +76,7 @@ public class User {
 	private Collection<ReproductionList> reproductionLists;
 	
 	// Vale tanto para alumnos como para profesores, cambiara segun el rol que tenga este usuario
-	@ManyToMany
-	@JoinTable(
-		name = "app_user_subject", 
-		joinColumns = @JoinColumn(name = "fk_app_user"), 
-		inverseJoinColumns = @JoinColumn(name = "fk_subject"))
+	@ManyToMany(mappedBy = "users")
 	private Collection<Subject> subjects;
 
 	@ManyToMany(fetch = FetchType.EAGER)

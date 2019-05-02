@@ -26,6 +26,8 @@ CREATE TABLE university (
 CREATE TABLE app_user (
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    surnames VARCHAR(100) NOT NULL,
     photo_path VARCHAR(1000) UNIQUE,
     email VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,

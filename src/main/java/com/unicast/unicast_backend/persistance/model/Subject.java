@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -14,7 +15,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 import lombok.Data;
 
@@ -37,7 +37,11 @@ public class Subject {
     private University university;
 
     // TODO: mirar lo de los roles
-    @ManyToMany(mappedBy = "subjects")
+	@ManyToMany
+    @JoinTable(
+		name = "app_user_subject", 
+		joinColumns = @JoinColumn(name = "fk_subject"), 
+		inverseJoinColumns = @JoinColumn(name = "fk_app_user"))
     private Collection<User> users;
 
     @JsonIgnore
