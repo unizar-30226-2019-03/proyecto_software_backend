@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.0.5
+  version: 1.0.6
   title: Swagger Unicast
 
 servers:
@@ -212,12 +212,18 @@ paths:
               type: object
               properties:
                 username:
-                  description: Nombre del nuevo usuario
+                  description: Nombre de usuario del nuevo usuario
                   type: string
                 password:
                   description: Contraseña del nuevo usuario
                   type: string
                   format: password
+                name:
+                  description: Nombre del nuevo usuario
+                  type: string
+                surnames:
+                  description: Apellidos del nuevo usuario
+                  type: string
                 email:
                   description: Email del nuevo usuario
                   type: string
@@ -228,6 +234,11 @@ paths:
                 university_id:
                   description: Universidad del usuario
                   type: integer
+                  format: int64
+                degree_id:
+                  description: Carrera del usuario
+                  type: integer
+                  format: int64
                 photo:
                   description: Foto del usuario
                   type: string
@@ -235,9 +246,12 @@ paths:
               required:
                 - username
                 - password
+                - name
+                - surnames
                 - email
                 - description
                 - university_id
+                - degree_id
                 - photo
             encoding:
               photo:

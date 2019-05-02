@@ -3,7 +3,6 @@ package com.unicast.unicast_backend.controllers;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 import com.unicast.unicast_backend.assemblers.UserResourceAssembler;
 import com.unicast.unicast_backend.configuration.SecurityConfiguration;
@@ -50,10 +49,11 @@ public class UserController {
     private S3ImageHandler s3ImageHandler;
 
     @PostMapping(value = "/api/public/register", produces = "application/json", consumes = "multipart/form-data")
-    public ResponseEntity<?> registerNewUser(@RequestParam("username") String username,@RequestParam("name") String name,
-            @RequestParam("surnames") String surnames,@RequestParam("password") String password, @RequestParam("description") String description,
-            @RequestParam("email") String email, @RequestParam("university_id") Long universityId,@RequestParam("degree") Long degreeId,
-            @RequestParam("subjects") List<Long> subjectsIds,
+    public ResponseEntity<?> registerNewUser(@RequestParam("username") String username,
+            @RequestParam("name") String name, @RequestParam("surnames") String surnames,
+            @RequestParam("password") String password, @RequestParam("description") String description,
+            @RequestParam("email") String email, @RequestParam("university_id") Long universityId,
+            @RequestParam("degree_id") Long degreeId,
             @RequestPart("photo") MultipartFile photo) {
 
         // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un
@@ -74,10 +74,6 @@ public class UserController {
             user.setUniversity(universityRepository.findById(universityId).get());
             user.setEnabled(true);
 
-
-            // List<Subject> subjects = subjectRepository.findAllById(ids);
-
-            // user.set
             userRepository.save(user);
 
             Resource<User> resourceUser = userAssembler.toResource(user);
@@ -88,7 +84,7 @@ public class UserController {
             // TODO: hacer algo
             return ResponseEntity.badRequest().build();
         } catch (URISyntaxException uriE) {
-            // TODO: hacer algo            
+            // TODO: hacer algo
             return ResponseEntity.badRequest().build();
         }
         // } catch (org.springframework.dao.DataIntegrityViolationException e) {
