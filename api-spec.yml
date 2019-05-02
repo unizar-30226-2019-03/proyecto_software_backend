@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.0.4
+  version: 1.0.5
   title: Swagger Unicast
 
 servers:
