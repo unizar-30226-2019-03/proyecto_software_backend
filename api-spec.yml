@@ -43,6 +43,9 @@ components:
     Token:
       type: object
       properties:
+        id:
+          type: integer
+          format: int64
         token:
           type: string
       required:
@@ -270,7 +273,7 @@ paths:
                 - password
       responses:
         200:
-          description: Devuelve el token en header Authorization y en el cuerpo
+          description: Devuelve el token en header Authorization y en el cuerpo + id de usuario
           content:
             application/json:
               schema:
@@ -281,7 +284,7 @@ paths:
                 type: string
               description: Token JWT a incluir en todas las peticiones
 
-  /user/update:
+  /users/update:
     post:
       tags:
         - user
@@ -323,12 +326,46 @@ paths:
       security:
         - bearerAuth: []
 
+        
+# TODO: documentar respuestas en todo lo de usuarios
+  /users/{id}:
+    get:
+      tags: 
+        - user
+      summary: Obtener un usuario
+      operationId: getUser
+      parameters:
+        - name: id
+          in: path
+          description: Id del usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+    
+      responses:
+        200:
+          description: Devuelve el usuario con el id dado
+          #content:
+          #  application/hal+json:
+          #    schema:
+          #      $ref: '#/components/schemas/SubjectWithLinks'
+      security:
+        - bearerAuth: []
+
+
   /universities:
     get:
       tags:
         - university
       summary: Lista de universidades
       operationId: getUniversities
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Numero de la página a devolver
       responses:
         200:
           description: Devuelve una lista de universidades
@@ -397,6 +434,12 @@ paths:
         - subject
       summary: Lista de asignaturas
       operationId: getSubjects
+      parameters:
+          - in: query
+            name: page
+            schema:
+              type: integer
+            description: Numero de la página a devolver
       responses:
         200:
           description: Devuelve una lista de asignaturas
@@ -459,31 +502,61 @@ paths:
       security:
         - bearerAuth: []
 
-  # TODO: documentar respuestas en todo lo de usuarios
-  /user/{id}:
-    get:
+  /subjects/{id}/users:
+    put:
       tags: 
-        - user
-      summary: Obtener un usuario
-      operationId: getUser
+        - subject
+      summary: Relacionar un usuario con una asignatura (tanto profesores como alumnos)
+      operationId: putUser
       parameters:
         - name: id
+          in: path
+          description: Id de la asignatura
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Link del usuario a asociar con la asignatura
+        required: true
+        content:
+          text/uri-list:
+            schema:
+              type: integer
+              format: int64
+      responses:
+        204:
+          description: Se ha relacionado el/los usuarios con la asignatura
+      security:
+        - bearerAuth: []
+
+  /subjects/{subject_id}/users/{user_id}:
+    delete:
+      tags: 
+          - subject
+      summary: Elimina el usuario de la relacion con asignatura
+      operationId: deleteUserFromSubject
+      parameters:
+        - name: user_id
           in: path
           description: Id del usuario
           required: true
           schema:
             type: integer
             format: int64
-    
+        - name: subject_id
+          in: path
+          description: Id de la asignatura
+          required: true
+          schema:
+            type: integer
+            format: int64
       responses:
-        200:
-          description: Devuelve el usuario con el id dado
-          #content:
-          #  application/hal+json:
-          #    schema:
-          #      $ref: '#/components/schemas/SubjectWithLinks'
+        204:
+          description: Se ha eliminado con exito
       security:
         - bearerAuth: []
+    
 
   # TODO: Aqui faltaria documentar respuesta, pero este endpoint lo cambiaremos por
   # sistema de recomendaciones (?)
