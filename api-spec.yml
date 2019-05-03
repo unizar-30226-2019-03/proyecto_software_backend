@@ -533,6 +533,8 @@ paths:
             application/hal+json:
               schema:
                 $ref: '#/components/schemas/UniversityGetResponse'
+
+  /universities/add:
     post:
       tags:
         - university
@@ -542,49 +544,61 @@ paths:
         description: Universidad a añadir
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
-              $ref: '#/components/schemas/University'
+              type: object
+              properties:
+                name:
+                  description: Nombre de la nueva universidad
+                  type: string
+                photo:
+                  description: Contraseña del nuevo usuario
+                  type: string
+                  format: binary
+              required:
+                - name
+                - photo
       responses:
         201:
           description: Devuelve la universidad que se ha creado
           content:
-            application/hal+json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/University'
       security:
         - bearerAuth: []
 
-  /universities/{id}:
-    patch:
-      tags:
-        - university
-      summary: Actualizar una universidad
-      operationId: updateUniversity
-      parameters:
-        - name: id
-          in: path
-          description: Id de la universidad
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        description: Contenido a editar
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/University'
-      responses:
-        200:
-          description: Devuelve la universidad que se ha actualizado
-          content:
-            application/hal+json:
-              schema:
-                $ref: '#/components/schemas/University'
-      security:
-        - bearerAuth: []
+  # TODO: gestionar que la foto es un fichero
+  # /universities/{id}:
+    # patch:
+    #   tags:
+    #     - university
+    #   summary: Actualizar una universidad
+    #   operationId: updateUniversity
+    #   parameters:
+    #     - name: id
+    #       in: path
+    #       description: Id de la universidad
+    #       required: true
+    #       schema:
+    #         type: integer
+    #         format: int64
+    #   requestBody:
+    #     description: Contenido a editar
+    #     required: true
+    #     content:
+    #       application/json:
+    #         schema:
+    #           $ref: '#/components/schemas/University'
+    #   responses:
+    #     200:
+    #       description: Devuelve la universidad que se ha actualizado
+    #       content:
+    #         application/hal+json:
+    #           schema:
+    #             $ref: '#/components/schemas/University'
+    #   security:
+    #     - bearerAuth: []
 
   /universities/search/nameStartsWith:
     get:
