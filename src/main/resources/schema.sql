@@ -70,7 +70,8 @@ CREATE TABLE video (
     id SERIAL PRIMARY KEY,
     title VARCHAR(200) UNIQUE NOT NULL,
     description TEXT NOT NULL,
-    s3_path VARCHAR(1000),
+    url VARCHAR(1000) NOT NULL,
+    thumbnail_url VARCHAR(1000) NOT NULL,
     timestamp TIMESTAMP NOT NULL,
     fk_subject INTEGER NOT NULL,
     CONSTRAINT fk_video_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE
@@ -177,8 +178,6 @@ CREATE TABLE video_video_tag (
     CONSTRAINT fk_video_video_tag_video_tag FOREIGN KEY (fk_video_tag) REFERENCES video_tag(id) ON DELETE CASCADE,
     CONSTRAINT pk_video_video_tag PRIMARY KEY (fk_video, fk_video_tag)
 );
-
-
 
 CREATE TABLE degree_university(
     fk_degree INTEGER,

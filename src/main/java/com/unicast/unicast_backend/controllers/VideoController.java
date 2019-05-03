@@ -12,6 +12,7 @@ import com.unicast.unicast_backend.persistance.model.Video;
 import com.unicast.unicast_backend.persistance.repository.SubjectRepository;
 import com.unicast.unicast_backend.persistance.repository.VideoRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
+import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 import com.unicast.unicast_backend.s3handlers.S3VideoHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,22 +40,27 @@ public class VideoController {
     @Autowired
     private S3VideoHandler s3VideoHandler;
 
+    @Autowired
+    private S3ImageHandler s3ImageHandler;
+
     @PostMapping(value = "/api/upload/video", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> uploadVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestPart("file") MultipartFile videoFile, @RequestParam("title") String title,
-            @RequestParam("description") String description, @RequestParam("subject_id") Long subjectId)
-            throws IllegalStateException, IOException, URISyntaxException {
+            @RequestPart("file") MultipartFile videoFile, @RequestPart("thumbnail") MultipartFile thumbnail,
+            @RequestParam("title") String title, @RequestParam("description") String description,
+            @RequestParam("subject_id") Long subjectId) throws IllegalStateException, IOException, URISyntaxException {
         // TODO: gestionar tags
         Video video = new Video();
 
         URI videoURL = s3VideoHandler.uploadFile(videoFile);
+        URI thumbnailURL = s3ImageHandler.uploadFile(thumbnail);
 
         Subject subject = subjectRepository.findById(subjectId).get();
 
         video.setTitle(title);
         video.setDescription(description);
         video.setSubject(subject);
-        video.setS3Path(videoURL);
+        video.setThumbnailUrl(thumbnailURL);
+        video.setUrl(videoURL);
         video.setTimestamp(Timestamp.from(Instant.now()));
 
         videoRepository.save(video);

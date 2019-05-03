@@ -4,7 +4,6 @@ import java.net.URI;
 import java.sql.Timestamp;
 import java.util.Collection;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -35,8 +34,9 @@ public class Video {
 
     private Timestamp timestamp;
     
-    @Column(name = "s3_path")
-    private URI s3Path;
+    private URI url;
+
+	private URI thumbnailUrl;
     
     @ManyToOne
     @JoinColumn(name = "fk_subject")

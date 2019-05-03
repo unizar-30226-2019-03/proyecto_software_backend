@@ -700,7 +700,7 @@ public class UnicastBackendPersistanceTests {
 		video.setTitle("Video test");
 		video.setDescription("Description test");
 		video.setTimestamp(new Timestamp(1000));
-		video.setS3Path(new URI("http://s3.amazonaws.com/bucket/video"));
+		video.setUrl(new URI("http://s3.amazonaws.com/bucket/video"));
 
 		return video;
 	}

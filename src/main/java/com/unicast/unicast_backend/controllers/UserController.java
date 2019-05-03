@@ -78,8 +78,8 @@ public class UserController {
 
             Resource<User> resourceUser = userAssembler.toResource(user);
 
-            return ResponseEntity.created(new URI(resourceUser.getId().expand().getHref()))
-                    .body(userAssembler.toResource(user));
+            return ResponseEntity.created(new URI(resourceUser.getId().getHref()))
+                    .body(resourceUser);
         } catch (IOException ioE) {
             // TODO: hacer algo
             return ResponseEntity.badRequest().build();

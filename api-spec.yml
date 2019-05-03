@@ -52,10 +52,37 @@ components:
           type: string
       required:
         - token
+
+    Video:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        url:
+          type: string
+          format: url
+        thumbnailUrl:
+          type: string
+          format: url
+        # comments:
+        # votes:
+        # tags:
+
     VideoToUpload:
       type: object
       properties:
         file:
+          type: string
+          format: binary
+        thumbnail:
           type: string
           format: binary
         title:
@@ -67,9 +94,11 @@ components:
           format: int64
       required:
         - file
+        - thumbnail
         - title
         - description
         - subject_id
+
     University:
       type: object
       discriminator:
@@ -82,6 +111,7 @@ components:
           type: string
       required:
         - name
+
     Subject:
       type: object
       discriminator:
@@ -94,6 +124,7 @@ components:
           type: string
       required:
         - name
+
     PaginationPage:
       type: object
       properties:
@@ -110,30 +141,13 @@ components:
         - totalElements
         - totalPages
         - number
-    HalLink:
-      type: object
-      properties:
-        href:
-          type: string
-          format: url
-        templated:
-          type: boolean
-      required:
-        - href
+
     GetResponse:
       type: object
       properties:
-        _links:
-          type: object
-          properties:
-            self:
-              $ref: '#/components/schemas/HalLink'
-            profile:
-              $ref: '#/components/schemas/HalLink'
-            search:
-              $ref: '#/components/schemas/HalLink'
         page:
           $ref: '#/components/schemas/PaginationPage'
+
     UniversityGetEmbedded:
       type: object
       properties:
@@ -143,60 +157,29 @@ components:
             universities:
               type: array
               items:
-                $ref: '#/components/schemas/UniversityWithLinks'
-    UniversityGetEmbeddedTest:
+                $ref: '#/components/schemas/University'
+
+    UniversityGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/UniversityGetEmbedded'
+
+    SubjectGetEmbedded:
       type: object
       properties:
         _embedded:
           type: object
           properties:
-            universities:
+            subjects:
               type: array
               items:
-                $ref: '#/components/schemas/University'
-    UniversityFindByNameStartsWith:
-      allOf:
-       - $ref: '#/components/schemas/UniversityGetEmbeddedTest'
-    UniversityGetResponse:
-      allOf:
-        - $ref: '#/components/schemas/GetResponse'
-        - $ref: '#/components/schemas/UniversityGetEmbedded'
-    UniversityWithLinks:
-      allOf:
-        - $ref: '#/components/schemas/University'
-        - $ref: '#/components/schemas/UniversityLinks'
-    SubjectGetEmbedded:
-      type: object
-      properties:
-        subjects:
-          type: array
-          items:
-            $ref: '#/components/schemas/SubjectWithLinks'
+                $ref: '#/components/schemas/Subject'
+
     SubjectGetResponse:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
-        - type: object
-          properties:
-            _embedded:
-              $ref: '#/components/schemas/SubjectGetEmbedded'
-    SubjectWithLinks:
-      allOf:
-        - $ref: '#/components/schemas/Subject'
-        - type: object
-          properties:
-            _links:
-              type: object
-              properties:
-                self:
-                  $ref: '#/components/schemas/HalLink'
-                university:
-                  $ref: '#/components/schemas/HalLink'
-                users:
-                  $ref: '#/components/schemas/HalLink'
-                subject:
-                  $ref: '#/components/schemas/HalLink'
-                videos:
-                  $ref: '#/components/schemas/HalLink'
+        - $ref: '#/components/schemas/SubjectGetEmbedded'
+
     User:
       type: object
       properties:
@@ -207,66 +190,17 @@ components:
           type: string
         name:
           type: string
-        surname:
+        surnames:
           type: string
         email:
           type: string
           format: email
         photo:
           type: string
-          format: uri
+          format: url
         description:
           type: string
-    UserLinks:
-      type: object
-      properties:
-        _links:
-          type: object
-          properties:
-            self:
-              $ref: '#/components/schemas/HalLink'
-            user:
-              $ref: '#/components/schemas/HalLink'
-            degree:
-              $ref: '#/components/schemas/HalLink'
-            reproductionLists:
-              $ref: '#/components/schemas/HalLink'
-            subjects:
-              $ref: '#/components/schemas/HalLink'
-            university:
-              $ref: '#/components/schemas/HalLink'
-    SelfLink:
-      type: object
-      properties:
-        _links:
-          type: object
-          properties:
-            self:
-              $ref: '#/components/schemas/HalLink'
-    GetUser:
-      allOf:
-        - $ref: '#/components/schemas/User'
-        - $ref: '#/components/schemas/UserLinks'
-    PostUser:
-      allOf:
-        - $ref: '#/components/schemas/User'
-        - $ref: '#/components/schemas/SelfLink'
-    UniversityLinks:
-      type: object
-      properties:
-        _links:
-          type: object
-          properties:
-            self:
-              $ref: '#/components/schemas/HalLink'
-            university:
-              $ref: '#/components/schemas/HalLink'
-            subjects:
-              $ref: '#/components/schemas/HalLink'
-            users:
-              $ref: '#/components/schemas/HalLink'
-            degrees:
-              $ref: '#/components/schemas/HalLink'
+
     Degree:
       type: object
       discriminator:
@@ -288,8 +222,21 @@ components:
           items:
                 $ref: '#/components/schemas/Degree'
 
+    DegreeGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/DegreeGetEmbedded'
 
-
+    DegreeGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            degrees:
+              type: array
+              items:
+                $ref: '#/components/schemas/Degree'
 
 paths:
   /public/register:
@@ -356,9 +303,9 @@ paths:
         201:
           description: Usuario añadido con exito
           content:
-            application/hal+json:
+            application/json:
               schema:
-                $ref: '#/components/schemas/PostUser'
+                $ref: '#/components/schemas/User'
 
   /public/authenticate:
     post:
@@ -440,12 +387,11 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/PostUser'
+                $ref: '#/components/schemas/User'
       security:
         - bearerAuth: []
 
 
-# TODO: documentar respuestas en todo lo de usuarios
   /users/{id}:
     get:
       tags:
@@ -460,90 +406,108 @@ paths:
           schema:
             type: integer
             format: int64
-
       responses:
         200:
           description: Devuelve el usuario con el id dado
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/GetUser'
+                $ref: '#/components/schemas/User'
       security:
         - bearerAuth: []
 
 
-  # /degrees:
-  #   get:
-  #     tags:
-  #       - degree
-  #     summary: Lista de carreras
-  #     operationId: getDegrees
-  #     parameters:
-  #       - in: query
-  #         name: page
-  #         schema:
-  #           type: integer
-  #         description: Numero de la página a devolver
-  #     responses:
-  #       200:
-  #         description: Devuelve una lista de carreras
-  #         content:
-  #           application/hal+json:
-  #             schema:
-  #               $ref: '#/components/schemas/DegreeGetResponse'
-  #   post:
-  #     tags:
-  #       - degree
-  #     summary: Crear nueva carrera
-  #     operationId: addDegree
-  #     requestBody:
-  #       description: Carrera a añadir
-  #       required: true
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/Degree'
-  #     responses:
-  #       201:
-  #         description: Devuelve la carrera que se ha creado
-  #         content:
-  #           application/hal+json:
-  #             schema:
-  #               $ref: '#/components/schemas/DegreeWithLinks'
-  #     security:
-  #       - bearerAuth: []
+  /degrees:
+    get:
+      tags:
+        - degree
+      summary: Lista de carreras
+      operationId: getDegrees
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          description: Numero de la página a devolver
+      responses:
+        200:
+          description: Devuelve una lista de carreras
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/DegreeGetResponse'
+    post:
+      tags:
+        - degree
+      summary: Crear nueva carrera
+      operationId: addDegree
+      requestBody:
+        description: Carrera a añadir
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Degree'
+      responses:
+        201:
+          description: Devuelve la carrera que se ha creado
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Degree'
+      security:
+        - bearerAuth: []
 
-  # /degrees/{id}:
-  #   patch:
-  #     tags:
-  #       - degree
-  #     summary: Actualizar una carrera
-  #     operationId: updateDegree
-  #     parameters:
-  #       - name: id
-  #         in: path
-  #         description: Id de la carrera
-  #         required: true
-  #         schema:
-  #           type: integer
-  #           format: int64
-  #     requestBody:
-  #       description: Contenido a editar
-  #       required: true
-  #       content:
-  #         application/json:
-  #           schema:
-  #             $ref: '#/components/schemas/Degree'
-  #     responses:
-  #       200:
-  #         description: Devuelve la carrera que se ha actualizado
-  #         content:
-  #           application/hal+json:
-  #             schema:
-  #               $ref: '#/components/schemas/DegreeWithLinks'
-  #     security:
-  #       - bearerAuth: []
+  /degrees/{id}:
+    patch:
+      tags:
+        - degree
+      summary: Actualizar una carrera
+      operationId: updateDegree
+      parameters:
+        - name: id
+          in: path
+          description: Id de la carrera
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Contenido a editar
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Degree'
+      responses:
+        200:
+          description: Devuelve la carrera que se ha actualizado
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Degree'
+      security:
+        - bearerAuth: []
 
+  /degrees/search/nameStartsWith:
+    get:
+      tags:
+        - degree
+      summary: Busca carreras que empiecen por el nombre dado
+      operationId: findUniversityStartsWith
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Comienzo del nombre de la carrera a buscar
+      responses:
+        200:
+          description: Lista de las carreras encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DegreeGetEmbedded'
 
   /universities:
     get:
@@ -582,7 +546,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/UniversityWithLinks'
+                $ref: '#/components/schemas/University'
       security:
         - bearerAuth: []
 
@@ -613,7 +577,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/UniversityWithLinks'
+                $ref: '#/components/schemas/University'
       security:
         - bearerAuth: []
 
@@ -635,7 +599,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UniversityGetEmbeddedTest'
+                $ref: '#/components/schemas/UniversityGetEmbedded'
 
   /subjects:
     get:
@@ -656,8 +620,6 @@ paths:
             application/hal+json:
               schema:
                 $ref: '#/components/schemas/SubjectGetResponse'
-      security:
-        - bearerAuth: []
     post:
       tags:
         - subject
@@ -676,7 +638,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/SubjectWithLinks'
+                $ref: '#/components/schemas/Subject'
       security:
         - bearerAuth: []
 
@@ -707,7 +669,7 @@ paths:
           content:
             application/hal+json:
               schema:
-                $ref: '#/components/schemas/SubjectWithLinks'
+                $ref: '#/components/schemas/Subject'
       security:
         - bearerAuth: []
 
@@ -798,5 +760,9 @@ paths:
       responses:
         201:
           description: Video añadido con exito
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/Video'
       security:
         - bearerAuth: []
