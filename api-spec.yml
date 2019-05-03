@@ -390,7 +390,7 @@ paths:
         200:
           description: Devuelve usuario con campos actualizados
           content:
-            application/hal+json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/User'
       security:
@@ -780,7 +780,7 @@ paths:
         201:
           description: Video añadido con exito
           content:
-            application/hal+json:
+            application/json:
               schema:
                 $ref: '#/components/schemas/Video'
       security:
