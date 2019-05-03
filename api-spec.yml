@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.0.7
+  version: 1.0.8
   title: Swagger Unicast
 
 servers:
@@ -111,7 +111,7 @@ components:
           type: string
         photo:
           type: string
-          format: url 
+          format: url
       required:
         - name
         - photo
@@ -499,7 +499,7 @@ paths:
       tags:
         - degree
       summary: Busca carreras que empiecen por el nombre dado
-      operationId: findUniversityStartsWith
+      operationId: findDegreeStartsWith
       parameters:
         - in: query
           name: name
