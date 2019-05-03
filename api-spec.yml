@@ -194,6 +194,62 @@ components:
                   $ref: '#/components/schemas/HalLink'
                 videos:
                   $ref: '#/components/schemas/HalLink'
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        name:
+          type: string
+        surname:
+          type: string
+        email:
+          type: string
+          format: email
+        photo:
+          type: string
+          format: uri
+        description:
+          type: string
+    UserLinks:
+      type: object
+      properties:
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HalLink'
+            user:
+              $ref: '#/components/schemas/HalLink'
+            degree:
+              $ref: '#/components/schemas/HalLink'
+            reproductionLists:
+              $ref: '#/components/schemas/HalLink'
+            subjects:
+              $ref: '#/components/schemas/HalLink'
+            university:
+              $ref: '#/components/schemas/HalLink'
+    SelfLink:
+      type: object
+      properties:
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HalLink'
+    GetUser:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - $ref: '#/components/schemas/UserLinks'
+    PostUser:
+      allOf:
+        - $ref: '#/components/schemas/User'
+        - $ref: '#/components/schemas/SelfLink'
+    
+
 
 paths:
   /public/register:
@@ -259,6 +315,10 @@ paths:
       responses:
         201:
           description: Usuario añadido con exito
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/PostUser'
 
   /public/authenticate:
     post:
@@ -337,6 +397,10 @@ paths:
       responses:
         200:
           description: Devuelve usuario con campos actualizados
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/PostUser'
       security:
         - bearerAuth: []
 
@@ -360,15 +424,15 @@ paths:
       responses:
         200:
           description: Devuelve el usuario con el id dado
-          #content:
-          #  application/hal+json:
-          #    schema:
-          #      $ref: '#/components/schemas/SubjectWithLinks'
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/GetUser'
       security:
         - bearerAuth: []
 
 
-  /universities:
+  /public/universities:
     get:
       tags:
         - university
@@ -411,7 +475,7 @@ paths:
       security:
         - bearerAuth: []
 
-  /universities/{id}:
+  /public/universities/{id}:
     patch:
       tags: 
         - university
