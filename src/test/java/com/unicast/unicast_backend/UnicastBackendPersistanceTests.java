@@ -181,6 +181,7 @@ public class UnicastBackendPersistanceTests {
 		subjects.add(createTestSubject());
 		Subject testSubject = createTestSubject();
 		testSubject.setName("NOMBRE TEST 2 SUBJECT");
+		testSubject.setAbbreviation("ASDDS");
 		subjects.add(testSubject);
 		subjectRepository.saveAll(subjects);
 
@@ -690,6 +691,7 @@ public class UnicastBackendPersistanceTests {
 		Subject subject = new Subject();
 
 		subject.setName("Subject test");
+		subject.setAbbreviation("ABAB");
 
 		return subject;
 	}
@@ -701,6 +703,7 @@ public class UnicastBackendPersistanceTests {
 		video.setDescription("Description test");
 		video.setTimestamp(new Timestamp(1000));
 		video.setUrl(new URI("http://s3.amazonaws.com/bucket/video"));
+		video.setThumbnailUrl(new URI("http://s3.amazonaws.com/bucket/thumbnail"));
 
 		return video;
 	}
