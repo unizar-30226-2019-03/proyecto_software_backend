@@ -14,4 +14,6 @@ public interface UniversityRepository extends JpaRepository<University, Long> {
 
     @RestResource(path = "nameStartsWith", rel = "nameStartsWith")
     public List<University> findByNameStartsWith(@Param("name") String name);
+
+    public University findByName(String name);
 }
