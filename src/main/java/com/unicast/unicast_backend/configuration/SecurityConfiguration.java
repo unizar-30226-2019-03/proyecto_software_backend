@@ -8,6 +8,7 @@ import com.unicast.unicast_backend.services.UserDetailsServiceImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -37,6 +38,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .csrf().disable()
             .authorizeRequests()
             .antMatchers("/api/public/*").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/universities").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/universities/search/nameStartsWith").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/degrees").permitAll()
             .anyRequest().authenticated()
             .and()
             .addFilter(new JwtAuthenticationFilter(authenticationManager(), securityConstants))
