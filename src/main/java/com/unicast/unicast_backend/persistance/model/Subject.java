@@ -29,6 +29,8 @@ public class Subject {
 
     private String name;
 
+    private String abbreviation;
+
     @Transient
     private Double points;
 

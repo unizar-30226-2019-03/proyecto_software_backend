@@ -1,7 +1,9 @@
 package com.unicast.unicast_backend.persistance.model;
 
+import java.net.URI;
 import java.util.Collection;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -25,6 +27,9 @@ public class University {
     private Long id;
 
     private String name;
+
+    @Column(name = "uni_photo")
+	private URI photo;
 
     @Transient
     private Double points;

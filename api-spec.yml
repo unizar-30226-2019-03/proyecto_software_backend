@@ -78,8 +78,12 @@ components:
           format: int64
         name:
           type: string
+        photo:
+          type: string
+          format: url 
       required:
         - name
+        - photo
     Subject:
       type: object
       discriminator:
@@ -90,8 +94,11 @@ components:
           format: int64
         name:
           type: string
+        abbreviation:
+          type: string
       required:
         - name
+        - abbreviation
     PaginationPage:
       type: object
       properties:
