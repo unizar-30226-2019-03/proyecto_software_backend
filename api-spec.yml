@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.0.6
+  version: 1.0.7
   title: Swagger Unicast
 
 servers:
@@ -30,6 +30,8 @@ tags:
     description: Operaciones sobre universidades
   - name: subject
     description: Operaciones sobre asignaturas
+  - name: degree
+    description: Operaciones sobre carreras
   - name: video
     description: Operaciones sobre vídeos
 
@@ -142,33 +144,34 @@ components:
     UniversityGetEmbedded:
       type: object
       properties:
-        universities:
-          type: array
-          items:
-            $ref: '#/components/schemas/UniversityWithLinks'
+        _embedded:
+          type: object
+          properties:
+            universities:
+              type: array
+              items:
+                $ref: '#/components/schemas/UniversityWithLinks'
+    UniversityGetEmbeddedTest:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            universities:
+              type: array
+              items:
+                $ref: '#/components/schemas/University'
+    UniversityFindByNameStartsWith:
+      allOf:
+       - $ref: '#/components/schemas/UniversityGetEmbeddedTest'
     UniversityGetResponse:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
-        - type: object
-          properties:
-            _embedded:
-              $ref: '#/components/schemas/UniversityGetEmbedded'
+        - $ref: '#/components/schemas/UniversityGetEmbedded'
     UniversityWithLinks:
       allOf:
         - $ref: '#/components/schemas/University'
-        - type: object
-          properties:
-            _links:
-              type: object
-              properties:
-                self:
-                  $ref: '#/components/schemas/HalLink'
-                university:
-                  $ref: '#/components/schemas/HalLink'
-                users:
-                  $ref: '#/components/schemas/HalLink'
-                subjects:
-                  $ref: '#/components/schemas/HalLink'
+        - $ref: '#/components/schemas/UniversityLinks'
     SubjectGetEmbedded:
       type: object
       properties:
@@ -255,7 +258,44 @@ components:
       allOf:
         - $ref: '#/components/schemas/User'
         - $ref: '#/components/schemas/SelfLink'
-    
+    UniversityLinks:
+      type: object
+      properties:
+        _links:
+          type: object
+          properties:
+            self:
+              $ref: '#/components/schemas/HalLink'
+            university:
+              $ref: '#/components/schemas/HalLink'
+            subjects:
+              $ref: '#/components/schemas/HalLink'
+            users:
+              $ref: '#/components/schemas/HalLink'
+            degrees:
+              $ref: '#/components/schemas/HalLink'
+    Degree:
+      type: object
+      discriminator:
+        propertyName: name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      required:
+        - name
+
+    DegreeList:
+      type: object
+      properties:
+        degrees:
+          type: array
+          items:
+                $ref: '#/components/schemas/Degree'
+
+
 
 
 paths:
@@ -411,11 +451,11 @@ paths:
       security:
         - bearerAuth: []
 
-        
+
 # TODO: documentar respuestas en todo lo de usuarios
   /users/{id}:
     get:
-      tags: 
+      tags:
         - user
       summary: Obtener un usuario
       operationId: getUser
@@ -427,7 +467,7 @@ paths:
           schema:
             type: integer
             format: int64
-    
+
       responses:
         200:
           description: Devuelve el usuario con el id dado
@@ -439,7 +479,80 @@ paths:
         - bearerAuth: []
 
 
-  /public/universities:
+  # /degrees:
+  #   get:
+  #     tags:
+  #       - degree
+  #     summary: Lista de carreras
+  #     operationId: getDegrees
+  #     parameters:
+  #       - in: query
+  #         name: page
+  #         schema:
+  #           type: integer
+  #         description: Numero de la página a devolver
+  #     responses:
+  #       200:
+  #         description: Devuelve una lista de carreras
+  #         content:
+  #           application/hal+json:
+  #             schema:
+  #               $ref: '#/components/schemas/DegreeGetResponse'
+  #   post:
+  #     tags:
+  #       - degree
+  #     summary: Crear nueva carrera
+  #     operationId: addDegree
+  #     requestBody:
+  #       description: Carrera a añadir
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/Degree'
+  #     responses:
+  #       201:
+  #         description: Devuelve la carrera que se ha creado
+  #         content:
+  #           application/hal+json:
+  #             schema:
+  #               $ref: '#/components/schemas/DegreeWithLinks'
+  #     security:
+  #       - bearerAuth: []
+
+  # /degrees/{id}:
+  #   patch:
+  #     tags:
+  #       - degree
+  #     summary: Actualizar una carrera
+  #     operationId: updateDegree
+  #     parameters:
+  #       - name: id
+  #         in: path
+  #         description: Id de la carrera
+  #         required: true
+  #         schema:
+  #           type: integer
+  #           format: int64
+  #     requestBody:
+  #       description: Contenido a editar
+  #       required: true
+  #       content:
+  #         application/json:
+  #           schema:
+  #             $ref: '#/components/schemas/Degree'
+  #     responses:
+  #       200:
+  #         description: Devuelve la carrera que se ha actualizado
+  #         content:
+  #           application/hal+json:
+  #             schema:
+  #               $ref: '#/components/schemas/DegreeWithLinks'
+  #     security:
+  #       - bearerAuth: []
+
+
+  /universities:
     get:
       tags:
         - university
@@ -458,8 +571,6 @@ paths:
             application/hal+json:
               schema:
                 $ref: '#/components/schemas/UniversityGetResponse'
-      security:
-        - bearerAuth: []
     post:
       tags:
         - university
@@ -482,9 +593,9 @@ paths:
       security:
         - bearerAuth: []
 
-  /public/universities/{id}:
+  /universities/{id}:
     patch:
-      tags: 
+      tags:
         - university
       summary: Actualizar una universidad
       operationId: updateUniversity
@@ -512,6 +623,26 @@ paths:
                 $ref: '#/components/schemas/UniversityWithLinks'
       security:
         - bearerAuth: []
+
+  /universities/search/nameStartsWith:
+    get:
+      tags:
+        - university
+      summary: Busca universidades que empiecen por el nombre dado
+      operationId: findUniversityStartsWith
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Comienzo del nombre de la universidad a buscar
+      responses:
+        200:
+          description: Lista de las universidadas encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniversityGetEmbeddedTest'
 
   /subjects:
     get:
@@ -558,7 +689,7 @@ paths:
 
   /subjects/{id}:
     patch:
-      tags: 
+      tags:
         - subject
       summary: Actualizar una asignatura
       operationId: updateSubject
@@ -589,7 +720,7 @@ paths:
 
   /subjects/{id}/users:
     put:
-      tags: 
+      tags:
         - subject
       summary: Relacionar un usuario con una asignatura (tanto profesores como alumnos)
       operationId: putUser
@@ -617,7 +748,7 @@ paths:
 
   /subjects/{subject_id}/users/{user_id}:
     delete:
-      tags: 
+      tags:
           - subject
       summary: Elimina el usuario de la relacion con asignatura
       operationId: deleteUserFromSubject
@@ -641,7 +772,7 @@ paths:
           description: Se ha eliminado con exito
       security:
         - bearerAuth: []
-    
+
 
   # TODO: Aqui faltaria documentar respuesta, pero este endpoint lo cambiaremos por
   # sistema de recomendaciones (?)
@@ -676,4 +807,3 @@ paths:
           description: Video añadido con exito
       security:
         - bearerAuth: []
-      
