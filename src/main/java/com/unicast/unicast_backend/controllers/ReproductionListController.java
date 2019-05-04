@@ -1,6 +1,9 @@
 package com.unicast.unicast_backend.controllers;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.unicast.unicast_backend.persistance.model.ReproductionList;
 import com.unicast.unicast_backend.persistance.model.User;
@@ -34,6 +37,20 @@ public class ReproductionListController {
          // Retorno de las listas
          return reproductionLists;
     }
+
+
+    @GetMapping(value = "api/reproductionList/obternerUna", produces = "application/json")
+    public ReproductionList getReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth, int id)throws Exception {		 
+		 // Obtencion de los datos del usuario loggeado
+        User user = userAuth.getUser();
+		 
+         Collection<ReproductionList> reproductionLists = user.getReproductionLists();
+
+         LinkedList<ReproductionList> newList = new LinkedList<>(reproductionLists);
+         // Retorno de las listas
+         return newList.get(id);
+    }
+	
 
     @PostMapping(value = "/api/reproductionList/updateAdd", produces = "application/json")
     public void addReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
