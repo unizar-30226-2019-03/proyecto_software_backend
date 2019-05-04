@@ -294,12 +294,13 @@ public class UnicastBackendPersistanceTests {
 		Subject subject = createTestSubject();
 		subjectRepository.save(subject);
 
-		Video video = createTestVideo();
-		video.setSubject(subject);
-		videoRepository.save(video);
-
 		User user = createTestUser();
 		userRepository.save(user);
+
+		Video video = createTestVideo();
+		video.setSubject(subject);
+		video.setUploader(user);
+		videoRepository.save(video);
 
 		Comment comment = createTestComment();
 		comment.setVideo(video);
@@ -323,6 +324,9 @@ public class UnicastBackendPersistanceTests {
 	@Test
 	@Transactional
 	public void testVideo() throws URISyntaxException {
+		User uploader = createTestUser();
+		userRepository.save(uploader);
+
 		Subject subject = createTestSubject();
 		subjectRepository.save(subject);
 
@@ -335,13 +339,15 @@ public class UnicastBackendPersistanceTests {
 		
 		Video video = createTestVideo();
 		video.setSubject(subject);
+		video.setUploader(uploader);
 		video.setTags(videoTags);
 		videoRepository.save(video);
 
-		Video VideoBD = videoRepository.findById(video.getId()).get();
+		Video videoBD = videoRepository.findById(video.getId()).get();
 
-		assertEquals(video, VideoBD);
+		assertEquals(video, videoBD);
 
+		userRepository.delete(uploader);
 		videoTagRepository.deleteInBatch(videoTags);
 		videoRepository.delete(video);
 		subjectRepository.delete(subject);
@@ -385,6 +391,7 @@ public class UnicastBackendPersistanceTests {
 		Vote vote = createTestVote();
 
 		User user = createTestUser();
+		userRepository.save(user);
 
 		Subject subject = createTestSubject();
 		subjectRepository.save(subject);
@@ -399,9 +406,9 @@ public class UnicastBackendPersistanceTests {
 		Video video = createTestVideo();
 		video.setSubject(subject);
 		video.setTags(videoTags);
+		video.setUploader(user);
 		videoRepository.save(video);
 
-		userRepository.save(user);
 		videoRepository.save(video);
 		
 		VoteKey voteId = new VoteKey();
@@ -505,6 +512,7 @@ public class UnicastBackendPersistanceTests {
 		
 		Video video = createTestVideo();
 		video.setSubject(subject);
+		video.setUploader(user);
 		video.setTags(videoTags);
 		videoRepository.save(video);
 		
@@ -553,14 +561,15 @@ public class UnicastBackendPersistanceTests {
 		videoTagTest.setName("NOMBRE VIDEOTAG TEST 2");
 		videoTags.add(videoTagTest);
 		videoTagRepository.saveAll(videoTags);
-		
-		Video video = createTestVideo();
-		video.setSubject(subject);
-		video.setTags(videoTags);
-		videoRepository.save(video);
 
 		User user = createTestUser();
 		userRepository.save(user);
+
+		Video video = createTestVideo();
+		video.setSubject(subject);
+		video.setTags(videoTags);
+		video.setUploader(user);
+		videoRepository.save(video);
 
 		ReproductionList reproductionList = createTestReproductionList();
 		reproductionList.setUser(user);
