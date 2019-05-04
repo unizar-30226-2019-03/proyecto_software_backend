@@ -1,0 +1,63 @@
+UpdateDisplay:
+  post:
+    tags:
+      - display
+    summary: Actualiza una visualizacion
+    description: Actualiza una visualizacion
+    operationId: updateDisplay
+    requestBody:
+      description: Datos a actualizar de la visualizacion
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              secs_from_beg:
+                description: Segundos que se han visualizados del video
+                type: integer
+                format: int64
+              video_id:
+                description: Id del video que se esta visualizando
+                type: integer
+                format: int64
+            required:
+              - secs_from_beg
+              - video_id
+    responses:
+      200:
+        description: Visualizacion actuzalizada con exito
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Display'
+    security:
+      - bearerAuth: []
+
+DisplaysSearchUser:
+  get:
+    tags:
+      - display
+    summary: Devuelve una lista de visualizaciones que pertenezcan al usuario dado
+    operationId: getDisplaysByUser
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - name: id
+        in: query
+        description: Id del usuario
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Lista de las visualizaciones obtenidos
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/DisplayGetEmbedded'
+    security:
+      - bearerAuth: []

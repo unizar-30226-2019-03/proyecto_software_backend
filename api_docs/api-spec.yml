@@ -36,6 +36,8 @@ tags:
     description: Operaciones sobre vídeos
   - name: comment
     description: Operaciones sobre comentarios
+  - name: display
+    description: Operaciones sobre las visualizaciones de videos (historial)
 
 components:
   securitySchemes:
@@ -348,6 +350,42 @@ components:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
         - $ref: '#/components/schemas/CommentGetEmbedded'
+
+    Display:
+      type: object
+      properties:
+        id:
+          type: object
+          properties:
+            videoId:
+              type: integer
+              format: int64
+            userId:
+              type: integer
+              format: int64
+        timestampLastTime:
+          type: string
+          format: date-time
+        secsFromBeg:
+          type: integer
+          format: int64
+
+    DisplayGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            displays:
+              type: array
+              items:
+                $ref: '#/components/schemas/Display'
+
+    DisplayGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/DisplayGetEmbedded'
+          
         
 
 paths:
@@ -471,3 +509,11 @@ paths:
 
   /comments/search/video:
     $ref: 'comment_endpoints.yml#/CommentsSearchByVideo'
+
+  #Display endpoints
+
+  /displays/update:
+    $ref: 'display_endpoints.yml#/UpdateDisplay'
+
+  /displays/search/user:
+    $ref: 'display_endpoints.yml#/DisplaysSearchUser'

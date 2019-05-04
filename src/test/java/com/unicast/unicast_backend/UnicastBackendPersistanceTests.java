@@ -486,7 +486,7 @@ public class UnicastBackendPersistanceTests {
 	private Display createDisplayTest() {
 		Display d = new Display();
 		Timestamp t = Timestamp.from(Instant.now());
-		d.setSecsFromBeg(200L);
+		d.setSecsFromBeg(200);
 		d.setTimestampLastTime(t);
 		return d;
 	}
