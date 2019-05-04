@@ -44,19 +44,21 @@ components:
 
   parameters:
     QueryParameter:
-        in: query
-        name: page
-        schema:
-          type: integer
-        description: Número de la página a devolver
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: Número de la página a devolver
 
     SortParameter:
-        in: query
-        name: sort
-        style: simple
-        schema:
-          $ref: '#/components/schemas/SortParams'
-        description: Parámetros en la forma `($propertyname,)+[asc|desc]?`
+      name: sort
+      in: query
+      style: simple
+      schema:
+        type: array
+        items:
+          type: string
+      description: Parámetros en la forma `($propertyname,)+[asc|desc]?`
 
   schemas:
     Token:
@@ -288,12 +290,6 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Degree'
-
-    SortParams:
-      type: array
-      items:
-        type: string
-
 
 paths:
   /public/register:
