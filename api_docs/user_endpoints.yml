@@ -1,0 +1,391 @@
+Register:
+  post:
+    tags:
+      - user
+    summary: Registro de un nuevo usuario en el sistema
+    description: Adicion de nuevos usuarios
+    operationId: addUser
+    requestBody:
+      description: Usuario que se va a añadir
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              username:
+                description: Nombre de usuario del nuevo usuario
+                type: string
+              password:
+                description: Contraseña del nuevo usuario
+                type: string
+                format: password
+              name:
+                description: Nombre del nuevo usuario
+                type: string
+              surnames:
+                description: Apellidos del nuevo usuario
+                type: string
+              email:
+                description: Email del nuevo usuario
+                type: string
+                format: email
+              description:
+                description: Descripción para el nuevo usuario
+                type: string
+              university_id:
+                description: Universidad del usuario
+                type: integer
+                format: int64
+              degree_id:
+                description: Carrera del usuario
+                type: integer
+                format: int64
+              photo:
+                description: Foto del usuario
+                type: string
+                format: binary
+            required:
+              - username
+              - password
+              - name
+              - surnames
+              - email
+              - description
+              - university_id
+              - degree_id
+              - photo
+          encoding:
+            photo:
+              contentType: image/png, image/jpeg
+    responses:
+      201:
+        description: Usuario añadido con exito
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/User'
+
+Authenticate:
+  post:
+    tags:
+      - user
+    summary: Autentificacion de usuarios
+    description: Login a un usuario
+    operationId: authUser
+    requestBody:
+      description: Usuario que se va a añadir
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              username:
+                description: Nombre del usuario a comprobar
+                type: string
+              password:
+                description: Contraseña del nuevo usuario
+                type: string
+                format: password
+            required:
+              - username
+              - password
+    responses:
+      200:
+        description: Devuelve el token en header Authorization y en el cuerpo + id de usuario
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Token'
+        headers:
+          Authorization:
+            schema:
+              type: string
+            description: Token JWT a incluir en todas las peticiones
+
+UsersUpdate:
+  post:
+    tags:
+      - user
+    summary: Actualizacion de un usuario en el sistema
+    description: Actualizacion de usuarios
+    operationId: updateUser
+    requestBody:
+      description: Usuario que se va a actualizar
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              username:
+                description: Nuevo nombre del usuario
+                type: string
+              password:
+                description: Nueva contraseña del usuario
+                type: string
+                format: password
+              email:
+                description: Nuevo email del usuario
+                type: string
+                format: email
+              description:
+                description: Nueva descripción para el usuario
+                type: string
+              name:
+                description: Nuevo nombre para el usuario
+                type: string
+              surnames:
+                description: Nuevos apellidos para el usuario
+                type: string
+              university_id:
+                description: Nueva universidad del usuario
+                type: integer
+              degree_id:
+                description: Nueva carrera del usuario
+                type: integer
+              photo:
+                description: Nueva foto del usuario
+                type: string
+                format: binary
+    responses:
+      200:
+        description: Devuelve usuario con campos actualizados
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/User'
+    security:
+      - bearerAuth: []
+
+UsersId:
+  get:
+    tags:
+      - user
+    summary: Obtener un usuario
+    operationId: getUser
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id del usuario
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve el usuario con el id dado
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/User'
+    security:
+      - bearerAuth: []
+
+UsersIdSubjects:
+  get:
+    tags:
+      - user
+    summary: Obtener las asignaturas de un usuario
+    operationId: getSubjectsOfUser
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id del usuario
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve las asignaturas de un usuario
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/SubjectGetEmbedded'
+    security:
+      - bearerAuth: []
+
+UsersIdUploadedVideos:
+  get:
+    tags:
+      - user
+    summary: Obtener los videos subidos por un usuario
+    operationId: getVideosOfUser
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id del usuario
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve los videos de un usuario
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/VideoGetEmbedded'
+    security:
+      - bearerAuth: []
+
+UsersSearchNameStartsWith:
+  get:
+    tags:
+      - user
+    summary: Busca usuarios que empiecen por un nombre dado
+    operationId: findUsersStartsWithName
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: Comienzo del nombre del usuario a buscar
+    responses:
+      200:
+        description: Lista de las usuarios encontradas
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/UserGetEmbedded'
+    security:
+      - bearerAuth: []
+
+UsersSearchUsernameStartsWith:
+  get:
+    tags:
+      - user
+    summary: Busca usuarios que empiecen por un username dado
+    operationId: findUsersStartsWithUsername
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: username
+        schema:
+          type: string
+        description: Comienzo del username del usuario a buscar
+    responses:
+      200:
+        description: Lista de las usuarios encontradas
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/UserGetEmbedded'
+    security:
+      - bearerAuth: []
+
+UsersSearchSurnamesStartsWith:
+  get:
+    tags:
+      - user
+    summary: Busca usuarios que empiecen por unos apellidos dados
+    operationId: findUsersStartsWithSurnames
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: surnames
+        schema:
+          type: string
+        description: Comienzo de los apellidos del usuario a buscar
+    responses:
+      200:
+        description: Devuelve una lista de usuarios
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/UserGetEmbedded'
+    security:
+      - bearerAuth: []
+
+UsersSearchNameContaining:
+  get:
+    tags:
+      - user
+    summary: Busca usuarios que contengan una string en el nombre
+    operationId: findUsersContainingName
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: String a buscar en el nombre de usuarios
+    responses:
+      200:
+        description: Devuelve una lista de usuarios
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/UserGetEmbedded'
+    security:
+      - bearerAuth: []
+    
+UsersSearchUsernameContaining:
+  get:
+    tags:
+      - user
+    summary: Busca usuarios que contengan una string en el username
+    operationId: findUsersContainingUsername
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: username
+        schema:
+          type: string
+        description: String a buscar en el nombre de usuarios
+    responses:
+      200:
+        description: Devuelve una lista de usuarios
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/UserGetEmbedded'
+    security:
+      - bearerAuth: []
+
+UsersSearchSurnamesContaining:
+  get:
+    tags:
+      - user
+    summary: Busca usuarios que contengan una string en los apellidos
+    operationId: findUsersContainingSurname
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: surnames
+        schema:
+          type: string
+        description: String a buscar en los apellidos de usuarios
+    responses:
+      200:
+        description: Devuelve una lista de usuarios
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/UserGetEmbedded'
+    security:
+      - bearerAuth: []

@@ -42,6 +42,10 @@ public class Video {
     @JoinColumn(name = "fk_subject")
     private Subject subject;
 
+    @ManyToOne
+    @JoinColumn(name = "fk_uploader")
+    private User uploader;
+
     @OneToMany(mappedBy = "video")
     private Collection<Comment> comments;
 

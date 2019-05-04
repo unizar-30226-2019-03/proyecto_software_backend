@@ -1,0 +1,199 @@
+Subjects:
+  get:
+    tags:
+      - subject
+    summary: Lista de asignaturas
+    operationId: getSubjects
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/QueryParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+    responses:
+      200:
+        description: Devuelve una lista de asignaturas
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/SubjectGetResponse'
+  post:
+    tags:
+      - subject
+    summary: Crear nueva asignatura
+    operationId: addSubject
+    requestBody:
+      description: Asignatura a añadir
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'api-spec.yml#/components/schemas/Subject'
+    responses:
+      201:
+        description: Devuelve la asignatura que se ha creado
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Subject'
+    security:
+      - bearerAuth: []
+
+SubjectsId:
+  patch:
+    tags:
+      - subject
+    summary: Actualizar una asignatura
+    operationId: updateSubject
+    parameters:
+      - name: id
+        in: path
+        description: Id de la asignatura
+        required: true
+        schema:
+          type: integer
+          format: int64
+    requestBody:
+      description: Contenido a editar
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'api-spec.yml#/components/schemas/Subject'
+    responses:
+      200:
+        description: Devuelve la asignatura que se ha actualizado
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Subject'
+    security:
+      - bearerAuth: []
+
+SubjectsIdUsers:
+  put:
+    tags:
+      - subject
+    summary: Relacionar un usuario con una asignatura (tanto profesores como alumnos)
+    operationId: putUser
+    parameters:
+      - name: id
+        in: path
+        description: Id de la asignatura
+        required: true
+        schema:
+          type: integer
+          format: int64
+    requestBody:
+      description: Link del usuario a asociar con la asignatura
+      required: true
+      content:
+        text/uri-list:
+          schema:
+            type: integer
+            format: int64
+    responses:
+      204:
+        description: Se ha relacionado el/los usuarios con la asignatura
+    security:
+      - bearerAuth: []
+
+SubjectsIdVideos:
+  get:
+    tags:
+      - subject
+    summary: Devuelve una lista con los videos de una asignatura
+    operationId: getVideosFromSubject
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id de la asignatura
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Lista de los videos encontrados
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/VideoGetEmbedded'
+    security:
+      - bearerAuth: []
+
+SubjectsSubjectIdUsersUserId:
+  delete:
+    tags:
+        - subject
+    summary: Elimina el usuario de la relacion con asignatura
+    operationId: deleteUserFromSubject
+    parameters:
+      - name: user_id
+        in: path
+        description: Id del usuario
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: subject_id
+        in: path
+        description: Id de la asignatura
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      204:
+        description: Se ha eliminado con exito
+    security:
+      - bearerAuth: []
+
+SubjectsSearchNameStartsWith:
+  get:
+    tags:
+      - subject
+    summary: Busca asignaturas que empiecen por un nombre dado
+    operationId: findSubjectsStartsWithName
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: Comienzo del nombre de la asignatura a buscar
+    responses:
+      200:
+        description: Lista de las asignaturas encontradas
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/SubjectGetEmbedded'
+  
+SubjectsSearchNameContaining:
+  get:
+    tags:
+      - subject
+    summary: Busca asignaturas que contengan una string en el nombre
+    operationId: findSubjectsContainingName
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: String a buscar en el nombre de asignaturas
+    responses:
+      200:
+        description: Devuelve una lista de asignaturas
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/SubjectGetResponse'

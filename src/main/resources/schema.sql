@@ -76,7 +76,9 @@ CREATE TABLE video (
     thumbnail_url VARCHAR(1000) NOT NULL,
     timestamp TIMESTAMP NOT NULL,
     fk_subject INTEGER NOT NULL,
-    CONSTRAINT fk_video_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE
+    fk_uploader INTEGER NOT NULL,
+    CONSTRAINT fk_video_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE,
+    CONSTRAINT fk_video_user FOREIGN KEY (fk_uploader) REFERENCES app_user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE video_tag (

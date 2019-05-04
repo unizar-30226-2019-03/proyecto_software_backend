@@ -61,6 +61,7 @@ public class VideoController {
         video.setSubject(subject);
         video.setThumbnailUrl(thumbnailURL);
         video.setUrl(videoURL);
+        video.setUploader(userAuth.getUser());
         video.setTimestamp(Timestamp.from(Instant.now()));
 
         videoRepository.save(video);

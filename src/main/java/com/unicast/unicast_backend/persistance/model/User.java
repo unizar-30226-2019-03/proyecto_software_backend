@@ -74,6 +74,9 @@ public class User {
 
 	@OneToMany(mappedBy = "user")
 	private Collection<ReproductionList> reproductionLists;
+
+	@OneToMany(mappedBy = "uploader")
+	private Collection<Video> uploadedVideos;
 	
 	// Vale tanto para alumnos como para profesores, cambiara segun el rol que tenga este usuario
 	@ManyToMany(mappedBy = "users")

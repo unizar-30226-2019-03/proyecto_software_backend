@@ -1,0 +1,421 @@
+openapi: 3.0.0
+
+info:
+  description: Documento de la API de Unicast
+  version: 1.1.0
+  title: Swagger Unicast
+
+servers:
+  - url: "{protocol}://{host}:{port}/{basePath}"
+    variables:
+      host:
+        default: ec2-35-181-26-7.eu-west-3.compute.amazonaws.com
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      port:
+        enum:
+          - "8080"
+          - "80"
+        default: "8080"
+      basePath:
+        default: api
+
+tags:
+  - name: user
+    description: Operaciones sobre usuarios
+  - name: university
+    description: Operaciones sobre universidades
+  - name: subject
+    description: Operaciones sobre asignaturas
+  - name: degree
+    description: Operaciones sobre carreras
+  - name: video
+    description: Operaciones sobre vídeos
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    NoCacheHeaderParameter:
+      in: header
+      name: Cache-Control
+      schema:
+        type: string
+        default: no-cache, no-store, must-revalidate
+
+    PragmaHeaderParameter:
+      in: header
+      name: Pragma
+      schema:
+        type: string
+        default: no-cache
+
+    ExpiresHeaderParameter:
+      in: header
+      name: Expires
+      schema:
+        type: string
+        default: 0
+
+    QueryParameter:
+      name: page
+      in: query
+      schema:
+        type: integer
+      description: Número de la página a devolver
+
+    SortParameter:
+      name: sort
+      in: query
+      style: simple
+      schema:
+        type: array
+        items:
+          type: string
+      description: Parámetros en la forma `($propertyname,)+[asc|desc]?`
+
+  schemas:
+    Token:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        token:
+          type: string
+      required:
+        - token
+
+    Video:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        url:
+          type: string
+          format: url
+        thumbnailUrl:
+          type: string
+          format: url
+        # comments:
+        # votes:
+        # tags:
+
+    VideoGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            videos:
+              type: array
+              items:
+                $ref: '#/components/schemas/Video'
+
+    VideoGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/VideoGetEmbedded'
+
+    VideoToUpload:
+      type: object
+      properties:
+        file:
+          type: string
+          format: binary
+        thumbnail:
+          type: string
+          format: binary
+        title:
+          type: string
+        description:
+          type: string
+        subject_id:
+          type: integer
+          format: int64
+      required:
+        - file
+        - thumbnail
+        - title
+        - description
+        - subject_id
+
+    University:
+      type: object
+      discriminator:
+        propertyName: name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        photo:
+          type: string
+          format: url
+      required:
+        - name
+        - photo
+
+    Subject:
+      type: object
+      discriminator:
+        propertyName: name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        abbreviation:
+          type: string
+      required:
+        - name
+        - abbreviation
+
+    PaginationPage:
+      type: object
+      properties:
+        size:
+          type: integer
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        number:
+          type: integer
+      required:
+        - size
+        - totalElements
+        - totalPages
+        - number
+
+    GetResponse:
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PaginationPage'
+
+    UniversityGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            universities:
+              type: array
+              items:
+                $ref: '#/components/schemas/University'
+
+    UniversityGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/UniversityGetEmbedded'
+
+    SubjectGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            subjects:
+              type: array
+              items:
+                $ref: '#/components/schemas/Subject'
+
+    SubjectGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/SubjectGetEmbedded'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        username:
+          type: string
+        name:
+          type: string
+        surnames:
+          type: string
+        email:
+          type: string
+          format: email
+        photo:
+          type: string
+          format: url
+        description:
+          type: string
+
+    UserGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+
+    Degree:
+      type: object
+      discriminator:
+        propertyName: name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      required:
+        - name
+
+    DegreeList:
+      type: object
+      properties:
+        degrees:
+          type: array
+          items:
+                $ref: '#/components/schemas/Degree'
+
+    DegreeGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/DegreeGetEmbedded'
+
+    DegreeGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            degrees:
+              type: array
+              items:
+                $ref: '#/components/schemas/Degree'
+
+paths:
+
+  #User endpoints
+
+  /public/register:
+    $ref: 'user_endpoints.yml#/Register'
+
+  /public/authenticate:
+    $ref: 'user_endpoints.yml#/Authenticate'
+
+  /users/update:
+    $ref: 'user_endpoints.yml#/UsersUpdate'
+
+  /users/{id}:
+    $ref: 'user_endpoints.yml#/UsersId'
+
+  /users/{id}/subjects:
+    $ref: 'user_endpoints.yml#/UsersIdSubjects'
+
+  /users/{id}/uploadedVideos:
+    $ref: 'user_endpoints.yml#/UsersIdUploadedVideos'
+
+  /users/search/nameStartsWith:
+    $ref: 'user_endpoints.yml#/UsersSearchNameStartsWith'
+
+  /users/search/usernameStartsWith:
+    $ref: 'user_endpoints.yml#/UsersSearchUsernameStartsWith'
+
+  /users/search/surnamesStartsWith:
+    $ref: 'user_endpoints.yml#/UsersSearchSurnamesStartsWith'
+
+  /users/search/nameContaining:
+    $ref: 'user_endpoints.yml#/UsersSearchNameContaining'
+
+  /users/search/usernameContaining:
+    $ref: 'user_endpoints.yml#/UsersSearchUsernameContaining'
+
+  /users/search/surnamesContaining:
+    $ref: 'user_endpoints.yml#/UsersSearchSurnamesContaining'
+
+  #Subject endpoints
+
+  /subjects:
+    $ref: 'subject_endpoints.yml#/Subjects'
+
+  /subjects/{id}:
+    $ref: 'subject_endpoints.yml#/SubjectsId'
+
+  /subjects/{id}/users:
+    $ref: 'subject_endpoints.yml#/SubjectsIdUsers'
+
+  /subjects/{id}/videos:
+    $ref: 'subject_endpoints.yml#/SubjectsIdVideos'
+
+  /subjects/{subject_id}/users/{user_id}:
+    $ref: 'subject_endpoints.yml#/SubjectsSubjectIdUsersUserId'
+
+  /subjects/search/nameStartsWith:
+    $ref: 'subject_endpoints.yml#/SubjectsSearchNameStartsWith'
+
+  /subjects/search/nameContaining:
+    $ref: 'subject_endpoints.yml#/SubjectsSearchNameContaining'
+
+  #Degree endpoints
+
+  /degrees:
+    $ref: 'degree_endpoints.yml#/Degrees'
+
+  /degrees/{id}:
+    $ref: 'degree_endpoints.yml#/GetDegree'
+
+  /degrees/search/nameStartsWith:
+     $ref: 'degree_endpoints.yml#/DegreeSearchNameStartstWith'
+
+  /degrees/search/nameContaining:
+     $ref: 'degree_endpoints.yml#/DegreeSearchNameContaining'
+
+  #University endpoints
+
+  /universities:
+    $ref: 'university_endpoints.yml#/Universities'
+
+  /universities/add:
+    $ref: 'university_endpoints.yml#/AddUniversity'
+
+  /universities/search/nameStartsWith:
+    $ref: 'university_endpoints.yml#/UniversitiesSearchNameStartsWith'
+
+  /universities/search/nameContaining:
+    $ref: 'university_endpoints.yml#/UniversitiesSearchNameContaining'
+
+  #Video endpoints
+
+  /videos:
+    $ref: 'video_endpoints.yml#/Videos'
+  
+  /upload/video:
+    $ref: 'video_endpoints.yml#/UploadVideo'
+
+  /videos/search/titleContaining:
+    $ref: 'video_endpoints.yml#/VideosSearchTitleContaining'
+
+  /videos/search/titleStartsWith:
+    $ref: 'video_endpoints.yml#/VideosSearchTitleStartsWith'
+
+  /videos/{id}/uploader:
+    $ref: 'video_endpoints.yml#/VideosIdUploader'

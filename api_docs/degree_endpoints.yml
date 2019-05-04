@@ -1,0 +1,117 @@
+Degrees:
+  get:
+    tags:
+      - degree
+    summary: Lista de carreras
+    operationId: getDegrees
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/QueryParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+    responses:
+      200:
+        description: Devuelve una lista de carreras
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/DegreeGetResponse'
+  post:
+    tags:
+      - degree
+    summary: Crear nueva carrera
+    operationId: addDegree
+    requestBody:
+      description: Carrera a añadir
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'api-spec.yml#/components/schemas/Degree'
+    responses:
+      201:
+        description: Devuelve la carrera que se ha creado
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Degree'
+    security:
+      - bearerAuth: []
+
+GetDegree:
+  patch:
+    tags:
+      - degree
+    summary: Actualizar una carrera
+    operationId: updateDegree
+    parameters:
+      - name: id
+        in: path
+        description: Id de la carrera
+        required: true
+        schema:
+          type: integer
+          format: int64
+    requestBody:
+      description: Contenido a editar
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: 'api-spec.yml#/components/schemas/Degree'
+    responses:
+      200:
+        description: Devuelve la carrera que se ha actualizado
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Degree'
+    security:
+      - bearerAuth: []
+
+DegreeSearchNameStartstWith:
+  get:
+    tags:
+      - degree
+    summary: Busca carreras que empiecen por el nombre dado
+    operationId: findDegreesStartsWith
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: Comienzo del nombre de la carrera a buscar
+    responses:
+      200:
+        description: Lista de las carreras encontradas
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/DegreeGetEmbedded'
+    
+DegreeSearchNameContaining:
+  get:
+    tags:
+      - degree
+    summary: Busca carreras que contengan una string en el nombre
+    operationId: findDegreesContainingName
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: String a buscar en el nombre de carreras
+    responses:
+      200:
+        description: Devuelve una lista de carreras
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/DegreeGetResponse'

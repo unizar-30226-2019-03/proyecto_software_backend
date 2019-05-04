@@ -1,0 +1,125 @@
+# TODO: Aqui faltaria documentar respuesta, pero este endpoint lo cambiaremos por
+# sistema de recomendaciones (?)
+Videos:
+  get:
+    tags:
+      - video
+    summary: Lista de videos
+    operationId: getVideos
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/QueryParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+    responses:
+      200:
+        description: Devuelve una lista de videos
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/VideoGetResponse'
+    security:
+      - bearerAuth: []
+
+UploadVideo:
+  post:
+    tags:
+      - video
+    summary: Subida de un nuevo video
+    description: Adicion de nuevo video
+    operationId: addVideo
+    requestBody:
+        description: Video que se va a añadir
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/VideoToUpload'
+    responses:
+      201:
+        description: Video añadido con exito
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Video'
+    security:
+      - bearerAuth: []
+
+VideosSearchTitleContaining:
+  get:
+    tags:
+      - video
+    summary: Busca videos que contengan una string en el titulo
+    operationId: findVideosContainingTitle
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: title
+        schema:
+          type: string
+        description: String a buscar en el titulo de videos
+    responses:
+      200:
+        description: Devuelve una lista de videos
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/VideoGetResponse'
+    security:
+      - bearerAuth: []
+
+VideosSearchTitleStartsWith:
+  get:
+    tags:
+      - video
+    summary: Busca videos que empiecen por un nombre dado
+    operationId: findVideosStartsWithTitle
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: title
+        schema:
+          type: string
+        description: Comienzo del nombre de los videos a buscar
+    responses:
+      200:
+        description: Lista de los videos encontradas
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Video'
+    security:
+      - bearerAuth: []
+      
+VideosIdUploader:
+  get:
+    tags:
+      - video
+    summary: Obtener el uploader de un video
+    operationId: getVideoUploader
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id del video
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve las asignaturas de un usuario
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/User'
+    security:
+      - bearerAuth: []
+
