@@ -127,14 +127,12 @@ CREATE TABLE video_list (
     CONSTRAINT pk_video_list PRIMARY KEY (fk_video, fk_list)
 );
 
--- TODO: Faltan los atributos !!!!!!
 CREATE TABLE app_user_video_vote (
     fk_app_user INTEGER,
     fk_video INTEGER,
-    likes INTEGER NOT NULL,
-    dislikes INTEGER NOT NULL,
-    clarity INTEGER NOT NULL,
-    quality INTEGER NOT NULL,
+    clarity INTEGER NOT NULL CHECK (clarity >= 1 AND clarity <= 5),
+    quality INTEGER NOT NULL CHECK (quality >= 1 AND quality <= 5),
+    suitability INTEGER NOT NULL CHECK (suitability >= 1 AND suitability <= 5),
     CONSTRAINT fk_app_user_video_vote_video FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE,
     CONSTRAINT fk_app_user_video_vote_app_user FOREIGN KEY (fk_app_user) REFERENCES app_user(id) ON DELETE CASCADE,
     CONSTRAINT pk_app_user_video_vote PRIMARY KEY (fk_video, fk_app_user)

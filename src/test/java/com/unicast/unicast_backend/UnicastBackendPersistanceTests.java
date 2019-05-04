@@ -436,10 +436,9 @@ public class UnicastBackendPersistanceTests {
 	private Vote createTestVote() {
 		Vote v = new Vote();
 		
-		v.setClarity(8);
-		v.setDislikes(34);
-		v.setLikes(45);
-		v.setQuality(23);
+		v.setClarity(1);
+		v.setQuality(2);
+		v.setSuitability(3);
 		return v;
 	}
 

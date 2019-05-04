@@ -61,8 +61,7 @@ public class UserController {
         // usuario con nombre/email iguales
 
         try {
-            URI photoURL = s3ImageHandler.uploadFile(photo);
-
+            
             User user = new User();
             user.setUsername(username);
             user.setName(name);
@@ -71,9 +70,11 @@ public class UserController {
             user.setPassword(securityConfiguration.passwordEncoder().encode(password));
             user.setEmail(email);
             user.setDescription(description);
-            user.setPhoto(photoURL);
             user.setUniversity(universityRepository.findById(universityId).get());
             user.setEnabled(true);
+
+            URI photoURL = s3ImageHandler.uploadFile(photo);
+            user.setPhoto(photoURL);
 
             userRepository.save(user);
 
@@ -114,11 +115,6 @@ public class UserController {
         // User user = userRepository.findByUsername(userAuth.getUsername());
         User user = userAuth.getUser();
 
-        if (photo != null && !photo.isEmpty()) {
-            // TODO: borrar foto antigua o lo que sea
-            URI photoURL = s3ImageHandler.uploadFile(photo);
-            user.setPhoto(photoURL);
-        }
         if (username != null && !StringUtils.isEmpty(username)) {
             user.setUsername(username);
         }
@@ -144,6 +140,13 @@ public class UserController {
             user.setDegree(degreeRepository.findById(degreeId).get());
         }
         user.setEnabled(true);
+
+        if (photo != null && !photo.isEmpty()) {
+            // TODO: borrar foto antigua o lo que sea
+            URI photoURL = s3ImageHandler.uploadFile(photo);
+            user.setPhoto(photoURL);
+        }
+
         userRepository.save(user);
         return ResponseEntity.ok(userAssembler.toResource(user));
         // } catch (org.springframework.dao.DataIntegrityViolationException e) {

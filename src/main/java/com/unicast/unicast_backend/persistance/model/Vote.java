@@ -27,11 +27,9 @@ public class Vote {
     @JoinColumn(name = "fk_app_user")
     private User user;
 	
-    private int clarity;
+    private Integer clarity;
     
-    private int quality;
-
-    private int likes;
-
-    private int dislikes;	
+    private Integer quality;
+    
+    private Integer suitability;
 }

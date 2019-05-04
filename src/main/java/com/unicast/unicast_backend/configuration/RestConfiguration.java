@@ -7,6 +7,7 @@ import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.University;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.Video;
+import com.unicast.unicast_backend.persistance.model.Vote;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
@@ -25,6 +26,7 @@ public class RestConfiguration implements RepositoryRestConfigurer {
         config.exposeIdsFor(Degree.class);
         config.exposeIdsFor(Comment.class);
         config.exposeIdsFor(Display.class);
+        config.exposeIdsFor(Vote.class);
         config.setRepositoryDetectionStrategy(RepositoryDetectionStrategies.ANNOTATED);
     }
 }

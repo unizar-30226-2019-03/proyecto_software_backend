@@ -1,0 +1,23 @@
+Votes:
+  post:
+    tags:
+      - vote
+    summary: Subida de un nuevo voto
+    description: Adicion de nuevo voto
+    operationId: addVote
+    requestBody:
+        description: Voto que se va a añadir
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Vote'
+    responses:
+      201:
+        description: Voto añadido con exito
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Vote'
+    security:
+      - bearerAuth: []

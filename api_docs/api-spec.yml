@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.1.0
+  version: 1.1.1
   title: Swagger Unicast
 
 servers:
@@ -38,6 +38,8 @@ tags:
     description: Operaciones sobre comentarios
   - name: display
     description: Operaciones sobre las visualizaciones de videos (historial)
+  - name: vote
+    description: Operaciones sobre los votos
 
 components:
   securitySchemes:
@@ -116,6 +118,8 @@ components:
         thumbnailUrl:
           type: string
           format: url
+        score:
+          type: float
         # comments:
         # votes:
         # tags:
@@ -385,6 +389,52 @@ components:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
         - $ref: '#/components/schemas/DisplayGetEmbedded'
+    
+    Vote:
+      type: object
+      properties:
+        id:
+          type: object
+          properties:
+            videoId:
+              type: integer
+              format: int64
+            userId:
+              type: integer
+              format: int64
+          required:
+            - videoId
+            - userId
+        clarity:
+          type: integer
+          format: int64
+        quality:
+          type: integer
+          format: int64
+        suitability:
+          type: integer
+          format: int64
+      required:
+        - id
+        - clarity
+        - quality
+        - suitability
+
+    VoteGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            displays:
+              type: array
+              items:
+                $ref: '#/components/schemas/Vote'
+
+    VoteGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/VoteGetEmbedded'
           
         
 
@@ -517,3 +567,8 @@ paths:
 
   /displays/search/user:
     $ref: 'display_endpoints.yml#/DisplaysSearchUser'
+
+  #Vote endpoint
+
+  /votes:
+    $ref: 'vote_endpoints.yml#/Votes'

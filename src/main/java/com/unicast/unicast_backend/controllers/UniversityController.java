@@ -34,10 +34,11 @@ public class UniversityController {
     public ResponseEntity<?> addNewUniversity(@RequestParam("name") String name, @RequestPart("photo") MultipartFile photo) {
 
         try {
-            URI photoURL = s3ImageHandler.uploadFile(photo);
-
+            
             University university = new University();
             university.setName(name);
+            
+            URI photoURL = s3ImageHandler.uploadFile(photo);
             university.setPhoto(photoURL);
 
             universityRepository.save(university);

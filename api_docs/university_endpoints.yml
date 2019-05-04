@@ -36,7 +36,7 @@ AddUniversity:
                 description: Nombre de la nueva universidad
                 type: string
               photo:
-                description: Contraseña del nuevo usuario
+                description: Foto de la universidad
                 type: string
                 format: binary
             required:

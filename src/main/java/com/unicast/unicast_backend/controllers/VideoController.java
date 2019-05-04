@@ -51,18 +51,19 @@ public class VideoController {
         // TODO: gestionar tags
         Video video = new Video();
 
-        URI videoURL = s3VideoHandler.uploadFile(videoFile);
-        URI thumbnailURL = s3ImageHandler.uploadFile(thumbnail);
-
         Subject subject = subjectRepository.findById(subjectId).get();
 
         video.setTitle(title);
         video.setDescription(description);
         video.setSubject(subject);
-        video.setThumbnailUrl(thumbnailURL);
-        video.setUrl(videoURL);
         video.setUploader(userAuth.getUser());
         video.setTimestamp(Timestamp.from(Instant.now()));
+        
+        URI videoURL = s3VideoHandler.uploadFile(videoFile);
+        URI thumbnailURL = s3ImageHandler.uploadFile(thumbnail);
+        
+        video.setUrl(videoURL);
+        video.setThumbnailUrl(thumbnailURL);
 
         videoRepository.save(video);
 
