@@ -1,0 +1,120 @@
+CommentsAdd:
+  post:
+    tags:
+      - comment
+    summary: Subida de un nuevo comentario
+    description: Adicion de nuevo comentario
+    operationId: addComment
+    requestBody:
+        description: Comentario que se va a añadir
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                secs_from_beg:
+                  type: integer
+                video_id:
+                  type: integer
+                  format: int64
+                comment_replied_to_id:
+                  type: integer
+                  format: int64
+              required:
+                - text
+                - secs_from_beg
+                - video_id
+    responses:
+      201:
+        description: Comentario añadido con exito
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Comment'
+    security:
+      - bearerAuth: []
+
+CommentsIdCommentRepliedTo:
+  get:
+    tags:
+      - comment
+    summary: Devuelve el comentario al que responde el comentario dado
+    operationId: getRepliedToComment
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id del comentario
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Comentario al que responde
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Comment'
+    security:
+      - bearerAuth: []
+      
+CommentsIdCommentReplies:
+  get:
+    tags:
+      - comment
+    summary: Devuelve la lista de comentarios que responden al comentario dado
+    operationId: getCommentReplies
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id del comentario
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Lista de los comentarios obtenidos
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/CommentGetEmbedded'
+    security:
+      - bearerAuth: []
+
+CommentsSearchByVideo:
+  get:
+    tags:
+      - comment
+    summary: Devuelve una lista de comentarios que pertenezcan al video dado
+    operationId: getCommentsByVideo
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - name: id
+        in: query
+        description: Id del video
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Lista de los comentarios obtenidos
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/CommentGetEmbedded'
+    security:
+      - bearerAuth: []

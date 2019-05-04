@@ -1,5 +1,6 @@
 package com.unicast.unicast_backend.configuration;
 
+import com.unicast.unicast_backend.persistance.model.Comment;
 import com.unicast.unicast_backend.persistance.model.Degree;
 import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.University;
@@ -21,6 +22,7 @@ public class RestConfiguration implements RepositoryRestConfigurer {
         config.exposeIdsFor(University.class);
         config.exposeIdsFor(Subject.class);
         config.exposeIdsFor(Degree.class);
+        config.exposeIdsFor(Comment.class);
         config.setRepositoryDetectionStrategy(RepositoryDetectionStrategies.ANNOTATED);
     }
 }
