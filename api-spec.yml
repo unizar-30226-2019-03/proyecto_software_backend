@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.0.8
+  version: 1.0.10
   title: Swagger Unicast
 
 servers:
@@ -41,6 +41,23 @@ components:
       type: http
       scheme: bearer
       bearerFormat: JWT
+
+  parameters:
+    QueryParameter:
+        in: query
+        name: page
+        schema:
+          type: integer
+        description: Número de la página a devolver
+
+    SortParameter:
+        in: query
+        name: sort
+        style: simple
+        schema:
+          $ref: '#/components/schemas/SortParams'
+        description: Parámetros en la forma `($propertyname,)+[asc|desc]?`
+
   schemas:
     Token:
       type: object
@@ -75,6 +92,22 @@ components:
         # comments:
         # votes:
         # tags:
+
+    VideoGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            videos:
+              type: array
+              items:
+                $ref: '#/components/schemas/Video'
+
+    VideoGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/VideoGetEmbedded'
 
     VideoToUpload:
       type: object
@@ -115,6 +148,7 @@ components:
       required:
         - name
         - photo
+
     Subject:
       type: object
       discriminator:
@@ -130,6 +164,7 @@ components:
       required:
         - name
         - abbreviation
+
     PaginationPage:
       type: object
       properties:
@@ -206,6 +241,17 @@ components:
         description:
           type: string
 
+    UserGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            users:
+              type: array
+              items:
+                $ref: '#/components/schemas/User'
+
     Degree:
       type: object
       discriminator:
@@ -242,6 +288,12 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/Degree'
+
+    SortParams:
+      type: array
+      items:
+        type: string
+
 
 paths:
   /public/register:
@@ -382,6 +434,9 @@ paths:
                 university_id:
                   description: Nueva universidad del usuario
                   type: integer
+                degree_id:
+                  description: Nueva carrera del usuario
+                  type: integer
                 photo:
                   description: Nueva foto del usuario
                   type: string
@@ -422,6 +477,164 @@ paths:
         - bearerAuth: []
 
 
+  /users/{id}/subjects:
+    get:
+      tags:
+        - user
+      summary: Obtener las asignaturas de un usuario
+      operationId: getSubjectsOfUser
+      parameters:
+        - name: id
+          in: path
+          description: Id del usuario
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Devuelve las asignaturas de un usuario
+          content:
+            application/hal+json:
+              schema:
+                $ref: '#/components/schemas/SubjectGetEmbedded'
+      security:
+        - bearerAuth: []
+
+  /users/search/nameStartsWith:
+    get:
+      tags:
+        - user
+      summary: Busca usuarios que empiecen por un nombre dado
+      operationId: findUsersStartsWithName
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Comienzo del nombre del usuario a buscar
+      responses:
+        200:
+          description: Lista de las usuarios encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGetEmbedded'
+      security:
+        - bearerAuth: []
+
+  /users/search/usernameStartsWith:
+    get:
+      tags:
+        - user
+      summary: Busca usuarios que empiecen por un username dado
+      operationId: findUsersStartsWithUsername
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+          description: Comienzo del username del usuario a buscar
+      responses:
+        200:
+          description: Lista de las usuarios encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGetEmbedded'
+      security:
+        - bearerAuth: []
+
+  /users/search/surnamesStartsWith:
+    get:
+      tags:
+        - user
+      summary: Busca usuarios que empiecen por unos apellidos dados
+      operationId: findUsersStartsWithSurnames
+      parameters:
+        - in: query
+          name: surnames
+          schema:
+            type: string
+          description: Comienzo de los apellidos del usuario a buscar
+      responses:
+        200:
+          description: Devuelve una lista de usuarios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGetEmbedded'
+      security:
+        - bearerAuth: []
+
+
+  /users/search/nameContaining:
+    get:
+      tags:
+        - user
+      summary: Busca usuarios que contengan una string en el nombre
+      operationId: findUsersContainingName
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: String a buscar en el nombre de usuarios
+      responses:
+        200:
+          description: Devuelve una lista de usuarios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGetEmbedded'
+      security:
+        - bearerAuth: []
+      
+  /users/search/usernameContaining:
+    get:
+      tags:
+        - user
+      summary: Busca usuarios que contengan una string en el username
+      operationId: findUsersContainingUsername
+      parameters:
+        - in: query
+          name: username
+          schema:
+            type: string
+          description: String a buscar en el nombre de usuarios
+      responses:
+        200:
+          description: Devuelve una lista de usuarios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGetEmbedded'
+      security:
+        - bearerAuth: []
+
+  /users/search/surnamesContaining:
+    get:
+      tags:
+        - user
+      summary: Busca usuarios que contengan una string en los apellidos
+      operationId: findUsersContainingSurname
+      parameters:
+        - in: query
+          name: surnames
+          schema:
+            type: string
+          description: String a buscar en los apellidos de usuarios
+      responses:
+        200:
+          description: Devuelve una lista de usuarios
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserGetEmbedded'
+      security:
+        - bearerAuth: []
+
+
   /degrees:
     get:
       tags:
@@ -429,11 +642,8 @@ paths:
       summary: Lista de carreras
       operationId: getDegrees
       parameters:
-        - in: query
-          name: page
-          schema:
-            type: integer
-          description: Numero de la página a devolver
+        - $ref: '#/components/parameters/QueryParameter'
+        - $ref: '#/components/parameters/SortParameter'
       responses:
         200:
           description: Devuelve una lista de carreras
@@ -499,7 +709,7 @@ paths:
       tags:
         - degree
       summary: Busca carreras que empiecen por el nombre dado
-      operationId: findDegreeStartsWith
+      operationId: findDegreesStartsWith
       parameters:
         - in: query
           name: name
@@ -513,6 +723,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/DegreeGetEmbedded'
+      
+  /degrees/search/nameContaining:
+    get:
+      tags:
+        - degree
+      summary: Busca carreras que contengan una string en el nombre
+      operationId: findDegreesContainingName
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: String a buscar en el nombre de carreras
+      responses:
+        200:
+          description: Devuelve una lista de carreras
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DegreeGetResponse'
 
   /universities:
     get:
@@ -521,11 +751,8 @@ paths:
       summary: Lista de universidades
       operationId: getUniversities
       parameters:
-        - in: query
-          name: page
-          schema:
-            type: integer
-          description: Numero de la página a devolver
+        - $ref: '#/components/parameters/QueryParameter'
+        - $ref: '#/components/parameters/SortParameter'
       responses:
         200:
           description: Devuelve una lista de universidades
@@ -568,6 +795,8 @@ paths:
       security:
         - bearerAuth: []
 
+    
+
   # TODO: gestionar que la foto es un fichero
   # /universities/{id}:
     # patch:
@@ -605,13 +834,33 @@ paths:
       tags:
         - university
       summary: Busca universidades que empiecen por el nombre dado
-      operationId: findUniversityStartsWith
+      operationId: findUniversitiesStartsWith
       parameters:
         - in: query
           name: name
           schema:
             type: string
           description: Comienzo del nombre de la universidad a buscar
+      responses:
+        200:
+          description: Lista de las universidadas encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniversityGetEmbedded'
+
+  /universities/search/nameContaining:
+    get:
+      tags:
+        - university
+      summary: Busca universidades que contengan en el nombre la string dada
+      operationId: findUniversitiesContaining
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: String a buscar en el nombre
       responses:
         200:
           description: Lista de las universidadas encontradas
@@ -627,11 +876,8 @@ paths:
       summary: Lista de asignaturas
       operationId: getSubjects
       parameters:
-          - in: query
-            name: page
-            schema:
-              type: integer
-            description: Numero de la página a devolver
+        - $ref: '#/components/parameters/QueryParameter'
+        - $ref: '#/components/parameters/SortParameter'
       responses:
         200:
           description: Devuelve una lista de asignaturas
@@ -720,6 +966,30 @@ paths:
       security:
         - bearerAuth: []
 
+  /subjects/{id}/videos:
+    get:
+      tags:
+        - subject
+      summary: Devuelve una lista con los videos de una asignatura
+      operationId: getVideosFromSubject
+      parameters:
+        - name: id
+          in: path
+          description: Id de la asignatura
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: Lista de los videos encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGetEmbedded'
+      security:
+        - bearerAuth: []
+
   /subjects/{subject_id}/users/{user_id}:
     delete:
       tags:
@@ -747,6 +1017,46 @@ paths:
       security:
         - bearerAuth: []
 
+  /subjects/search/nameStartsWith:
+    get:
+      tags:
+        - subject
+      summary: Busca asignaturas que empiecen por un nombre dado
+      operationId: findSubjectsStartsWithName
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: Comienzo del nombre de la asignatura a buscar
+      responses:
+        200:
+          description: Lista de las asignaturas encontradas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectGetEmbedded'
+    
+  /subjects/search/nameContaining:
+    get:
+      tags:
+        - subject
+      summary: Busca asignaturas que contengan una string en el nombre
+      operationId: findSubjectsContainingName
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+          description: String a buscar en el nombre de asignaturas
+      responses:
+        200:
+          description: Devuelve una lista de asignaturas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectGetResponse'
+
 
   # TODO: Aqui faltaria documentar respuesta, pero este endpoint lo cambiaremos por
   # sistema de recomendaciones (?)
@@ -756,9 +1066,16 @@ paths:
         - video
       summary: Lista de videos
       operationId: getVideos
+      parameters:
+        - $ref: '#/components/parameters/QueryParameter'
+        - $ref: '#/components/parameters/SortParameter'
       responses:
         200:
           description: Devuelve una lista de videos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGetResponse'
       security:
         - bearerAuth: []
 
@@ -779,6 +1096,50 @@ paths:
       responses:
         201:
           description: Video añadido con exito
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Video'
+      security:
+        - bearerAuth: []
+
+  /videos/search/titleContaining:
+    get:
+      tags:
+        - video
+      summary: Busca videos que contengan una string en el titulo
+      operationId: findVideosContainingTitle
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: String a buscar en el titulo de videos
+      responses:
+        200:
+          description: Devuelve una lista de videos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoGetResponse'
+      security:
+        - bearerAuth: []
+
+  /videos/search/titleStartsWith:
+    get:
+      tags:
+        - video
+      summary: Busca videos que empiecen por un nombre dado
+      operationId: findVideosStartsWithTitle
+      parameters:
+        - in: query
+          name: title
+          schema:
+            type: string
+          description: Comienzo del nombre de los videos a buscar
+      responses:
+        200:
+          description: Lista de los videos encontradas
           content:
             application/json:
               schema:

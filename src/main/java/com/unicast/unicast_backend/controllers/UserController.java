@@ -14,6 +14,7 @@ import com.unicast.unicast_backend.persistance.repository.UserRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
@@ -101,6 +102,7 @@ public class UserController {
             @RequestParam(name = "description", required = false) String description,
             @RequestParam(name = "email", required = false) String email,
             @RequestParam(name = "university_id", required = false) Long universityId,
+            @RequestParam(name = "degree_id", required = false) Long degreeId,
             @RequestPart(name = "photo", required = false) MultipartFile photo) throws IOException, URISyntaxException {
 
         // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un
@@ -115,23 +117,26 @@ public class UserController {
             URI photoURL = s3ImageHandler.uploadFile(photo);
             user.setPhoto(photoURL);
         }
-        if (username != null && !username.isEmpty()) {
+        if (username != null && !StringUtils.isEmpty(username)) {
             user.setUsername(username);
         }
-        if (password != null && !username.isEmpty()) {
+        if (password != null && !StringUtils.isEmpty(password)) {
             user.setPassword(securityConfiguration.passwordEncoder().encode(password));
         }
-        if (email != null && !email.isEmpty()) {
+        if (email != null && !StringUtils.isEmpty(email)) {
             user.setEmail(email);
         }
-        if (description != null && !description.isEmpty()) {
+        if (description != null && !StringUtils.isEmpty(description)) {
             user.setDescription(description);
         }
         if (universityId != null) {
             user.setUniversity(universityRepository.findById(universityId).get());
         }
-        // user.setEnabled(true);
-        // userRepository.save(user);
+        if (degreeId != null) {
+            user.setDegree(degreeRepository.findById(degreeId).get());
+        }
+        user.setEnabled(true);
+        userRepository.save(user);
         return ResponseEntity.ok(userAssembler.toResource(user));
         // } catch (org.springframework.dao.DataIntegrityViolationException e) {
         // ResponseEntity<String> res = new ResponseEntity("El username ya existe",

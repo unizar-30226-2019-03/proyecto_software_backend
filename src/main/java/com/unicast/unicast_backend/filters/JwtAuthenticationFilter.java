@@ -59,7 +59,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = Jwts.builder().signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
                 .setHeaderParam("typ", securityConstants.TOKEN_TYPE).setIssuer(securityConstants.TOKEN_ISSUER)
-                .setAudience(securityConstants.TOKEN_AUDIENCE).setSubject(user.getUsername())
+                .setAudience(securityConstants.TOKEN_AUDIENCE).setSubject(user.getId().toString())
                 .setExpiration(new Date(System.currentTimeMillis() + securityConstants.TOKEN_TTL_MS))
                 .claim("rol", roles).compact();
 

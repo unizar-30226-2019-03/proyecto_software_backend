@@ -1,5 +1,7 @@
 package com.unicast.unicast_backend.services;
 
+import java.util.Optional;
+
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.repository.UserRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
@@ -15,6 +17,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;
+
+    public UserDetails loadUserById(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+
+        if (!user.isPresent()) {
+            throw new UsernameNotFoundException(userId.toString());
+        }
+
+        return new UserDetailsImpl(user.get());
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) {

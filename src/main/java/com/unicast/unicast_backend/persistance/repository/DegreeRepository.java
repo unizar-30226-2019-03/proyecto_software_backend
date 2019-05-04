@@ -15,4 +15,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 public interface DegreeRepository extends JpaRepository<Degree, Long> {
     @RestResource(path = "nameStartsWith", rel = "nameStartsWith")
     public List<Degree> findByNameStartsWith(@Param("name") String name);
+
+    @RestResource(path = "nameContaining", rel = "nameContaining")
+    public List<Degree> findByNameContaining(@Param("name") String name);
 }

@@ -67,13 +67,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 Jws<Claims> parsedToken = Jwts.parser().setSigningKey(signingKey)
                         .parseClaimsJws(token.replace("Bearer ", ""));
 
-                String username = parsedToken.getBody().getSubject();
+                String userIdStr = parsedToken.getBody().getSubject();
 
                 List<SimpleGrantedAuthority> authorities = ((List<?>) parsedToken.getBody().get("rol")).stream()
                         .map(authority -> new SimpleGrantedAuthority((String) authority)).collect(Collectors.toList());
 
-                if (StringUtils.isNotEmpty(username)) {
-                    return new UsernamePasswordAuthenticationToken(this.userDetailsService.loadUserByUsername(username),
+                if (StringUtils.isNotEmpty(userIdStr)) {
+                    Long userId = Long.parseLong(parsedToken.getBody().getSubject());
+
+                    return new UsernamePasswordAuthenticationToken(this.userDetailsService.loadUserById(userId),
                             null, authorities);
                 }
             } catch (ExpiredJwtException exception) {
