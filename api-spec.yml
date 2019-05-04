@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.0.12
+  version: 1.1.0
   title: Swagger Unicast
 
 servers:
@@ -48,7 +48,21 @@ components:
       name: Cache-Control
       schema:
         type: string
+        default: no-cache, no-store, must-revalidate
+
+    PragmaHeaderParameter:
+      in: header
+      name: Pragma
+      schema:
+        type: string
         default: no-cache
+
+    ExpiresHeaderParameter:
+      in: header
+      name: Expires
+      schema:
+        type: string
+        default: 0
 
     QueryParameter:
       name: page
@@ -469,6 +483,8 @@ paths:
       operationId: getUser
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - name: id
           in: path
           description: Id del usuario
@@ -495,6 +511,8 @@ paths:
       operationId: getSubjectsOfUser
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - name: id
           in: path
           description: Id del usuario
@@ -520,6 +538,8 @@ paths:
       operationId: findUsersStartsWithName
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: name
           schema:
@@ -543,6 +563,8 @@ paths:
       operationId: findUsersStartsWithUsername
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: username
           schema:
@@ -566,6 +588,8 @@ paths:
       operationId: findUsersStartsWithSurnames
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: surnames
           schema:
@@ -590,6 +614,8 @@ paths:
       operationId: findUsersContainingName
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: name
           schema:
@@ -613,6 +639,8 @@ paths:
       operationId: findUsersContainingUsername
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: username
           schema:
@@ -636,6 +664,8 @@ paths:
       operationId: findUsersContainingSurname
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: surnames
           schema:
@@ -660,6 +690,8 @@ paths:
       operationId: getDegrees
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - $ref: '#/components/parameters/QueryParameter'
         - $ref: '#/components/parameters/SortParameter'
       responses:
@@ -730,6 +762,8 @@ paths:
       operationId: findDegreesStartsWith
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: name
           schema:
@@ -751,6 +785,8 @@ paths:
       operationId: findDegreesContainingName
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: name
           schema:
@@ -772,6 +808,8 @@ paths:
       operationId: getUniversities
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - $ref: '#/components/parameters/QueryParameter'
         - $ref: '#/components/parameters/SortParameter'
       responses:
@@ -858,6 +896,8 @@ paths:
       operationId: findUniversitiesStartsWith
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: name
           schema:
@@ -879,6 +919,8 @@ paths:
       operationId: findUniversitiesContaining
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: name
           schema:
@@ -900,6 +942,8 @@ paths:
       operationId: getSubjects
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - $ref: '#/components/parameters/QueryParameter'
         - $ref: '#/components/parameters/SortParameter'
       responses:
@@ -998,6 +1042,8 @@ paths:
       operationId: getVideosFromSubject
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - name: id
           in: path
           description: Id de la asignatura
@@ -1050,6 +1096,8 @@ paths:
       operationId: findSubjectsStartsWithName
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: name
           schema:
@@ -1071,6 +1119,8 @@ paths:
       operationId: findSubjectsContainingName
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: name
           schema:
@@ -1095,6 +1145,8 @@ paths:
       operationId: getVideos
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - $ref: '#/components/parameters/QueryParameter'
         - $ref: '#/components/parameters/SortParameter'
       responses:
@@ -1139,6 +1191,8 @@ paths:
       operationId: findVideosContainingTitle
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: title
           schema:
@@ -1162,6 +1216,8 @@ paths:
       operationId: findVideosStartsWithTitle
       parameters:
         - $ref: '#/components/parameters/NoCacheHeaderParameter'
+        - $ref: '#/components/parameters/PragmaHeaderParameter'
+        - $ref: '#/components/parameters/ExpiresHeaderParameter'
         - in: query
           name: title
           schema:
