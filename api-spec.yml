@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.0.11
+  version: 1.0.12
   title: Swagger Unicast
 
 servers:
@@ -43,6 +43,13 @@ components:
       bearerFormat: JWT
 
   parameters:
+    NoCacheHeaderParameter:
+      in: header
+      name: Cache-Control
+      schema:
+        type: string
+        default: no-cache
+
     QueryParameter:
       name: page
       in: query
@@ -461,6 +468,7 @@ paths:
       summary: Obtener un usuario
       operationId: getUser
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - name: id
           in: path
           description: Id del usuario
@@ -486,6 +494,7 @@ paths:
       summary: Obtener las asignaturas de un usuario
       operationId: getSubjectsOfUser
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - name: id
           in: path
           description: Id del usuario
@@ -510,6 +519,7 @@ paths:
       summary: Busca usuarios que empiecen por un nombre dado
       operationId: findUsersStartsWithName
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: name
           schema:
@@ -532,6 +542,7 @@ paths:
       summary: Busca usuarios que empiecen por un username dado
       operationId: findUsersStartsWithUsername
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: username
           schema:
@@ -554,6 +565,7 @@ paths:
       summary: Busca usuarios que empiecen por unos apellidos dados
       operationId: findUsersStartsWithSurnames
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: surnames
           schema:
@@ -577,6 +589,7 @@ paths:
       summary: Busca usuarios que contengan una string en el nombre
       operationId: findUsersContainingName
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: name
           schema:
@@ -599,6 +612,7 @@ paths:
       summary: Busca usuarios que contengan una string en el username
       operationId: findUsersContainingUsername
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: username
           schema:
@@ -621,6 +635,7 @@ paths:
       summary: Busca usuarios que contengan una string en los apellidos
       operationId: findUsersContainingSurname
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: surnames
           schema:
@@ -644,6 +659,7 @@ paths:
       summary: Lista de carreras
       operationId: getDegrees
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - $ref: '#/components/parameters/QueryParameter'
         - $ref: '#/components/parameters/SortParameter'
       responses:
@@ -713,6 +729,7 @@ paths:
       summary: Busca carreras que empiecen por el nombre dado
       operationId: findDegreesStartsWith
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: name
           schema:
@@ -733,6 +750,7 @@ paths:
       summary: Busca carreras que contengan una string en el nombre
       operationId: findDegreesContainingName
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: name
           schema:
@@ -753,6 +771,7 @@ paths:
       summary: Lista de universidades
       operationId: getUniversities
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - $ref: '#/components/parameters/QueryParameter'
         - $ref: '#/components/parameters/SortParameter'
       responses:
@@ -838,6 +857,7 @@ paths:
       summary: Busca universidades que empiecen por el nombre dado
       operationId: findUniversitiesStartsWith
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: name
           schema:
@@ -858,6 +878,7 @@ paths:
       summary: Busca universidades que contengan en el nombre la string dada
       operationId: findUniversitiesContaining
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: name
           schema:
@@ -878,6 +899,7 @@ paths:
       summary: Lista de asignaturas
       operationId: getSubjects
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - $ref: '#/components/parameters/QueryParameter'
         - $ref: '#/components/parameters/SortParameter'
       responses:
@@ -975,6 +997,7 @@ paths:
       summary: Devuelve una lista con los videos de una asignatura
       operationId: getVideosFromSubject
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - name: id
           in: path
           description: Id de la asignatura
@@ -1026,6 +1049,7 @@ paths:
       summary: Busca asignaturas que empiecen por un nombre dado
       operationId: findSubjectsStartsWithName
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: name
           schema:
@@ -1046,6 +1070,7 @@ paths:
       summary: Busca asignaturas que contengan una string en el nombre
       operationId: findSubjectsContainingName
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: name
           schema:
@@ -1069,6 +1094,7 @@ paths:
       summary: Lista de videos
       operationId: getVideos
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - $ref: '#/components/parameters/QueryParameter'
         - $ref: '#/components/parameters/SortParameter'
       responses:
@@ -1112,6 +1138,7 @@ paths:
       summary: Busca videos que contengan una string en el titulo
       operationId: findVideosContainingTitle
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: title
           schema:
@@ -1134,6 +1161,7 @@ paths:
       summary: Busca videos que empiecen por un nombre dado
       operationId: findVideosStartsWithTitle
       parameters:
+        - $ref: '#/components/parameters/NoCacheHeaderParameter'
         - in: query
           name: title
           schema:
