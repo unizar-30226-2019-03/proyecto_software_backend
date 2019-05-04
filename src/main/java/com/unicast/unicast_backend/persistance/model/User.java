@@ -93,7 +93,7 @@ public class User {
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
-	private Collection<Display> collectionDisplays;
+	private Collection<Display> displays;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")

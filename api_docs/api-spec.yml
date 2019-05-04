@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.1.1
+  version: 1.1.2
   title: Swagger Unicast
 
 servers:
@@ -119,7 +119,8 @@ components:
           type: string
           format: url
         score:
-          type: float
+          type: number
+          format: float
         # comments:
         # votes:
         # tags:
@@ -322,7 +323,7 @@ components:
 
     Comment:
       type: object
-      properties: 
+      properties:
         id:
           type: integer
           format: int64
@@ -357,6 +358,8 @@ components:
 
     Display:
       type: object
+      discriminator:
+        propertyName: id
       properties:
         id:
           type: object
@@ -374,6 +377,14 @@ components:
           type: integer
           format: int64
 
+    DisplayWithVideoEmbedded:
+      allOf:
+        - type: object
+          properties:
+            video:
+              $ref: '#/components/schemas/Video'
+        - $ref: '#/components/schemas/Display'
+      
     DisplayGetEmbedded:
       type: object
       properties:
@@ -383,13 +394,13 @@ components:
             displays:
               type: array
               items:
-                $ref: '#/components/schemas/Display'
+                $ref: '#/components/schemas/DisplayWithVideoEmbedded'
 
     DisplayGetResponse:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
         - $ref: '#/components/schemas/DisplayGetEmbedded'
-    
+
     Vote:
       type: object
       properties:
@@ -435,8 +446,8 @@ components:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
         - $ref: '#/components/schemas/VoteGetEmbedded'
-          
-        
+
+
 
 paths:
 
@@ -533,7 +544,7 @@ paths:
 
   /videos:
     $ref: 'video_endpoints.yml#/Videos'
-  
+
   /upload/video:
     $ref: 'video_endpoints.yml#/UploadVideo'
 

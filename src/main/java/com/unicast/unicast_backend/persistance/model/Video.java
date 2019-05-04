@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.Formula;
 
 import lombok.Data;
@@ -53,6 +55,10 @@ public class Video {
 
     @OneToMany(mappedBy = "video")
     private Collection<Vote> votes;
+
+    @JsonIgnore
+	@OneToMany(mappedBy = "video")
+	private Collection<Display> displays;
 
     @ManyToMany
     @JoinTable(name = "video_video_tag", joinColumns = @JoinColumn(name = "fk_video"), inverseJoinColumns = @JoinColumn(name = "fk_video_tag"))
