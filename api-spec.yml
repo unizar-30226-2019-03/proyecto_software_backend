@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.0.10
+  version: 1.0.11
   title: Swagger Unicast
 
 servers:
@@ -426,6 +426,12 @@ paths:
                   format: email
                 description:
                   description: Nueva descripción para el usuario
+                  type: string
+                name:
+                  description: Nuevo nombre para el usuario
+                  type: string
+                surnames:
+                  description: Nuevos apellidos para el usuario
                   type: string
                 university_id:
                   description: Nueva universidad del usuario

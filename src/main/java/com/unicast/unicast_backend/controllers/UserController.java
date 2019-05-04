@@ -101,6 +101,8 @@ public class UserController {
             @RequestParam(name = "password", required = false) String password,
             @RequestParam(name = "description", required = false) String description,
             @RequestParam(name = "email", required = false) String email,
+            @RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "surnames", required = false) String surnames,
             @RequestParam(name = "university_id", required = false) Long universityId,
             @RequestParam(name = "degree_id", required = false) Long degreeId,
             @RequestPart(name = "photo", required = false) MultipartFile photo) throws IOException, URISyntaxException {
@@ -128,6 +130,12 @@ public class UserController {
         }
         if (description != null && !StringUtils.isEmpty(description)) {
             user.setDescription(description);
+        }
+        if (name != null && !StringUtils.isEmpty(name)) {
+            user.setName(name);
+        }
+        if (surnames != null && !StringUtils.isEmpty(surnames)) {
+            user.setSurnames(surnames);
         }
         if (universityId != null) {
             user.setUniversity(universityRepository.findById(universityId).get());
