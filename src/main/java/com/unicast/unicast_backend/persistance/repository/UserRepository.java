@@ -11,10 +11,10 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 @RepositoryRestResource(collectionResourceRel = "users", path = "users")
 public interface UserRepository extends JpaRepository<User, Long> {
- 
+
     User findByUsername(String username);
 
-    //Busquedas de usuarios que comienzan con un string dado
+    // Busquedas de usuarios que comienzan con un string dado
 
     @RestResource(path = "nameStartsWith", rel = "nameStartsWith")
     public List<User> findByNameStartsWith(@Param("name") String name);
@@ -25,7 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @RestResource(path = "surnamesStartsWith", rel = "surnamesStartsWith")
     public List<User> findBySurnamesStartsWith(@Param("surnames") String name);
 
-    //Busqueda de usuarios que contiene un string dado
+    // Busqueda de usuarios que contiene un string dado
 
     @RestResource(path = "nameContaining", rel = "nameContaining")
     public List<User> findByNameContaining(@Param("name") String name);
@@ -35,4 +35,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @RestResource(path = "surnamesContaining", rel = "surnamesContaining")
     public List<User> findBySurnamesContaining(@Param("surnames") String surnames);
+
 }

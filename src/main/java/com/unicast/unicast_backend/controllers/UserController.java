@@ -76,6 +76,7 @@ public class UserController {
             URI photoURL = s3ImageHandler.uploadFile(photo);
             user.setPhoto(photoURL);
 
+            s3ImageHandler.deleteLastUploadedTmpFile();
             userRepository.save(user);
 
             Resource<User> resourceUser = userAssembler.toResource(user);
@@ -145,6 +146,7 @@ public class UserController {
             // TODO: borrar foto antigua o lo que sea
             URI photoURL = s3ImageHandler.uploadFile(photo);
             user.setPhoto(photoURL);
+            s3ImageHandler.deleteLastUploadedTmpFile();
         }
 
         userRepository.save(user);

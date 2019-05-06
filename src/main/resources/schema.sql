@@ -75,6 +75,7 @@ CREATE TABLE video (
     url VARCHAR(1000) NOT NULL,
     thumbnail_url VARCHAR(1000) NOT NULL,
     timestamp TIMESTAMP NOT NULL,
+    seconds INTEGER NOT NULL,
     fk_subject INTEGER NOT NULL,
     fk_uploader INTEGER NOT NULL,
     CONSTRAINT fk_video_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE,
@@ -187,12 +188,4 @@ CREATE TABLE degree_university(
     CONSTRAINT fk_degree_university_degree FOREIGN KEY (fk_degree) REFERENCES degree(id) ON DELETE CASCADE,
     CONSTRAINT fk_degree_university_university FOREIGN KEY (fk_university) REFERENCES university(id) ON DELETE CASCADE,
     CONSTRAINT pk_degree_university PRIMARY KEY (fk_degree, fk_university)
-);
-
-CREATE TABLE degree_subject(
-    fk_degree INTEGER,
-    fk_subject INTEGER,
-    CONSTRAINT fk_degree_subject_degree FOREIGN KEY (fk_degree) REFERENCES degree(id) ON DELETE CASCADE,
-    CONSTRAINT fk_degree_subject_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE,
-    CONSTRAINT pk_degree_subject PRIMARY KEY (fk_degree, fk_subject)
 );

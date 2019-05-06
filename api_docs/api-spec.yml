@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.1.2
+  version: 1.1.5
   title: Swagger Unicast
 
 servers:
@@ -70,7 +70,7 @@ components:
         type: string
         default: 0
 
-    QueryParameter:
+    PageParameter:
       name: page
       in: query
       schema:
@@ -121,6 +121,9 @@ components:
         score:
           type: number
           format: float
+        seconds:
+          type: integer
+          format: int64
         # comments:
         # votes:
         # tags:
@@ -384,7 +387,7 @@ components:
             video:
               $ref: '#/components/schemas/Video'
         - $ref: '#/components/schemas/Display'
-      
+
     DisplayGetEmbedded:
       type: object
       properties:
@@ -468,9 +471,6 @@ paths:
   /users/{id}/subjects:
     $ref: 'user_endpoints.yml#/UsersIdSubjects'
 
-  /users/{id}/uploadedVideos:
-    $ref: 'user_endpoints.yml#/UsersIdUploadedVideos'
-
   /users/search/nameStartsWith:
     $ref: 'user_endpoints.yml#/UsersSearchNameStartsWith'
 
@@ -500,11 +500,11 @@ paths:
   /subjects/{id}/users:
     $ref: 'subject_endpoints.yml#/SubjectsIdUsers'
 
-  /subjects/{id}/videos:
-    $ref: 'subject_endpoints.yml#/SubjectsIdVideos'
-
   /subjects/{subject_id}/users/{user_id}:
     $ref: 'subject_endpoints.yml#/SubjectsSubjectIdUsersUserId'
+
+  /subjects/{id}/university:
+    $ref: 'subject_endpoints.yml#/SubjectsIdUniversity'
 
   /subjects/search/nameStartsWith:
     $ref: 'subject_endpoints.yml#/SubjectsSearchNameStartsWith'
@@ -520,11 +520,14 @@ paths:
   /degrees/{id}:
     $ref: 'degree_endpoints.yml#/GetDegree'
 
+  /degrees/{id}/universities:
+    $ref: 'degree_endpoints.yml#/DegreesIdUniversities'
+
   /degrees/search/nameStartsWith:
-     $ref: 'degree_endpoints.yml#/DegreeSearchNameStartstWith'
+    $ref: 'degree_endpoints.yml#/DegreeSearchNameStartstWith'
 
   /degrees/search/nameContaining:
-     $ref: 'degree_endpoints.yml#/DegreeSearchNameContaining'
+    $ref: 'degree_endpoints.yml#/DegreeSearchNameContaining'
 
   #University endpoints
 
@@ -533,6 +536,9 @@ paths:
 
   /universities/add:
     $ref: 'university_endpoints.yml#/AddUniversity'
+
+  /universities/{id}/subjects:
+    $ref: 'university_endpoints.yml#/UniversitiesIdSubjects'
 
   /universities/search/nameStartsWith:
     $ref: 'university_endpoints.yml#/UniversitiesSearchNameStartsWith'
@@ -556,6 +562,19 @@ paths:
 
   /videos/{id}/uploader:
     $ref: 'video_endpoints.yml#/VideosIdUploader'
+
+  /videos/search/uploaderVideos:
+     $ref: 'video_endpoints.yml#/VideosUploaderVideos'
+
+  /videos/search/subjectVideos:
+    $ref: 'video_endpoints.yml#/VideosSubjectVideos'
+
+  /videos/{id}/subject:
+    $ref: 'video_endpoints.yml#/VideosIdSubject'
+
+  /videos/{id}:
+    $ref: 'video_endpoints.yml#/VideoId'
+
 
   #Comment endpoints
 

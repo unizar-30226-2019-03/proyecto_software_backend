@@ -41,6 +41,7 @@ public class UniversityController {
             URI photoURL = s3ImageHandler.uploadFile(photo);
             university.setPhoto(photoURL);
 
+            s3ImageHandler.deleteLastUploadedTmpFile();;
             universityRepository.save(university);
 
             Resource<University> resourceUniversity = universityAssembler.toResource(university);

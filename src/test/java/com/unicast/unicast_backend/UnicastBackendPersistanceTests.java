@@ -367,7 +367,6 @@ public class UnicastBackendPersistanceTests {
 		List<Subject> subjects = new ArrayList<>();
 		subjects.add(createTestSubject());
 		subjectRepository.saveAll(subjects);
-		degree.setSubjects(subjects);
 		degree.setUniversities(universities);
 		degree.setUsers(users);
 
@@ -712,6 +711,7 @@ public class UnicastBackendPersistanceTests {
 		video.setTimestamp(new Timestamp(1000));
 		video.setUrl(new URI("http://s3.amazonaws.com/bucket/video"));
 		video.setThumbnailUrl(new URI("http://s3.amazonaws.com/bucket/thumbnail"));
+		video.setSeconds(123);
 
 		return video;
 	}

@@ -8,7 +8,7 @@ Degrees:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/QueryParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
       - $ref: 'api-spec.yml#/components/parameters/SortParameter'
     responses:
       200:
@@ -70,6 +70,60 @@ GetDegree:
     security:
       - bearerAuth: []
 
+DegreesIdUniversities:
+  get:
+    tags:
+      - degree
+    summary: Devuelve una lista con las universidades de una carrera
+    operationId: getUniversitiesFromDegree
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id de la carrera
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Lista de las universidades encontrados
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/UniversityGetEmbedded'
+    security:
+      - bearerAuth: []
+
+  put:
+    tags:
+      - degree
+    summary: Relacionar una universidad con una asignatura
+    operationId: putDegreeUniversity
+    parameters:
+      - name: id
+        in: path
+        description: Id de la carrera
+        required: true
+        schema:
+          type: integer
+          format: int64
+    requestBody:
+      description: Id de la universidad a asociar con la carrera
+      required: true
+      content:
+        text/uri-list:
+          schema:
+            type: integer
+            format: int64
+    responses:
+      204:
+        description: Se ha relacionado la universidad con la carrera
+    security:
+      - bearerAuth: []
+
 DegreeSearchNameStartstWith:
   get:
     tags:
@@ -115,3 +169,5 @@ DegreeSearchNameContaining:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/DegreeGetResponse'
+
+

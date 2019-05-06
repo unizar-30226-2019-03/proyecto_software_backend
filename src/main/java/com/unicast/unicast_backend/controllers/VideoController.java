@@ -1,5 +1,6 @@
 package com.unicast.unicast_backend.controllers;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -15,6 +16,7 @@ import com.unicast.unicast_backend.principal.UserDetailsImpl;
 import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 import com.unicast.unicast_backend.s3handlers.S3VideoHandler;
 
+import org.mp4parser.IsoFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.ResponseEntity;
@@ -65,6 +67,19 @@ public class VideoController {
         video.setUrl(videoURL);
         video.setThumbnailUrl(thumbnailURL);
 
+        File tempFile = s3VideoHandler.getLastUploadedTmpFile();
+        IsoFile isoFile = new IsoFile(tempFile);
+
+        Double lengthInSeconds = (double)
+                isoFile.getMovieBox().getMovieHeaderBox().getDuration() /
+                isoFile.getMovieBox().getMovieHeaderBox().getTimescale();
+        
+        video.setSeconds(lengthInSeconds.intValue());
+
+        isoFile.close();
+        s3VideoHandler.deleteLastUploadedTmpFile();
+        s3ImageHandler.deleteLastUploadedTmpFile();
+                
         videoRepository.save(video);
 
         Resource<Video> resourceVideo = videoAsssembler.toResource(video);

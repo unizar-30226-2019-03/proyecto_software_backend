@@ -51,4 +51,5 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compile 'com.amazonaws:aws-java-sdk-s3'
+	compile 'org.mp4parser:isoparser:1.9.27'
 }

@@ -42,6 +42,8 @@ public class Video {
 
     private URI thumbnailUrl;
 
+    private Integer seconds;
+
     @ManyToOne
     @JoinColumn(name = "fk_subject")
     private Subject subject;
@@ -64,7 +66,7 @@ public class Video {
     @JoinTable(name = "video_video_tag", joinColumns = @JoinColumn(name = "fk_video"), inverseJoinColumns = @JoinColumn(name = "fk_video_tag"))
     private Collection<VideoTag> tags;
 
-    @Formula("(select avg((v.quality + v.clarity + v.suitability) / 3.0) from video vid join app_user_video_vote v on vid.id = v.fk_video)")
+    @Formula("(select avg((v.quality + v.clarity + v.suitability) / 3.0) from app_user_video_vote v where id = v.fk_video)")
     private Float score;
 
 }
