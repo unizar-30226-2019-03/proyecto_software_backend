@@ -42,6 +42,8 @@ tags:
     description: Operaciones sobre los votos
   - name: message
     description: Operaciones sobre los mensajes
+  - name: reproductionList
+    description: Operaciones sobre listas de reproduccion
 
 components:
   securitySchemes:
@@ -520,6 +522,44 @@ components:
         - $ref: '#/components/schemas/GetResponse'
         - $ref: '#/components/schemas/MessageGetEmbedded'
 
+    ReproductionList:
+      type: object
+      discriminator:
+        propertyName: name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      required:
+          - name
+              
+    ReproductionListList:
+        type: object
+      properties:
+        degrees:
+          type: array
+          items:
+                $ref: '#/components/schemas/ReproductionList'
+                
+    ReproductionListGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/ReproductionListGetEmbedded'
+
+    ReproductionListGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            degrees:
+              type: array
+              items:
+                $ref: '#/components/schemas/ReproductionList'
+                
+
 paths:
 
   #User endpoints
@@ -685,3 +725,18 @@ paths:
 
   /messages:
     $ref: 'messages_endpoints.yml#/Messages'
+
+  #ReproductionList endpoints
+
+  /ReproductionList:
+    $ref: 'reproductionList_endpoints.yml#/ReproductionLists'
+
+  /ReproductionList/{id}:
+    $ref: 'reproductionList_endpoints.yml#/GetReproductionList'
+
+  /ReproductionList/search/AddReproductionList:
+     $ref: 'reproductionList_endpoints.yml#/AddReproductionList'
+
+  /ReproductionList/search/DeleteReproductionList:
+     $ref: 'reproductionList_endpoints.yml#/DeleteReproductionList'
+     

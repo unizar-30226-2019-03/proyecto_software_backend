@@ -245,7 +245,6 @@ VideoId:
     security:
       - bearerAuth: []
 
-
 UserSubjects:
   get:
     tags:
