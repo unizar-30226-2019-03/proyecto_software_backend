@@ -100,7 +100,7 @@ DegreesIdUniversities:
   put:
     tags:
       - degree
-    summary: Relacionar una universidad con una asignatura
+    summary: Relacionar una carrera con una universidad
     operationId: putDegreeUniversity
     parameters:
       - name: id
@@ -169,5 +169,29 @@ DegreeSearchNameContaining:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/DegreeGetResponse'
+
+
+DegreeSearchName:
+  get:
+    tags:
+      - degree
+    summary: Busca una carrera con un nmbre dado
+    operationId: findDegreesByName
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: Nombre a buscar
+    responses:
+      200:
+        description: Devuelve una carrera
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Degree'
 
 

@@ -12,6 +12,7 @@ Videos:
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PageParameter'
       - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
     responses:
       200:
         description: Devuelve una lista de videos
@@ -56,6 +57,7 @@ VideosSearchTitleContaining:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
       - in: query
         name: title
         schema:
@@ -81,6 +83,7 @@ VideosSearchTitleStartsWith:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
       - in: query
         name: title
         schema:
@@ -106,6 +109,7 @@ VideosIdUploader:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
       - name: id
         in: path
         description: Id del video
@@ -133,6 +137,7 @@ VideosIdSubject:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
       - name: id
         in: path
         description: Id del video
@@ -140,12 +145,6 @@ VideosIdSubject:
         schema:
           type: integer
           format: int64
-      - name: projection
-        in: query
-        description: Incluir si se quiere obtener tambien la universidad en la respuesta
-        schema:
-          type: string
-          default: subjectWithUniversity
     responses:
       200:
         description: Devuelve la asignatura de un video
@@ -168,6 +167,7 @@ VideosUploaderVideos:
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PageParameter'
       - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
       - name: uploader_id
         in: query
         description: Id del uploader
@@ -198,6 +198,7 @@ VideosSubjectVideos:
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PageParameter'
       - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
       - name: subject_id
         in: query
         description: Id de la asignatura
@@ -226,6 +227,7 @@ VideoId:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
       - name: id
         in: path
         description: Id del video
@@ -240,5 +242,37 @@ VideoId:
           application/hal+json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/Video'
+    security:
+      - bearerAuth: []
+
+
+UserSubjects:
+  get:
+    tags:
+      - video
+    summary: Lista de videos de una asignatura
+    operationId: getVideosOfUserSubjects
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
+      - name: user_id
+        in: query
+        description: Id del usuario
+        required: true
+        schema:
+          type: integer
+          format: int64
+
+    responses:
+      200:
+        description: Devuelve una lista de videos
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/VideoGetResponse'
     security:
       - bearerAuth: []

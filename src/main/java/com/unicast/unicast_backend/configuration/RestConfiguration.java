@@ -3,6 +3,7 @@ package com.unicast.unicast_backend.configuration;
 import com.unicast.unicast_backend.persistance.model.Comment;
 import com.unicast.unicast_backend.persistance.model.Degree;
 import com.unicast.unicast_backend.persistance.model.Display;
+import com.unicast.unicast_backend.persistance.model.Message;
 import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.University;
 import com.unicast.unicast_backend.persistance.model.User;
@@ -27,6 +28,7 @@ public class RestConfiguration implements RepositoryRestConfigurer {
         config.exposeIdsFor(Comment.class);
         config.exposeIdsFor(Display.class);
         config.exposeIdsFor(Vote.class);
+        config.exposeIdsFor(Message.class);
         config.setRepositoryDetectionStrategy(RepositoryDetectionStrategies.ANNOTATED);
     }
 }

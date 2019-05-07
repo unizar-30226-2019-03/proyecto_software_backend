@@ -11,11 +11,13 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 @RepositoryRestResource(collectionResourceRel = "subjects", path = "subjects")
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
-    Subject findByName(String name);
 
     @RestResource(path = "nameStartsWith", rel = "nameStartsWith")
-    public List<Subject> findByNameStartsWith(@Param("name") String name);
+    public List<Subject> findByNameStartsWithIgnoreCase(@Param("name") String name);
 
     @RestResource(path = "nameContaining", rel = "nameContaining")
-    public List<Subject> findByNameContaining(@Param("name") String name);
+    public List<Subject> findByNameContainingIgnoreCase(@Param("name") String name);
+
+    @RestResource(path = "name", rel = "name")
+    public Subject findByNameIgnoreCase(@Param("name") String name);
 }

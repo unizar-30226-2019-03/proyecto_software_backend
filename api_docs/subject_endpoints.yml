@@ -10,12 +10,7 @@ Subjects:
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PageParameter'
       - $ref: 'api-spec.yml#/components/parameters/SortParameter'
-      - name: projection
-        in: query
-        description: Incluir si se quiere obtener tambien la universidad en la respuesta
-        schema:
-          type: string
-          default: subjectWithUniversity
+      - $ref: 'api-spec.yml#/components/parameters/SubjectProjectionParameter'
     responses:
       200:
         description: Devuelve una lista de asignaturas
@@ -169,17 +164,12 @@ SubjectsSearchNameStartsWith:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SubjectProjectionParameter'
       - in: query
         name: name
         schema:
           type: string
         description: Comienzo del nombre de la asignatura a buscar
-      - name: projection
-        in: query
-        description: Incluir si se quiere obtener tambien la universidad en la respuesta
-        schema:
-          type: string
-          default: subjectWithUniversity
     responses:
       200:
         description: Lista de las asignaturas encontradas
@@ -198,17 +188,12 @@ SubjectsSearchNameContaining:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SubjectProjectionParameter'
       - in: query
         name: name
         schema:
           type: string
         description: String a buscar en el nombre de asignaturas
-      - name: projection
-        in: query
-        description: Incluir si se quiere obtener tambien la universidad en la respuesta
-        schema:
-          type: string
-          default: subjectWithUniversity
     responses:
       200:
         description: Devuelve una lista de asignaturas
@@ -216,3 +201,26 @@ SubjectsSearchNameContaining:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/SubjectGetResponse'
+
+SubjectsSearchName:
+  get:
+    tags:
+      - subject
+    summary: Busca una asignatura con un nmbre dado
+    operationId: findSubjectsByName
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: name
+        schema:
+          type: string
+        description: Nombre a buscar
+    responses:
+      200:
+        description: Devuelve una asignatura
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Subject'

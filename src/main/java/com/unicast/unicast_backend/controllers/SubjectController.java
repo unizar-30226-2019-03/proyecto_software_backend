@@ -54,7 +54,7 @@ public class SubjectController {
     @ResponseBody
     public Subject getPoints(@RequestParam String name) {
         Subject s;
-        s = subjectRepository.findByName(name);
+        s = subjectRepository.findByNameIgnoreCase(name);
         s.setPoints(7.2);
         return s;
 

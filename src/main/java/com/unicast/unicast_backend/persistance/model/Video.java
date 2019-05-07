@@ -18,12 +18,16 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.JoinColumnOrFormula;
+import org.hibernate.annotations.JoinColumnsOrFormulas;
+import org.hibernate.annotations.JoinFormula;
 
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "video")
+// @NamedQuery(name="Video.getUniversity", query="select u from Subject s join University u on s.university = u where subject = s")
 public class Video {
 
     // TODO: meter quien ha subido el video
@@ -43,6 +47,12 @@ public class Video {
     private URI thumbnailUrl;
 
     private Integer seconds;
+
+    @ManyToOne
+        @JoinColumnsOrFormulas({
+            @JoinColumnOrFormula(formula=@JoinFormula(value="(select u.id from subject s join university u on s.fk_university = u.id where fk_subject = s.id)", referencedColumnName = "id"))
+        })
+    private University university;
 
     @ManyToOne
     @JoinColumn(name = "fk_subject")

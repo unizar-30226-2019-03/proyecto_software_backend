@@ -111,8 +111,8 @@ CREATE TABLE privilege (
 );
 
 CREATE TABLE notification_app_user (
-    fk_notification INTEGER,
-    fk_app_user INTEGER,
+    fk_notification INTEGER NOT NULL,
+    fk_app_user INTEGER NOT NULL,
     checked BOOLEAN NOT NULL,
     CONSTRAINT fk_notification_app_user_notification FOREIGN KEY (fk_notification) REFERENCES notification(id) ON DELETE CASCADE,
     CONSTRAINT fk_notification_app_user_app_user FOREIGN KEY (fk_app_user) REFERENCES app_user(id) ON DELETE CASCADE,
@@ -120,8 +120,8 @@ CREATE TABLE notification_app_user (
 );
 
 CREATE TABLE video_list (
-    fk_video INTEGER,
-    fk_list INTEGER,
+    fk_video INTEGER NOT NULL,
+    fk_list INTEGER NOT NULL,
     position INTEGER NOT NULL,
     CONSTRAINT fk_video_list_video FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE,
     CONSTRAINT fk_video_list_list FOREIGN KEY (fk_list) REFERENCES reproduction_list(id) ON DELETE CASCADE,
@@ -129,8 +129,8 @@ CREATE TABLE video_list (
 );
 
 CREATE TABLE app_user_video_vote (
-    fk_app_user INTEGER,
-    fk_video INTEGER,
+    fk_app_user INTEGER NOT NULL,
+    fk_video INTEGER NOT NULL,
     clarity INTEGER NOT NULL CHECK (clarity >= 1 AND clarity <= 5),
     quality INTEGER NOT NULL CHECK (quality >= 1 AND quality <= 5),
     suitability INTEGER NOT NULL CHECK (suitability >= 1 AND suitability <= 5),
@@ -140,8 +140,8 @@ CREATE TABLE app_user_video_vote (
 );
 
 CREATE TABLE app_user_video_watches (
-    fk_app_user INTEGER,
-    fk_video INTEGER,
+    fk_app_user INTEGER NOT NULL,
+    fk_video INTEGER NOT NULL,
     timestamp_last_time TIMESTAMP NOT NULL,
     secs_from_beg INTEGER NOT NULL,
     CONSTRAINT fk_app_user_video_watches_app_user FOREIGN KEY (fk_app_user) REFERENCES app_user(id) ON DELETE CASCADE,
@@ -150,7 +150,7 @@ CREATE TABLE app_user_video_watches (
 );
 
 CREATE TABLE role_privilege (
-    fk_role INTEGER,
+    fk_role INTEGER NOT NULL,
     fk_privilege INTEGER,
     CONSTRAINT fk_role_privilege_role FOREIGN KEY (fk_role) REFERENCES role(id) ON DELETE CASCADE,
     CONSTRAINT fk_role_privilege_privilege FOREIGN KEY (fk_privilege) REFERENCES privilege(id) ON DELETE CASCADE,
@@ -158,8 +158,8 @@ CREATE TABLE role_privilege (
 );
 
 CREATE TABLE role_app_user (
-    fk_role INTEGER,
-    fk_app_user INTEGER,
+    fk_role INTEGER NOT NULL,
+    fk_app_user INTEGER NOT NULL,
     CONSTRAINT fk_role_app_user_role FOREIGN KEY (fk_role) REFERENCES role(id) ON DELETE CASCADE,
     CONSTRAINT fk_role_app_user_app_user FOREIGN KEY (fk_app_user) REFERENCES app_user(id) ON DELETE CASCADE,
     CONSTRAINT pk_role_app_user PRIMARY KEY (fk_role, fk_app_user)
@@ -167,24 +167,24 @@ CREATE TABLE role_app_user (
 
 -- Es la relacion de alumno con asignatura y profesor con asignatura, comprobar roles etc en java
 CREATE TABLE app_user_subject (
-    fk_subject INTEGER,
-    fk_app_user INTEGER,
+    fk_subject INTEGER NOT NULL,
+    fk_app_user INTEGER NOT NULL,
     CONSTRAINT fk_app_user_subject_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE,
     CONSTRAINT fk_app_user_subject_app_user FOREIGN KEY (fk_app_user) REFERENCES app_user(id) ON DELETE CASCADE,
     CONSTRAINT pk_app_user_subject PRIMARY KEY (fk_subject, fk_app_user)
 );
 
 CREATE TABLE video_video_tag (
-    fk_video INTEGER,
-    fk_video_tag INTEGER,
+    fk_video INTEGER NOT NULL,
+    fk_video_tag INTEGER NOT NULL,
     CONSTRAINT fk_video_video_tag_video FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE,
     CONSTRAINT fk_video_video_tag_video_tag FOREIGN KEY (fk_video_tag) REFERENCES video_tag(id) ON DELETE CASCADE,
     CONSTRAINT pk_video_video_tag PRIMARY KEY (fk_video, fk_video_tag)
 );
 
 CREATE TABLE degree_university(
-    fk_degree INTEGER,
-    fk_university INTEGER,
+    fk_degree INTEGER NOT NULL,
+    fk_university INTEGER NOT NULL,
     CONSTRAINT fk_degree_university_degree FOREIGN KEY (fk_degree) REFERENCES degree(id) ON DELETE CASCADE,
     CONSTRAINT fk_degree_university_university FOREIGN KEY (fk_university) REFERENCES university(id) ON DELETE CASCADE,
     CONSTRAINT pk_degree_university PRIMARY KEY (fk_degree, fk_university)

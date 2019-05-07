@@ -9,6 +9,7 @@ import java.time.Instant;
 
 import com.unicast.unicast_backend.assemblers.VideoResourceAssembler;
 import com.unicast.unicast_backend.persistance.model.Subject;
+import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.Video;
 import com.unicast.unicast_backend.persistance.repository.SubjectRepository;
 import com.unicast.unicast_backend.persistance.repository.VideoRepository;
@@ -49,16 +50,22 @@ public class VideoController {
     public ResponseEntity<?> uploadVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestPart("file") MultipartFile videoFile, @RequestPart("thumbnail") MultipartFile thumbnail,
             @RequestParam("title") String title, @RequestParam("description") String description,
-            @RequestParam("subject_id") Long subjectId) throws IllegalStateException, IOException, URISyntaxException {
-        // TODO: gestionar tags
+            @RequestParam("subject_id") Long subjectId) throws Exception, IllegalStateException, IOException, URISyntaxException {
+        // TODO: gestionar tags y errores
+        User user = userAuth.getUser();
         Video video = new Video();
 
         Subject subject = subjectRepository.findById(subjectId).get();
 
+        if (!subject.getUsers().contains(user) /* y no es profesor el que sube */) {
+            // TODO: hacer eso una nueva clase/loqsea
+            throw new Exception("El que sube video debe pertenecer a la asignatura del video");
+        }
+
         video.setTitle(title);
         video.setDescription(description);
         video.setSubject(subject);
-        video.setUploader(userAuth.getUser());
+        video.setUploader(user);
         video.setTimestamp(Timestamp.from(Instant.now()));
         
         URI videoURL = s3VideoHandler.uploadFile(videoFile);

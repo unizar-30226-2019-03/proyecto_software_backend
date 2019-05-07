@@ -47,6 +47,7 @@ CommentsIdCommentRepliedTo:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/CommentProjectionParameter'
       - name: id
         in: path
         description: Id del comentario
@@ -74,6 +75,7 @@ CommentsIdCommentReplies:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/CommentProjectionParameter'
       - name: id
         in: path
         description: Id del comentario
@@ -101,7 +103,9 @@ CommentsSearchByVideo:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
       - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - $ref: 'api-spec.yml#/components/parameters/CommentProjectionParameter'
       - name: id
         in: query
         description: Id del video
@@ -115,6 +119,6 @@ CommentsSearchByVideo:
         content:
           application/json:
             schema:
-              $ref: 'api-spec.yml#/components/schemas/CommentGetEmbedded'
+              $ref: 'api-spec.yml#/components/schemas/CommentGetResponse'
     security:
       - bearerAuth: []

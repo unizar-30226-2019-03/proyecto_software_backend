@@ -17,23 +17,23 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // Busquedas de usuarios que comienzan con un string dado
 
     @RestResource(path = "nameStartsWith", rel = "nameStartsWith")
-    public List<User> findByNameStartsWith(@Param("name") String name);
+    public List<User> findByNameStartsWithIgnoreCase(@Param("name") String name);
 
     @RestResource(path = "usernameStartsWith", rel = "usernameStartsWith")
-    public List<User> findByUsernameStartsWith(@Param("username") String username);
+    public List<User> findByUsernameStartsWithIgnoreCase(@Param("username") String username);
 
     @RestResource(path = "surnamesStartsWith", rel = "surnamesStartsWith")
-    public List<User> findBySurnamesStartsWith(@Param("surnames") String name);
+    public List<User> findBySurnamesStartsWithIgnoreCase(@Param("surnames") String name);
 
     // Busqueda de usuarios que contiene un string dado
 
     @RestResource(path = "nameContaining", rel = "nameContaining")
-    public List<User> findByNameContaining(@Param("name") String name);
+    public List<User> findByNameContainingIgnoreCase(@Param("name") String name);
 
     @RestResource(path = "usernameContaining", rel = "usernameContaining")
-    public List<User> findByUsernameContaining(@Param("username") String username);
+    public List<User> findByUsernameContainingIgnoreCase(@Param("username") String username);
 
     @RestResource(path = "surnamesContaining", rel = "surnamesContaining")
-    public List<User> findBySurnamesContaining(@Param("surnames") String surnames);
+    public List<User> findBySurnamesContainingIgnoreCase(@Param("surnames") String surnames);
 
 }

@@ -44,7 +44,9 @@ DisplaysSearchUser:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
       - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - $ref: 'api-spec.yml#/components/parameters/DisplayProjectionParameter'
       - name: id
         in: query
         description: Id del usuario
@@ -52,18 +54,12 @@ DisplaysSearchUser:
         schema:
           type: integer
           format: int64
-      - name: projection
-        in: query
-        description: Incluir si se quiere obtener tambien los videos en la respuesta
-        schema:
-          type: string
-          default: displayWithVideo
     responses:
       200:
         description: Lista de las visualizaciones obtenidos
         content:
           application/json:
             schema:
-              $ref: 'api-spec.yml#/components/schemas/DisplayGetEmbedded'
+              $ref: 'api-spec.yml#/components/schemas/DisplayGetResponse'
     security:
       - bearerAuth: []
