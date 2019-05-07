@@ -16,8 +16,11 @@ import com.unicast.unicast_backend.principal.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,8 +44,7 @@ public class DisplayController {
 
     @PostMapping(value = "/api/displays/update", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> updateDisplay(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam("secs_from_beg") Integer secondsFromBeginning,
-            @RequestParam("video_id") Long videoId)
+            @RequestParam("secs_from_beg") Integer secondsFromBeginning, @RequestParam("video_id") Long videoId)
             throws URISyntaxException {
         User user = userAuth.getUser();
 
@@ -64,5 +66,17 @@ public class DisplayController {
         Resource<Display> resourceDisplay = displayAssembler.toResource(display);
 
         return ResponseEntity.created(new URI(resourceDisplay.getId().expand().getHref())).body(resourceDisplay);
+    }
+
+    @DeleteMapping(value = "/api/displays/delete/{video_id}")
+    public ResponseEntity<?> deleteDisplay(@AuthenticationPrincipal UserDetailsImpl userAuth,
+            @PathVariable(name = "video_id", required = true) Long videoId) {
+        DisplayKey key = new DisplayKey();
+        key.setUserId(userAuth.getId());
+        key.setVideoId(videoId);
+
+        displayRepository.deleteById(key);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body("");
     }
 }

@@ -721,6 +721,9 @@ paths:
 
   /displays/search/user:
     $ref: 'display_endpoints.yml#/DisplaysSearchUser'
+  
+  /displays/delete/{video_id}:
+    $ref: 'display_endpoints.yml#/DisplaysDelete'
 
   #Vote endpoint
 

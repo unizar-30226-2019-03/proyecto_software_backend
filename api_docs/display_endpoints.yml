@@ -63,3 +63,23 @@ DisplaysSearchUser:
               $ref: 'api-spec.yml#/components/schemas/DisplayGetResponse'
     security:
       - bearerAuth: []
+
+DisplaysDelete:
+  delete:
+    tags:
+      - display
+    summary: Elimina la visualizacion dada
+    operartionId: deleteDisplay
+    parameters:
+      - name: video_id
+        in: path
+        description: Id del video de la visualizacion a borrar
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      204:
+        description: La visualizacion ha sido borrada
+    security:
+      - bearerAuth: []
