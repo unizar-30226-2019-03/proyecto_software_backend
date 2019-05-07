@@ -10,7 +10,7 @@ Videos:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/QueryParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
       - $ref: 'api-spec.yml#/components/parameters/SortParameter'
     responses:
       200:
@@ -95,7 +95,7 @@ VideosSearchTitleStartsWith:
               $ref: 'api-spec.yml#/components/schemas/Video'
     security:
       - bearerAuth: []
-      
+
 VideosIdUploader:
   get:
     tags:
@@ -123,3 +123,122 @@ VideosIdUploader:
     security:
       - bearerAuth: []
 
+VideosIdSubject:
+  get:
+    tags:
+      - video
+    summary: Obtener la asignatura de un video
+    operationId: getVideoSubject
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id del video
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: projection
+        in: query
+        description: Incluir si se quiere obtener tambien la universidad en la respuesta
+        schema:
+          type: string
+          default: subjectWithUniversity
+    responses:
+      200:
+        description: Devuelve la asignatura de un video
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Subject'
+    security:
+      - bearerAuth: []
+
+VideosUploaderVideos:
+  get:
+    tags:
+      - video
+    summary: Lista de videos que ha subido un usuario
+    operationId: getVideosFromUploader
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - name: uploader_id
+        in: query
+        description: Id del uploader
+        required: true
+        schema:
+          type: integer
+          format: int64
+
+    responses:
+      200:
+        description: Devuelve una lista de videos
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/VideoGetResponse'
+    security:
+      - bearerAuth: []
+
+VideosSubjectVideos:
+  get:
+    tags:
+      - video
+    summary: Lista de videos de una asignatura
+    operationId: getVideosFromSubject
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - name: subject_id
+        in: query
+        description: Id de la asignatura
+        required: true
+        schema:
+          type: integer
+          format: int64
+
+    responses:
+      200:
+        description: Devuelve una lista de videos
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/VideoGetResponse'
+    security:
+      - bearerAuth: []
+
+VideoId:
+  get:
+    tags:
+      - video
+    summary: Obtener el video con un id dado
+    operationId: getVideo
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id del video
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve el video con un id dado
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Video'
+    security:
+      - bearerAuth: []

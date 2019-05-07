@@ -37,13 +37,4 @@ public class Degree {
 			inverseJoinColumns = @JoinColumn(
 				name = "fk_university", referencedColumnName = "id"))
     private Collection<University> universities;
-    
-    @ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(
-		name = "degree_subject",
-		joinColumns = @JoinColumn(
-			name = "fk_degree", referencedColumnName = "id"),
-			inverseJoinColumns = @JoinColumn(
-				name = "fk_subject", referencedColumnName = "id"))
-	private Collection<Subject> subjects;
 }

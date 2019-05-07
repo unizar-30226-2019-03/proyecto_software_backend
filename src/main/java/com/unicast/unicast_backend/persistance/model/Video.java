@@ -15,6 +15,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.Formula;
 
 import lombok.Data;
@@ -40,6 +42,8 @@ public class Video {
 
     private URI thumbnailUrl;
 
+    private Integer seconds;
+
     @ManyToOne
     @JoinColumn(name = "fk_subject")
     private Subject subject;
@@ -54,11 +58,15 @@ public class Video {
     @OneToMany(mappedBy = "video")
     private Collection<Vote> votes;
 
+    @JsonIgnore
+	@OneToMany(mappedBy = "video")
+	private Collection<Display> displays;
+
     @ManyToMany
     @JoinTable(name = "video_video_tag", joinColumns = @JoinColumn(name = "fk_video"), inverseJoinColumns = @JoinColumn(name = "fk_video_tag"))
     private Collection<VideoTag> tags;
 
-    @Formula("(select avg((v.quality + v.clarity + v.suitability) / 3.0) from video vid join app_user_video_vote v on vid.id = v.fk_video)")
+    @Formula("(select avg((v.quality + v.clarity + v.suitability) / 3.0) from app_user_video_vote v where id = v.fk_video)")
     private Float score;
 
 }

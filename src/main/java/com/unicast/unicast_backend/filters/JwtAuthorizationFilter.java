@@ -19,6 +19,8 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 import io.jsonwebtoken.Claims;
@@ -74,9 +76,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
                 if (StringUtils.isNotEmpty(userIdStr)) {
                     Long userId = Long.parseLong(parsedToken.getBody().getSubject());
+                    UserDetails user = this.userDetailsService.loadUserById(userId);
+                    return new UsernamePasswordAuthenticationToken(user, null, authorities);
 
-                    return new UsernamePasswordAuthenticationToken(this.userDetailsService.loadUserById(userId),
-                            null, authorities);
                 }
             } catch (ExpiredJwtException exception) {
                 log.warn("Request to parse expired JWT : {} failed : {}", token, exception.getMessage());
@@ -88,6 +90,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 log.warn("Request to parse JWT with invalid signature : {} failed : {}", token, exception.getMessage());
             } catch (IllegalArgumentException exception) {
                 log.warn("Request to parse empty or null JWT : {} failed : {}", token, exception.getMessage());
+            } catch (UsernameNotFoundException exception) {
+                log.warn("Id of user in token was not found on the database: {}", exception.getMessage());
             }
         }
 

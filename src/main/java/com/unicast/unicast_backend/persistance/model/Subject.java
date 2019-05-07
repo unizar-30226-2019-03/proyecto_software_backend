@@ -48,7 +48,4 @@ public class Subject {
     @JsonIgnore
     @OneToMany(mappedBy = "subject")
     private Collection<Video> videos;
-
-    @ManyToMany(mappedBy = "subjects")
-    private Collection<Degree> degrees;
 }

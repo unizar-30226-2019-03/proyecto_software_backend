@@ -213,33 +213,6 @@ UsersIdSubjects:
     security:
       - bearerAuth: []
 
-UsersIdUploadedVideos:
-  get:
-    tags:
-      - user
-    summary: Obtener los videos subidos por un usuario
-    operationId: getVideosOfUser
-    parameters:
-      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
-      - name: id
-        in: path
-        description: Id del usuario
-        required: true
-        schema:
-          type: integer
-          format: int64
-    responses:
-      200:
-        description: Devuelve los videos de un usuario
-        content:
-          application/hal+json:
-            schema:
-              $ref: 'api-spec.yml#/components/schemas/VideoGetEmbedded'
-    security:
-      - bearerAuth: []
-
 UsersSearchNameStartsWith:
   get:
     tags:

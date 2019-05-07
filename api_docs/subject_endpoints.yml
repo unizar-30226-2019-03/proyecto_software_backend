@@ -8,8 +8,14 @@ Subjects:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/QueryParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
       - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - name: projection
+        in: query
+        description: Incluir si se quiere obtener tambien la universidad en la respuesta
+        schema:
+          type: string
+          default: subjectWithUniversity
     responses:
       200:
         description: Devuelve una lista de asignaturas
@@ -85,7 +91,7 @@ SubjectsIdUsers:
           type: integer
           format: int64
     requestBody:
-      description: Link del usuario a asociar con la asignatura
+      description: Id del usuario a asociar con la asignatura
       required: true
       content:
         text/uri-list:
@@ -94,20 +100,17 @@ SubjectsIdUsers:
             format: int64
     responses:
       204:
-        description: Se ha relacionado el/los usuarios con la asignatura
+        description: Se ha relacionado el usuario con la asignatura
     security:
       - bearerAuth: []
 
-SubjectsIdVideos:
-  get:
+SubjectsIdUniversity:
+  put:
     tags:
       - subject
-    summary: Devuelve una lista con los videos de una asignatura
-    operationId: getVideosFromSubject
+    summary: Relacionar una universidad con una asignatura
+    operationId: putUniversity
     parameters:
-      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
       - name: id
         in: path
         description: Id de la asignatura
@@ -115,13 +118,17 @@ SubjectsIdVideos:
         schema:
           type: integer
           format: int64
+    requestBody:
+      description: Id de la universidad a asociar con la asignatura
+      required: true
+      content:
+        text/uri-list:
+          schema:
+            type: integer
+            format: int64
     responses:
-      200:
-        description: Lista de los videos encontrados
-        content:
-          application/json:
-            schema:
-              $ref: 'api-spec.yml#/components/schemas/VideoGetEmbedded'
+      204:
+        description: Se ha relacionado la universidad con la asignatura
     security:
       - bearerAuth: []
 
@@ -167,6 +174,12 @@ SubjectsSearchNameStartsWith:
         schema:
           type: string
         description: Comienzo del nombre de la asignatura a buscar
+      - name: projection
+        in: query
+        description: Incluir si se quiere obtener tambien la universidad en la respuesta
+        schema:
+          type: string
+          default: subjectWithUniversity
     responses:
       200:
         description: Lista de las asignaturas encontradas
@@ -190,6 +203,12 @@ SubjectsSearchNameContaining:
         schema:
           type: string
         description: String a buscar en el nombre de asignaturas
+      - name: projection
+        in: query
+        description: Incluir si se quiere obtener tambien la universidad en la respuesta
+        schema:
+          type: string
+          default: subjectWithUniversity
     responses:
       200:
         description: Devuelve una lista de asignaturas

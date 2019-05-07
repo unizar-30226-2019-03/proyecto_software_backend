@@ -19,6 +19,8 @@ public abstract class S3FileHandler {
 
     private static Integer FILE_KEY_LENGTH = 10;
 
+    private File lastFile;
+
     abstract protected String getFilePrefix();
 
     abstract protected String getFileFolder();
@@ -34,6 +36,15 @@ public abstract class S3FileHandler {
         // TODO: excepcion sin tratar
         s3.putObject(s3Constants.BUCKET_NAME, s3Key, file);
 
+        lastFile = file;
         return new URI(s3.getResourceUrl(s3Constants.BUCKET_NAME, s3Key));
+    }
+
+    public File getLastUploadedTmpFile() {
+        return lastFile;
+    }
+
+    public void deleteLastUploadedTmpFile() {
+        lastFile.delete();
     }
 }
