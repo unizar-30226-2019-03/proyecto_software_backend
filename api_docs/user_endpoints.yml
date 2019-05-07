@@ -213,6 +213,60 @@ UsersIdSubjects:
     security:
       - bearerAuth: []
 
+UsersIdDegree:
+  get:
+    tags:
+      - user
+    summary: Obtener la carrera de un usuario
+    operationId: getDegreeOfUser
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id del usuario
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve la carrera de un usuario
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Degree'
+    security:
+      - bearerAuth: []
+
+UsersIdUniversity:
+  get:
+    tags:
+      - user
+    summary: Obtener la universidad de un usuario
+    operationId: getUniversityOfUser
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id del usuario
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve la universidad de un usuario
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/University'
+    security:
+      - bearerAuth: []
+
 UsersSearchNameStartsWith:
   get:
     tags:

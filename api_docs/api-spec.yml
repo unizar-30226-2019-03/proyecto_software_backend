@@ -534,15 +534,15 @@ components:
           type: string
       required:
           - name
-              
+
     ReproductionListList:
-        type: object
+      type: object
       properties:
         degrees:
           type: array
           items:
                 $ref: '#/components/schemas/ReproductionList'
-                
+
     ReproductionListGetResponse:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
@@ -558,7 +558,7 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/ReproductionList'
-                
+
 
 paths:
 
@@ -578,6 +578,12 @@ paths:
 
   /users/{id}/subjects:
     $ref: 'user_endpoints.yml#/UsersIdSubjects'
+
+  /users/{id}/degree:
+    $ref: 'user_endpoints.yml#/UsersIdDegree'
+
+  /users/{id}/university:
+    $ref: 'user_endpoints.yml#/UsersIdUniversity'
 
   /users/search/nameStartsWith:
     $ref: 'user_endpoints.yml#/UsersSearchNameStartsWith'
@@ -724,19 +730,19 @@ paths:
   #Messages endpoints
 
   /messages:
-    $ref: 'messages_endpoints.yml#/Messages'
+    $ref: 'message_endpoints.yml#/Messages'
 
   #ReproductionList endpoints
 
-  /ReproductionList:
-    $ref: 'reproductionList_endpoints.yml#/ReproductionLists'
+  # /reproductionLists:
+  #   $ref: 'reproduction_list_endpoints.yml#/ReproductionLists'
 
-  /ReproductionList/{id}:
-    $ref: 'reproductionList_endpoints.yml#/GetReproductionList'
+  # /reproductionList/{id}:
+  #   $ref: 'reproduction_list_endpoints.yml#/GetReproductionList'
 
-  /ReproductionList/search/AddReproductionList:
-     $ref: 'reproductionList_endpoints.yml#/AddReproductionList'
+  # /reproductionList/search/AddReproductionList:
+  #    $ref: 'reproduction_list_endpoints.yml#/AddReproductionList'
 
-  /ReproductionList/search/DeleteReproductionList:
-     $ref: 'reproductionList_endpoints.yml#/DeleteReproductionList'
-     
+  # /reproductionList/search/DeleteReproductionList:
+  #    $ref: 'reproduction_list_endpoints.yml#/DeleteReproductionList'
+

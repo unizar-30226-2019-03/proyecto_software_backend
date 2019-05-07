@@ -1,9 +1,7 @@
 package com.unicast.unicast_backend.controllers;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
-import java.util.List;
 
 import com.unicast.unicast_backend.persistance.model.ReproductionList;
 import com.unicast.unicast_backend.persistance.model.User;
@@ -11,14 +9,14 @@ import com.unicast.unicast_backend.persistance.repository.ReproductionListReposi
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.RestController;
 
 
-@RepositoryRestController
+@RestController
 public class ReproductionListController {
 
     private final ReproductionListRepository repo;
@@ -27,9 +25,8 @@ public class ReproductionListController {
     public ReproductionListController(ReproductionListRepository u) {
         this.repo = u;
     }
-
     
-    @GetMapping(value = "api/reproductionList/mostrar", produces = "application/json")
+    @GetMapping(value = "/api/reproductionList/mostrar", produces = "application/json")
     public Collection<ReproductionList> getUserReproducctionLists(User user)throws Exception {
          // Obtencion de la coleccion de listas de reproduccion del usuario loggeado
          Collection<ReproductionList> reproductionLists = user.getReproductionLists();
@@ -39,7 +36,7 @@ public class ReproductionListController {
     }
 
 
-    @GetMapping(value = "api/reproductionList/obternerUna", produces = "application/json")
+    @GetMapping(value = "/api/reproductionList/obternerUna", produces = "application/json")
     public ReproductionList getReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth, int id)throws Exception {		 
 		 // Obtencion de los datos del usuario loggeado
         User user = userAuth.getUser();
