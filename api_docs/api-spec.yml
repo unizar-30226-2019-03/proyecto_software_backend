@@ -40,6 +40,8 @@ tags:
     description: Operaciones sobre las visualizaciones de videos (historial)
   - name: vote
     description: Operaciones sobre los votos
+  - name: reproductionList
+    description: Operaciones sobre listas de reproduccion
 
 components:
   securitySchemes:
@@ -304,6 +306,7 @@ components:
           items:
                 $ref: '#/components/schemas/Degree'
 
+              
     DegreeGetResponse:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
@@ -320,6 +323,46 @@ components:
               items:
                 $ref: '#/components/schemas/Degree'
 
+    
+    #### NUEVO DE LISTAS VIDEO
+    ReproductionList:
+      type: object
+      discriminator:
+        propertyName: name
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+      required:
+          - name
+              
+    ReproductionListList:
+        type: object
+      properties:
+        degrees:
+          type: array
+          items:
+                $ref: '#/components/schemas/ReproductionList'
+                
+                
+    ReproductionListGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/ReproductionListGetEmbedded'
+
+    ReproductionListGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            degrees:
+              type: array
+              items:
+                $ref: '#/components/schemas/ReproductionList'
+                
     Comment:
       type: object
       properties: 
@@ -514,6 +557,23 @@ paths:
 
   /degrees/search/nameContaining:
      $ref: 'degree_endpoints.yml#/DegreeSearchNameContaining'
+     
+  
+  #NUEVO LISTAS REPRODUCCION
+  #ReproductionList endpoints
+
+  /ReproductionList:
+    $ref: 'reproductionList_endpoints.yml#/ReproductionLists'
+
+  /ReproductionList/{id}:
+    $ref: 'reproductionList_endpoints.yml#/GetReproductionList'
+
+  /ReproductionList/search/AddReproductionList:
+     $ref: 'reproductionList_endpoints.yml#/AddReproductionList'
+
+  /ReproductionList/search/DeleteReproductionList:
+     $ref: 'reproductionList_endpoints.yml#/DeleteReproductionList'
+     
 
   #University endpoints
 
