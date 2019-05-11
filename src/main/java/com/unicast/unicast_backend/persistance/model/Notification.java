@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import lombok.Data;
 
 @Data
@@ -34,4 +37,8 @@ public class Notification {
     @OneToMany(mappedBy = "notification")
     private Collection<UserIsNotified> users;
 
+	@JsonProperty(access = Access.READ_ONLY)
+    public String getNotificationCategory() {
+        return category.getName();
+    }
 }

@@ -3,7 +3,7 @@ UserUncheckedNotifications:
     tags:
       - notification
     summary: Lista de notificaciones que no han sido revisadas
-    operationId: getReproductionLists
+    operationId: getUserUncheckedNotifications
     parameters:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
@@ -23,6 +23,59 @@ UserUncheckedNotifications:
         content:
           application/json:
             schema:
-              $ref: 'api-spec.yml#/components/schemas/NotificationGetResponse'
+              $ref: 'api-spec.yml#/components/schemas/UserIsNotifiedGetResponse'
+    security:
+      - bearerAuth: []
+
+UserNotifications:
+  get:
+    tags:
+      - notification
+    summary: Lista de notificaciones de un usuario, tanto revisadas como no revisadas
+    operationId: getUserNotifications
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - name: user_id
+        in: query
+        description: Id del usuario sobre el que comprobar las notificaciones
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve una lista de notificaciones 
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/UserIsNotifiedGetResponse'
+    security:
+      - bearerAuth: []
+
+NotificationsCheck:
+  patch:
+    tags:
+      - notification
+    summary: Marca una notificacion como revisada
+    operationId: checkNotification
+    parameters:
+      - name: notification_id
+        in: query
+        description: Id de la notificacion a marcar como revisada
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve la notificacion modificada 
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/UserIsNotified'
     security:
       - bearerAuth: []

@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.2.0
+  version: 1.2.1
   title: Swagger Unicast
 
 servers:
@@ -262,13 +262,17 @@ components:
         timestamp:
           type: string
           format: date-time
-        # category ?
+        notificationCategory:
+          type: string
+          enum: [messages, videos]
 
     UserIsNotified:
-      checked:
-        type: boolean
-      notification:
-        $ref: '#/components/schemas/Notification'
+      type: object
+      properties:
+        checked:
+          type: boolean
+        notification:
+          $ref: '#/components/schemas/Notification'
 
     PaginationPage:
       type: object
@@ -785,6 +789,17 @@ paths:
 
   /messages:
     $ref: 'message_endpoints.yml#/Messages'
+
+  #Notification endpoints
+
+  /usersAreNotified/search/userUncheckedNotifications:
+    $ref: 'notification_endpoints.yml#/UserUncheckedNotifications'
+
+  /usersAreNotified/search/userNotifications:
+    $ref: 'notification_endpoints.yml#/UserNotifications'
+
+  /usersAreNotified/check:
+    $ref: 'notification_endpoints.yml#/NotificationsCheck'
 
   #ReproductionList endpoints
 
