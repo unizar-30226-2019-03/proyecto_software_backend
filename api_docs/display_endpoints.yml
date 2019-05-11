@@ -47,13 +47,6 @@ DisplaysSearchUser:
       - $ref: 'api-spec.yml#/components/parameters/PageParameter'
       - $ref: 'api-spec.yml#/components/parameters/SortParameter'
       - $ref: 'api-spec.yml#/components/parameters/DisplayProjectionParameter'
-      - name: id
-        in: query
-        description: Id del usuario
-        required: true
-        schema:
-          type: integer
-          format: int64
     responses:
       200:
         description: Lista de las visualizaciones obtenidos

@@ -45,6 +45,7 @@ public class CommentController {
             @RequestParam(name = "comment_replied_to_id", required = false) Long commentRepliedToId)
             throws URISyntaxException {
         User user = userAuth.getUser();
+        // TODO: comprobar que secs_from_beg sea <= que la duracion del video y sino lance excepcion
 
         Comment comment = new Comment();
 

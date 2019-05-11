@@ -24,12 +24,13 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     public List<Video> findByTitleContainingIgnoreCase(@Param("title") String title);
 
     @RestResource(path = "uploaderVideos", rel = "uploaderVideos")
-    public Page<Video> findByUploaderId(@Param("uploader_id") Long uploaderId, Pageable page);
+    @Query("select v from Video v where v.uploader.id = ?#{ principal?.id }")
+    public Page<Video> findByUploaderId(Pageable page);
 
     @RestResource(path = "subjectVideos", rel = "subjectVideos")
     public Page<Video> findBySubjectId(@Param("subject_id") Long subjectId, Pageable page);
 
     @RestResource(path = "userSubjects", rel = "userSubjects")
-    @Query("select v from Video v join Subject s on v.subject = s join User u on u.id = ?1 where u member of s.users")
-    public Page<Video> findBySubjectsAndUserId(@Param("user_id") Long userId, Pageable Page);
+    @Query("select v from Video v join Subject s on v.subject = s join User u on u.id = ?#{ principal?.id } where u member of s.users")
+    public Page<Video> findBySubjectsAndUserId(Pageable Page);
 }

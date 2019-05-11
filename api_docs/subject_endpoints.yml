@@ -238,13 +238,6 @@ SubjectsUserIn:
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
       - in: query
-        name: user_id
-        required: true
-        schema:
-          type: integer
-          format: int64
-        description: Id el usuario a buscar
-      - in: query
         name: subject_id
         required: true
         schema:

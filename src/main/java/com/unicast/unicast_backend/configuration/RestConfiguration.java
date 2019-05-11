@@ -11,10 +11,12 @@ import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.Video;
 import com.unicast.unicast_backend.persistance.model.Vote;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.mapping.RepositoryDetectionStrategy.RepositoryDetectionStrategies;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
+import org.springframework.security.data.repository.query.SecurityEvaluationContextExtension;
 
 @Configuration
 public class RestConfiguration implements RepositoryRestConfigurer {
@@ -32,5 +34,10 @@ public class RestConfiguration implements RepositoryRestConfigurer {
         config.exposeIdsFor(Message.class);
         config.exposeIdsFor(Notification.class);
         config.setRepositoryDetectionStrategy(RepositoryDetectionStrategies.ANNOTATED);
+    }
+
+    @Bean
+    public SecurityEvaluationContextExtension securityEvaluationContextExtension() {
+        return new SecurityEvaluationContextExtension();
     }
 }

@@ -40,6 +40,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-rest'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.security:spring-security-data'
 	implementation 'org.postgresql:postgresql'
 	implementation 'org.apache.commons:commons-lang3'
 	compile 'org.apache.httpcomponents:httpmime'

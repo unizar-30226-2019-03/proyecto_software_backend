@@ -48,6 +48,8 @@ public class DisplayController {
             throws URISyntaxException {
         User user = userAuth.getUser();
 
+        // TODO: comprobar que secs_from_beg sea <= que la duracion del video y sino lance excepcion
+
         Display display = new Display();
         display.setSecsFromBeg(secondsFromBeginning);
         display.setUser(user);

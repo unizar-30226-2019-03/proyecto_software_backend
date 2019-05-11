@@ -9,14 +9,6 @@ UserUncheckedNotifications:
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PageParameter'
-      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
-      - name: user_id
-        in: query
-        description: Id del usuario sobre el que comprobar las notificaciones
-        required: true
-        schema:
-          type: integer
-          format: int64
     responses:
       200:
         description: Devuelve una lista de notificaciones 
@@ -38,14 +30,6 @@ UserNotifications:
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PageParameter'
-      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
-      - name: user_id
-        in: query
-        description: Id del usuario sobre el que comprobar las notificaciones
-        required: true
-        schema:
-          type: integer
-          format: int64
     responses:
       200:
         description: Devuelve una lista de notificaciones 
