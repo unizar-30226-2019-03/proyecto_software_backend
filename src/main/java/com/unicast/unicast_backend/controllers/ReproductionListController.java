@@ -128,7 +128,10 @@ public class ReproductionListController {
             c.setVideo(v);
             c.setPosition(position);
 
-    }
+            // añadir el video
+            Collection<Contains> totalContains = list.getVideoList();
 
- 
+            // añadir contain
+            totalContains.add(c);
+    }
 }
