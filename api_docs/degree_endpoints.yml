@@ -175,7 +175,7 @@ DegreeSearchName:
   get:
     tags:
       - degree
-    summary: Busca una carrera con un nmbre dado
+    summary: Busca una carrera con un nombre dado
     operationId: findDegreesByName
     parameters:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'

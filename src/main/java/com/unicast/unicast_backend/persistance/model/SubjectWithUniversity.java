@@ -10,7 +10,7 @@ interface SubjectWithUniversity {
 
     String getAbbreviation();
 
-    Double getPoints();
-
     University getUniversity();
+
+    Double getAvgScore();
 }

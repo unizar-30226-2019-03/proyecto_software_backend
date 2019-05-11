@@ -11,6 +11,7 @@ import com.drew.imaging.ImageMetadataReader;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.mp4.Mp4Directory;
 import com.unicast.unicast_backend.assemblers.VideoResourceAssembler;
+import com.unicast.unicast_backend.async.NotificationAsync;
 import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.Video;
@@ -40,7 +41,7 @@ public class VideoController {
 
     @Autowired
     private SubjectRepository subjectRepository;
-
+    
     @Autowired
     private VideoResourceAssembler videoAsssembler;
 
@@ -50,6 +51,9 @@ public class VideoController {
     @Autowired
     private S3ImageHandler s3ImageHandler;
 
+    @Autowired
+    private NotificationAsync notificationAsync;
+    
     @PostMapping(value = "/api/upload/video", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> uploadVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestPart("file") MultipartFile videoFile, @RequestPart("thumbnail") MultipartFile thumbnail,
@@ -67,11 +71,13 @@ public class VideoController {
             throw new Exception("El que sube video debe pertenecer a la asignatura del video");
         }
 
+        Timestamp now = Timestamp.from(Instant.now());
+
         video.setTitle(title);
         video.setDescription(description);
         video.setSubject(subject);
         video.setUploader(user);
-        video.setTimestamp(Timestamp.from(Instant.now()));
+        video.setTimestamp(now);
 
         URI videoURL = s3VideoHandler.uploadFile(videoFile);
         URI thumbnailURL = s3ImageHandler.uploadFile(thumbnail);
@@ -95,6 +101,8 @@ public class VideoController {
 
         videoRepository.save(video);
 
+        notificationAsync.createUserNotificationsVideo(subject, now);
+        
         Resource<Video> resourceVideo = videoAsssembler.toResource(video);
 
         return ResponseEntity.created(new URI(resourceVideo.getId().expand().getHref())).body(resourceVideo);

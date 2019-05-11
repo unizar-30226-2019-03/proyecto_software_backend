@@ -129,7 +129,7 @@ public class UnicastBackendPersistanceTests {
 		notificationCategory.setName(testName);
 		notificationCategoryRepository.save(notificationCategory);
 
-		NotificationCategory notificationCategoryBD = notificationCategoryRepository.findByName(testName);
+		NotificationCategory notificationCategoryBD = notificationCategoryRepository.findByName(testName).get();
 
 		assertEquals(notificationCategory, notificationCategoryBD);
 

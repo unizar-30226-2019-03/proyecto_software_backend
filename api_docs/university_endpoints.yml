@@ -91,11 +91,12 @@ UniversitiesIdSubjects:
     tags:
       - university
     summary: Devuelve una lista con las asignaturas de una universidad
-    operationId: getSubjecstFromUniversity
+    operationId: getSubjectsFromUniversity
     parameters:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SubjectProjectionParameter'
       - name: id
         in: path
         description: Id de la universidad
@@ -110,6 +111,33 @@ UniversitiesIdSubjects:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/SubjectGetEmbedded'
+    security:
+      - bearerAuth: []
+
+UniversitiesIdDegrees:
+  get:
+    tags:
+      - university
+    summary: Devuelve una lista con las carreras de una universidad
+    operationId: getDegreesFromUniversity
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
+        in: path
+        description: Id de la universidad
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Lista de las carreras encontrados
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/DegreeGetEmbedded'
     security:
       - bearerAuth: []
 

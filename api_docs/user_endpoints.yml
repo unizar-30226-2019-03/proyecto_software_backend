@@ -196,6 +196,7 @@ UsersIdSubjects:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SubjectProjectionParameter'
       - name: id
         in: path
         description: Id del usuario

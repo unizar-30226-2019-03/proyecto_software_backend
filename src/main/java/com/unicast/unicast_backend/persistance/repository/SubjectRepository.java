@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.unicast.unicast_backend.persistance.model.Subject;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
@@ -21,8 +23,10 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
     @RestResource(path = "name", rel = "name")
     public Subject findByNameIgnoreCase(@Param("name") String name);
 
+    @RestResource(path = "ranking", rel = "ranking")
+    public Page<Subject> findRanking(Pageable page);
+
     @RestResource(path = "userIn", rel = "userIn")
     public boolean existsByIdAndUsersIdIn(@Param("subject_id") Long subjectId, @Param("user_id") Long userId);
-
 
 }

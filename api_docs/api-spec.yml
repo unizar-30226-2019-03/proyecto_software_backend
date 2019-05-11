@@ -44,6 +44,8 @@ tags:
     description: Operaciones sobre los mensajes
   - name: reproductionList
     description: Operaciones sobre listas de reproduccion
+  - name: notification
+    description: Operaciones sobre notificaciones
 
 components:
   securitySchemes:
@@ -236,13 +238,37 @@ components:
         id:
           type: integer
           format: int64
+        university:
+          $ref: '#/components/schemas/University'
         name:
           type: string
         abbreviation:
           type: string
+        avgScore:
+          type: number
+          format: double
       required:
         - name
         - abbreviation
+
+    Notification:
+      type: object
+      properties:
+        id:
+          type: int
+          format: int64
+        text:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        # category ?
+
+    UserIsNotified:
+      checked:
+        type: boolean
+      notification:
+        $ref: '#/components/schemas/Notification'
 
     PaginationPage:
       type: object
@@ -282,7 +308,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
         - $ref: '#/components/schemas/UniversityGetEmbedded'
-
+        
     SubjectGetEmbedded:
       type: object
       properties:
@@ -382,6 +408,8 @@ components:
         secondsFromBeginning:
           type: integer
           format: int64
+        user:
+          $ref: '#/components/schemas/User'
       required:
         - text
         - timestamp
@@ -417,20 +445,14 @@ components:
             userId:
               type: integer
               format: int64
+        video:
+          $ref: '#/components/schemas/Video'
         timestampLastTime:
           type: string
           format: date-time
         secsFromBeg:
           type: integer
           format: int64
-
-    DisplayWithVideoEmbedded:
-      allOf:
-        - type: object
-          properties:
-            video:
-              $ref: '#/components/schemas/Video'
-        - $ref: '#/components/schemas/Display'
 
     DisplayGetEmbedded:
       type: object
@@ -441,7 +463,7 @@ components:
             displays:
               type: array
               items:
-                $ref: '#/components/schemas/DisplayWithVideoEmbedded'
+                $ref: '#/components/schemas/Display'
 
     DisplayGetResponse:
       allOf:
@@ -559,6 +581,22 @@ components:
               items:
                 $ref: '#/components/schemas/ReproductionList'
 
+    UserIsNotifiedGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/UserIsNotifiedGetEmbedded'
+
+    UserIsNotifiedGetEmbedded:
+      type: object
+      properties:
+        _embedded:
+          type: object
+          properties:
+            usersAreNotified:
+              type: array
+              items:
+                $ref: '#/components/schemas/UserIsNotified'
+
 
 paths:
 
@@ -629,6 +667,14 @@ paths:
   /subjects/search/name:
     $ref: 'subject_endpoints.yml#/SubjectsSearchName'
 
+  /subjects/search/userIn:
+    $ref: 'subject_endpoints.yml#/SubjectsUserIn'
+
+  /subjects/search/ranking:
+     $ref: 'subject_endpoints.yml#/SubjectsGetRanking'
+
+    
+
 
   #Degree endpoints
 
@@ -660,6 +706,9 @@ paths:
 
   /universities/{id}/subjects:
     $ref: 'university_endpoints.yml#/UniversitiesIdSubjects'
+
+  /universities/{id}/degrees:
+    $ref: 'university_endpoints.yml#/UniversitiesIdDegrees'
 
   /universities/search/nameStartsWith:
     $ref: 'university_endpoints.yml#/UniversitiesSearchNameStartsWith'
@@ -699,6 +748,8 @@ paths:
   /videos/search/userSubjects:
     $ref: 'video_endpoints.yml#/UserSubjects'
 
+  /delete/video:
+    $ref: 'video_endpoints.yml#/DeleteVideo'
 
   #Comment endpoints
 

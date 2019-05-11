@@ -3,20 +3,24 @@ package com.unicast.unicast_backend.configuration;
 import java.util.Collection;
 import java.util.Optional;
 
+import com.unicast.unicast_backend.persistance.model.NotificationCategory;
 import com.unicast.unicast_backend.persistance.model.Privilege;
 import com.unicast.unicast_backend.persistance.model.Role;
 import com.unicast.unicast_backend.persistance.model.User;
+import com.unicast.unicast_backend.persistance.repository.NotificationCategoryRepository;
 import com.unicast.unicast_backend.persistance.repository.PrivilegeRepository;
 import com.unicast.unicast_backend.persistance.repository.RoleRepository;
 import com.unicast.unicast_backend.persistance.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.stereotype.Component;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.transaction.annotation.Transactional;
 
-@Component
+@Configuration
+@EnableAsync
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
  
     private boolean alreadySetup = false;
@@ -26,6 +30,9 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private NotificationCategoryRepository notificationCatRepository;
 
     @Autowired
     private SecurityConfiguration securityConfiguration;
@@ -56,6 +63,20 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             user.setDescription("blablabla");
             user.setEnabled(true);
             userRepository.save(user);
+        }
+
+        // LAS CATEGORIAS DE LAS NOTIFICACIONES SE CREAN AQUI
+
+        if (!notificationCatRepository.findByName("videos").isPresent()) {
+            NotificationCategory videosCategory = new NotificationCategory();
+            videosCategory.setName("videos");
+            notificationCatRepository.save(videosCategory);
+        }
+
+        if (!notificationCatRepository.findByName("messages").isPresent()) {
+            NotificationCategory videosCategory = new NotificationCategory();
+            videosCategory.setName("messages");
+            notificationCatRepository.save(videosCategory);
         }
 
 

@@ -138,6 +138,7 @@ VideosIdSubject:
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SubjectProjectionParameter'
       - name: id
         in: path
         description: Id del video
@@ -249,7 +250,7 @@ UserSubjects:
   get:
     tags:
       - video
-    summary: Lista de videos de una asignatura
+    summary: Lista de videos de las asignaturas de un usuario
     operationId: getVideosOfUserSubjects
     parameters:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
@@ -273,5 +274,30 @@ UserSubjects:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/VideoGetResponse'
+    security:
+      - bearerAuth: []
+
+DeleteVideo:
+  delete:
+    tags:
+      - video
+    summary: Eliminacion de un video (si se es el autor del mismo)
+    operationId: deleteVideo
+    requestBody:
+      description: video que se va a eliminar
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+            required:
+              - id
+    responses:
+      204:
+        description: Video eliminado con exito
     security:
       - bearerAuth: []

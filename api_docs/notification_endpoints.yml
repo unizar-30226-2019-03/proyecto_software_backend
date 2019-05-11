@@ -1,0 +1,28 @@
+UserUncheckedNotifications:
+  get:
+    tags:
+      - notification
+    summary: Lista de notificaciones que no han sido revisadas
+    operationId: getReproductionLists
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - name: user_id
+        in: query
+        description: Id del usuario sobre el que comprobar las notificaciones
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve una lista de notificaciones 
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/NotificationGetResponse'
+    security:
+      - bearerAuth: []

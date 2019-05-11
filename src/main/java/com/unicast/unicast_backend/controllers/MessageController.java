@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 import com.unicast.unicast_backend.assemblers.MessageResourceAssembler;
+import com.unicast.unicast_backend.async.NotificationAsync;
 import com.unicast.unicast_backend.persistance.model.Message;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.repository.MessageRepository;
@@ -36,13 +37,16 @@ public class MessageController {
 
     private final PagedResourcesAssembler<Message> pagedAssembler;
 
+    private final NotificationAsync notificationAsync;
+
     @Autowired
     public MessageController(MessageRepository u, UserRepository a, MessageResourceAssembler messageAssembler,
-            PagedResourcesAssembler<Message> pagedAssembler) {
+            PagedResourcesAssembler<Message> pagedAssembler, NotificationAsync notificationAsync) {
         this.messageRepository = u;
         this.userRepository = a;
         this.messageAssembler = messageAssembler;
         this.pagedAssembler = pagedAssembler;
+        this.notificationAsync = notificationAsync;
     }
 
     @PostMapping(value = "/api/messages", produces = "application/json", consumes = "multipart/form-data")
@@ -57,12 +61,16 @@ public class MessageController {
         // TODO: comprobar que receiver sea un profesor de una de las asignaturas del
         // usuario
 
-        message.setTimestamp(Timestamp.from(Instant.now()));
+        Timestamp now = Timestamp.from(Instant.now());
+
+        message.setTimestamp(now);
         message.setText(text);
         message.setReceiver(receiver);
         message.setSender(user);
 
         messageRepository.save(message);
+
+        notificationAsync.createUserNotificationsMessage(message, now);
 
         Resource<Message> messageResource = messageAssembler.toResource(message);
 
@@ -82,5 +90,4 @@ public class MessageController {
 
         return ResponseEntity.ok(messagesResource);
     }
-
 }
