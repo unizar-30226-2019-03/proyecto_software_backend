@@ -7,6 +7,9 @@ import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.metadata.Metadata;
+import com.drew.metadata.mp4.Mp4Directory;
 import com.unicast.unicast_backend.assemblers.VideoResourceAssembler;
 import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.User;
@@ -17,11 +20,12 @@ import com.unicast.unicast_backend.principal.UserDetailsImpl;
 import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 import com.unicast.unicast_backend.s3handlers.S3VideoHandler;
 
-import org.mp4parser.IsoFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -50,7 +54,8 @@ public class VideoController {
     public ResponseEntity<?> uploadVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestPart("file") MultipartFile videoFile, @RequestPart("thumbnail") MultipartFile thumbnail,
             @RequestParam("title") String title, @RequestParam("description") String description,
-            @RequestParam("subject_id") Long subjectId) throws Exception, IllegalStateException, IOException, URISyntaxException {
+            @RequestParam("subject_id") Long subjectId)
+            throws Exception, IllegalStateException, IOException, URISyntaxException {
         // TODO: gestionar tags y errores
         User user = userAuth.getUser();
         Video video = new Video();
@@ -67,30 +72,50 @@ public class VideoController {
         video.setSubject(subject);
         video.setUploader(user);
         video.setTimestamp(Timestamp.from(Instant.now()));
-        
+
         URI videoURL = s3VideoHandler.uploadFile(videoFile);
         URI thumbnailURL = s3ImageHandler.uploadFile(thumbnail);
-        
+
         video.setUrl(videoURL);
         video.setThumbnailUrl(thumbnailURL);
 
         File tempFile = s3VideoHandler.getLastUploadedTmpFile();
-        IsoFile isoFile = new IsoFile(tempFile);
+        Metadata metadata = ImageMetadataReader.readMetadata(tempFile);
 
-        Double lengthInSeconds = (double)
-                isoFile.getMovieBox().getMovieHeaderBox().getDuration() /
-                isoFile.getMovieBox().getMovieHeaderBox().getTimescale();
+        Mp4Directory mp4Directory = metadata.getFirstDirectoryOfType(Mp4Directory.class);
+
+        if (mp4Directory == null) {
+            // TODO: excepcion, el fichero no es video
+        }
         
-        video.setSeconds(lengthInSeconds.intValue());
+        video.setSeconds(mp4Directory.getInteger(Mp4Directory.TAG_DURATION));
 
-        isoFile.close();
         s3VideoHandler.deleteLastUploadedTmpFile();
         s3ImageHandler.deleteLastUploadedTmpFile();
-                
+
         videoRepository.save(video);
 
         Resource<Video> resourceVideo = videoAsssembler.toResource(video);
 
         return ResponseEntity.created(new URI(resourceVideo.getId().expand().getHref())).body(resourceVideo);
+    }
+
+    @DeleteMapping(value = "/api/delete/video", consumes = "multipart/form-data")
+    public ResponseEntity<?> uploadVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
+            @RequestParam("id") Long videoId) throws Exception, IllegalStateException, IOException, URISyntaxException {
+        // TODO: gestionar tags y errores
+        User user = userAuth.getUser();
+        Video video = videoRepository.findById(videoId).get();
+
+        if (video.getUploader() != user) {
+            // TODO: lanzar excepcion o algo
+        }
+
+        s3VideoHandler.deleteFile(video.getUrl().getPath());
+        s3ImageHandler.deleteFile(video.getThumbnailUrl().getPath());
+
+        videoRepository.delete(video);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

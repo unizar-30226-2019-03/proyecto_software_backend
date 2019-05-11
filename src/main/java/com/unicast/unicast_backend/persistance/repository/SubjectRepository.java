@@ -20,4 +20,9 @@ public interface SubjectRepository extends JpaRepository<Subject, Long> {
 
     @RestResource(path = "name", rel = "name")
     public Subject findByNameIgnoreCase(@Param("name") String name);
+
+    @RestResource(path = "userIn", rel = "userIn")
+    public boolean existsByIdAndUsersIdIn(@Param("subject_id") Long subjectId, @Param("user_id") Long userId);
+
+
 }

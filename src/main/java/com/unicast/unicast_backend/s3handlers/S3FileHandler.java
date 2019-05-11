@@ -6,13 +6,14 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+@Component
 public abstract class S3FileHandler {
     @Autowired
     private S3Constants s3Constants;
@@ -30,14 +31,18 @@ public abstract class S3FileHandler {
         File file = File.createTempFile(getFilePrefix(), uploadedFile.getOriginalFilename());
         uploadedFile.transferTo(file);
 
-        final AmazonS3Client s3 = (AmazonS3Client) AmazonS3ClientBuilder.standard().withRegion(s3Constants.CLIENT_REGION).build();
+
         final String s3Key = getFileFolder() + "/" + getFilePrefix()
                 + RandomStringUtils.randomAlphanumeric(FILE_KEY_LENGTH);
         // TODO: excepcion sin tratar
-        s3.putObject(s3Constants.BUCKET_NAME, s3Key, file);
+        s3Constants.s3.putObject(s3Constants.BUCKET_NAME, s3Key, file);
 
         lastFile = file;
-        return new URI(s3.getResourceUrl(s3Constants.BUCKET_NAME, s3Key));
+        return new URI(s3Constants.s3.getResourceUrl(s3Constants.BUCKET_NAME, s3Key));
+    }
+
+    public void deleteFile(String fileName) {
+        s3Constants.s3.deleteObject(new DeleteObjectRequest(s3Constants.BUCKET_NAME, fileName));
     }
 
     public File getLastUploadedTmpFile() {
