@@ -111,122 +111,24 @@ public class ReproductionListController {
 
     @PostMapping(value = "/api/reproductionList/addVideoReproductionList", produces = "application/json")
     public void anyadirVideoReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
-                                       ReproductionList newList, Video v)throws Exception {
+            @RequestParam ReproductionList list, @RequestParam Video v) throws Exception {
 
-        // Obtencion de los datos del usuario loggeado
-        User user = userAuth.getUser();
+            int position = list.getVideoList().size();
 
-        // Obtencion de la coleccion de listas de reproduccion del usuario loggeado
-        Collection<ReproductionList> reproductionLists = getUserReproducctionLists(user);
+            // Crear el contains Key
+            ContainsKey ck = new ContainsKey();
+            ck.setListId(list.getId());
+            ck.setVideoId(v.getId());
 
-        // NUmero de videos de la lista
-        int position = reproductionLists.size();
-
-        //Comprobar si existe la lista en las que ya tiene el ususario
-        try {
-            // Comprobar la existencia de esa lista
-            reproductionLists.contains(newList);
-
-            // Obtencion de los videos que posee esa lista
-            Collection<Contains> listaDeVideos = newList.getVideoList();
-            
-            // Comprobar que existe el video
+            // Crear contains
             Contains c = new Contains();
 
-            // Creacion de la tupla de claves
-            ContainsKey contains = new ContainsKey();
-
-            // Creacion de un contains
-            contains.setListId(newList.getId());
-            contains.setVideoId(v.getId());
-
-            c.setId(contains);
-            c.setList(newList);
+            c.setId(ck);
+            c.setList(list);
             c.setVideo(v);
-            c.setPosition(position + 1);
+            c.setPosition(position);
 
-            try {
-                // Comprobar si contiene ya el video
-                listaDeVideos.contains(c);
-
-                // Añadir el video a la lista 
-                listaDeVideos.add(c);
-
-                // Anyadir la nueva coleccion de videos
-                newList.setVideoList(listaDeVideos);
-
-            }
-            catch( Exception e){
-                // Mostrar la excepcion
-                e.printStackTrace();
-            }
-
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
     }
 
-
-    @PostMapping(value = "/api/reproductionList/addVideoReproductionList", produces = "application/json")
-    public void borrarVideoReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
-                                       ReproductionList newList, Video v)throws Exception {
-
-        // Obtencion de los datos del usuario loggeado
-        User user = userAuth.getUser();
-
-        // Obtencion de la coleccion de listas de reproduccion del usuario loggeado
-        Collection<ReproductionList> reproductionLists = getUserReproducctionLists(user);
-
-        // NUmero de videos de la lista
-        int position = reproductionLists.size();
-
-        //Comprobar si existe la lista en las que ya tiene el ususario
-        try {
-            // Comprobar la existencia de esa lista
-            reproductionLists.contains(newList);
-
-            // Obtencion de los videos que posee esa lista
-            Collection<Contains> listaDeVideos = newList.getVideoList();
-            
-            // Comprobar que existe el video
-            Contains c = new Contains();
-
-            // Creacion de la tupla de claves
-            ContainsKey contains = new ContainsKey();
-
-            // Creacion de un contains
-            contains.setListId(newList.getId());
-            contains.setVideoId(v.getId());
-
-            c.setId(contains);
-            c.setList(newList);
-            c.setVideo(v);
-            c.setPosition(position + 1);
-
-            try {
-                // Comprobar si contiene ya el video
-                listaDeVideos.contains(c);
-
-                // Añadir el video a la lista 
-                listaDeVideos.remove(c);
-
-                // Anyadir la nueva coleccion de videos
-                newList.setVideoList(listaDeVideos);
-
-            }
-            catch( Exception e){
-                // Mostrar la excepcion
-                e.printStackTrace();
-            }
-
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-    }
-
-
-
-
+ 
 }
