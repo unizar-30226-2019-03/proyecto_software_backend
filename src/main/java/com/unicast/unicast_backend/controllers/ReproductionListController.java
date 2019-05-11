@@ -134,4 +134,39 @@ public class ReproductionListController {
             // añadir contain
             totalContains.add(c);
     }
+
+
+    @PostMapping(value = "/api/reproductionList/borrarVideoReproductionList", produces = "application/json")
+    public void borrarVideoReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
+            @RequestParam ReproductionList list, @RequestParam Video v,
+            @RequestParam int position) throws Exception {
+
+            // Crear el contains Key con los datos que nos pasan
+            ContainsKey ck = new ContainsKey();
+            ck.setListId(list.getId());
+            ck.setVideoId(v.getId());
+
+            // Crear contains
+            Contains c = new Contains();
+
+            c.setId(ck);
+            c.setList(list);
+            c.setVideo(v);
+            c.setPosition(position);
+
+            // obtencion de todos los videos asociados a la lista
+            Collection<Contains> totalContains = list.getVideoList();
+
+            try {
+                // Comprobar que esta el video en la lista
+                totalContains.contains(c);
+
+                // Borrar el video asociado
+                totalContains.remove(c);
+            }
+            catch (Exception e){
+                // Mostrar excepcion 
+                e.printStackTrace();
+            }
+    }
 }
