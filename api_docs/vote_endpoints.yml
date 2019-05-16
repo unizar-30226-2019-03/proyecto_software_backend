@@ -6,12 +6,30 @@ Votes:
     description: Adicion de nuevo voto
     operationId: addVote
     requestBody:
-        description: Voto que se va a añadir
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: 'api-spec.yml#/components/schemas/Vote'
+      description: Voto que se va a añadir
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              video_id:
+                description: Id de la asignatura de la que se va a borar  el profesor
+                type: integer
+              suitability:
+                description: adecuacion
+                type: integer
+              clarity:
+                description: claridad
+                type: integer
+              quality:
+                description: calidad
+                type: integer
+            required:
+              - video_id
+              - suitability
+              - quality
+              - clarity
     responses:
       201:
         description: Voto añadido con exito

@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.2.1
+  version: 1.3.0
   title: Swagger Unicast
 
 servers:
@@ -341,14 +341,16 @@ components:
           type: string
         surnames:
           type: string
-        email:
-          type: string
-          format: email
         photo:
           type: string
           format: url
         description:
           type: string
+        role:
+          type: string
+          default: ROLE_USER
+          enum: [ROLE_USER, ROLE_PROFESSOR, ROLE_ADMIN]
+          
 
     UserGetEmbedded:
       type: object
@@ -621,6 +623,9 @@ paths:
   /users/{id}/subjects:
     $ref: 'user_endpoints.yml#/UsersIdSubjects'
 
+  /users/{id}/subjectsAsProfessor:
+    $ref: 'user_endpoints.yml#/UsersIdSubjectsAsProfessor'
+
   /users/{id}/degree:
     $ref: 'user_endpoints.yml#/UsersIdDegree'
 
@@ -645,6 +650,19 @@ paths:
   /users/search/surnamesContaining:
     $ref: 'user_endpoints.yml#/UsersSearchSurnamesContaining'
 
+  /users/setDisabled:
+    $ref: 'user_endpoints.yml#/UsersSetDisabled'
+
+  /users/delete:
+    $ref: 'user_endpoints.yml#/DeleteUser'
+
+  /users/makeProfessor:
+    $ref: 'user_endpoints.yml#/MakeProfessor'
+
+  /users/eraseProfessor:
+    $ref: 'user_endpoints.yml#/EraseProfessor'
+
+
   #Subject endpoints
 
   /subjects:
@@ -653,12 +671,9 @@ paths:
   /subjects/{id}:
     $ref: 'subject_endpoints.yml#/SubjectsId'
 
-  /subjects/{id}/users:
-    $ref: 'subject_endpoints.yml#/SubjectsIdUsers'
-
-  /subjects/{subject_id}/users/{user_id}:
-    $ref: 'subject_endpoints.yml#/SubjectsSubjectIdUsersUserId'
-
+  /subjects/{id}/professors:
+    $ref: 'subject_endpoints.yml#/SubjectsIdProfessors'
+  
   /subjects/{id}/university:
     $ref: 'subject_endpoints.yml#/SubjectsIdUniversity'
 
@@ -675,10 +690,16 @@ paths:
     $ref: 'subject_endpoints.yml#/SubjectsUserIn'
 
   /subjects/search/ranking:
-     $ref: 'subject_endpoints.yml#/SubjectsGetRanking'
+    $ref: 'subject_endpoints.yml#/SubjectsGetRanking'
 
-    
+  /subjects/follow:
+    $ref: 'subject_endpoints.yml#/FollowSubject'
 
+  /subjects/unfollow:
+    $ref: 'subject_endpoints.yml#/UnfollowSubject'
+
+  /subjects/professors:
+    $ref: 'subject_endpoints.yml#/Professor'
 
   #Degree endpoints
 
@@ -686,7 +707,7 @@ paths:
     $ref: 'degree_endpoints.yml#/Degrees'
 
   /degrees/{id}:
-    $ref: 'degree_endpoints.yml#/GetDegree'
+    $ref: 'degree_endpoints.yml#/DegreesId'
 
   /degrees/{id}/universities:
     $ref: 'degree_endpoints.yml#/DegreesIdUniversities'
@@ -720,12 +741,15 @@ paths:
   /universities/search/nameContaining:
     $ref: 'university_endpoints.yml#/UniversitiesSearchNameContaining'
 
+  /universities/delete:
+    $ref: 'university_endpoints.yml#/DeleteUniversity'
+
   #Video endpoints
 
   /videos:
     $ref: 'video_endpoints.yml#/Videos'
 
-  /upload/video:
+  /videos/upload:
     $ref: 'video_endpoints.yml#/UploadVideo'
 
   /videos/search/titleContaining:
@@ -752,12 +776,12 @@ paths:
   /videos/search/userSubjects:
     $ref: 'video_endpoints.yml#/UserSubjects'
 
-  /delete/video:
+  /videos/delete:
     $ref: 'video_endpoints.yml#/DeleteVideo'
 
   #Comment endpoints
 
-  /comments/add:
+  /comments:
     $ref: 'comment_endpoints.yml#/CommentsAdd'
 
   /comments/{id}/commentRepliedTo:
@@ -771,13 +795,13 @@ paths:
 
   #Display endpoints
 
-  /displays/update:
+  /displays:
     $ref: 'display_endpoints.yml#/UpdateDisplay'
 
   /displays/search/user:
     $ref: 'display_endpoints.yml#/DisplaysSearchUser'
   
-  /displays/delete/{video_id}:
+  /displays/{video_id}:
     $ref: 'display_endpoints.yml#/DisplaysDelete'
 
   #Vote endpoint

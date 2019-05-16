@@ -1,6 +1,5 @@
 package com.unicast.unicast_backend.controllers;
 
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -42,7 +41,7 @@ public class DisplayController {
         this.displayAssembler = displayAssembler;
     }
 
-    @PostMapping(value = "/api/displays/update", produces = "application/json", consumes = "multipart/form-data")
+    @PostMapping(value = "/api/displays", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> updateDisplay(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam("secs_from_beg") Integer secondsFromBeginning, @RequestParam("video_id") Long videoId)
             throws URISyntaxException {
@@ -67,10 +66,10 @@ public class DisplayController {
 
         Resource<Display> resourceDisplay = displayAssembler.toResource(display);
 
-        return ResponseEntity.created(new URI(resourceDisplay.getId().expand().getHref())).body(resourceDisplay);
+        return ResponseEntity.ok(resourceDisplay);
     }
 
-    @DeleteMapping(value = "/api/displays/delete/{video_id}")
+    @DeleteMapping(value = "/api/displays/{video_id}")
     public ResponseEntity<?> deleteDisplay(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @PathVariable(name = "video_id", required = true) Long videoId) {
         DisplayKey key = new DisplayKey();

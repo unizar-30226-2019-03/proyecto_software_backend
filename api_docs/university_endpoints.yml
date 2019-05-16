@@ -138,8 +138,6 @@ UniversitiesIdDegrees:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/DegreeGetEmbedded'
-    security:
-      - bearerAuth: []
 
 UniversitiesSearchNameStartsWith:
   get:
@@ -187,3 +185,27 @@ UniversitiesSearchNameContaining:
             schema:
               $ref: 'api-spec.yml#/components/schemas/UniversityGetEmbedded'
   
+DeleteUniversity:
+  delete:
+    tags:
+      - university
+    summary: Eliminacion de una universidad
+    operationId: deleteUniversity
+    requestBody:
+      description: Universidad que se va a eliminar
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+            required:
+              - id
+    responses:
+      204:
+        description: Universidad eliminada con exito
+    security:
+      - bearerAuth: []

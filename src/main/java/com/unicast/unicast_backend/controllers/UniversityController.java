@@ -11,7 +11,10 @@ import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -31,23 +34,25 @@ public class UniversityController {
     private S3ImageHandler s3ImageHandler;
 
     @PostMapping(value = "/api/universities/add", produces = "application/json", consumes = "multipart/form-data")
-    public ResponseEntity<?> addNewUniversity(@RequestParam("name") String name, @RequestPart("photo") MultipartFile photo) {
+    @PreAuthorize("hasAuthority('CREATE_UNIVERSITY_PRIVILEGE')")
+    public ResponseEntity<?> addNewUniversity(@RequestParam("name") String name,
+            @RequestPart("photo") MultipartFile photo) {
 
         try {
-            
+
             University university = new University();
             university.setName(name);
-            
+
             URI photoURL = s3ImageHandler.uploadFile(photo);
             university.setPhoto(photoURL);
 
-            s3ImageHandler.deleteLastUploadedTmpFile();;
+            s3ImageHandler.deleteLastUploadedTmpFile();
+
             universityRepository.save(university);
 
             Resource<University> resourceUniversity = universityAssembler.toResource(university);
 
-            return ResponseEntity.created(new URI(resourceUniversity.getId().getHref()))
-                    .body(resourceUniversity);
+            return ResponseEntity.created(new URI(resourceUniversity.getId().getHref())).body(resourceUniversity);
         } catch (IOException ioE) {
             // TODO: hacer algo
             return ResponseEntity.badRequest().build();
@@ -61,5 +66,16 @@ public class UniversityController {
         // return res;
         // }
     }
-}
+    
+    @DeleteMapping(value = "/api/universities/delete", consumes = "multipart/form-data")
+    @PreAuthorize("hasAuthority('DELETE_UNIVERSITY_PRIVILEGE')")
+    public ResponseEntity<?> deleteUniversity(@RequestParam("id") Long universityId) {
+        University university = universityRepository.findById(universityId).get();
 
+        s3ImageHandler.deleteFile(university.getPhoto().getPath());
+
+        universityRepository.delete(university);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+}

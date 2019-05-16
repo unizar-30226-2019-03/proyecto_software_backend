@@ -71,13 +71,11 @@ SubjectsId:
               $ref: 'api-spec.yml#/components/schemas/Subject'
     security:
       - bearerAuth: []
-
-SubjectsIdUsers:
-  put:
+  delete:
     tags:
       - subject
-    summary: Relacionar un usuario con una asignatura (tanto profesores como alumnos)
-    operationId: putUser
+    summary: Elimina la asignatura
+    operationId: deleteSubject
     parameters:
       - name: id
         in: path
@@ -86,17 +84,9 @@ SubjectsIdUsers:
         schema:
           type: integer
           format: int64
-    requestBody:
-      description: Id del usuario a asociar con la asignatura
-      required: true
-      content:
-        text/uri-list:
-          schema:
-            type: integer
-            format: int64
     responses:
       204:
-        description: Se ha relacionado el usuario con la asignatura
+        description: Se ha eliminado con exito
     security:
       - bearerAuth: []
 
@@ -128,21 +118,17 @@ SubjectsIdUniversity:
     security:
       - bearerAuth: []
 
-SubjectsSubjectIdUsersUserId:
-  delete:
+SubjectsIdProfessors:
+  get:
     tags:
-        - subject
-    summary: Elimina el usuario de la relacion con asignatura
-    operationId: deleteUserFromSubject
+      - subject
+    summary: Devuelve una lista con los profesores de la asignatura
+    operationId: getProfessorsFromSubject
     parameters:
-      - name: user_id
-        in: path
-        description: Id del usuario
-        required: true
-        schema:
-          type: integer
-          format: int64
-      - name: subject_id
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - name: id
         in: path
         description: Id de la asignatura
         required: true
@@ -150,10 +136,14 @@ SubjectsSubjectIdUsersUserId:
           type: integer
           format: int64
     responses:
-      204:
-        description: Se ha eliminado con exito
+      200:
+        description: Lista de los profesores encontrados
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/UserGetEmbedded'
     security:
-      - bearerAuth: []
+      - bearerAuth: [] 
 
 SubjectsSearchNameStartsWith:
   get:
@@ -275,3 +265,113 @@ SubjectsGetRanking:
               $ref: 'api-spec.yml#/components/schemas/SubjectGetResponse'
     security:
       - bearerAuth: []
+
+FollowSubject:
+  put:
+    tags:
+      - subject
+    summary: Seguir asignaturas
+    description: Seguimiento de asignaturas
+    operationId: followSubject
+    requestBody:
+      description: Id de la asignatura seguir
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              subject_id:
+                description: Id de la asignatura que se va a seguir
+                type: integer
+            required:
+              - subject_id
+    responses:
+      204:
+        description: Se ha seguido la asignatura
+    security:
+      - bearerAuth: [] 
+
+UnfollowSubject:
+  delete:
+    tags:
+      - subject
+    summary: Dejar de seguir asignaturas
+    description: Dejar de seguir asignaturas
+    operationId: unfollowSubject
+    requestBody:
+      description: Id de la asignatura seguir
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              subject_id:
+                description: Id de la asignatura que se va a dejar de seguir
+                type: integer
+            required:
+              - subject_id
+    responses:
+      204:
+        description: Se ha dejado de seguir la asignatura
+    security:
+      - bearerAuth: [] 
+
+Professor:
+  put:
+    tags:
+      - subject
+    summary: Añadir un profesor a una asignatura
+    description: Añadir un profesor a una asignatura
+    operationId: addProfessor
+    requestBody:
+      description: Ids de el profesor y de la asignatura que se quieren relacionar
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              subject_id:
+                description: Id de la asignatura a la que se va a añadir el profesor
+                type: integer
+              professor_id:
+                description: Id del profesor que se va a añadir
+                type: integer
+            required:
+              - subject_id
+              - professor_id
+    responses:
+      204:
+        description: Se ha añadido el profesor a la asignatura
+    security:
+      - bearerAuth: []
+  delete:
+    tags:
+      - subject
+    summary: Eliminar un profesor a una asignatura
+    description: Eliminar un profesor a una asignatura
+    operationId: deleteProfessor
+    requestBody:
+      description: Ids de el profesor y de la asignatura de los que se quiere eliminar la relacion
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              subject_id:
+                description: Id de la asignatura de la que se va a borar  el profesor
+                type: integer
+              professor_id:
+                description: Id del profesor que se va a eliminar
+                type: integer
+            required:
+              - subject_id
+              - professor_id
+    responses:
+      204:
+        description: Se ha borrado el profesor de la asignatura
+    security:
+      - bearerAuth: [] 

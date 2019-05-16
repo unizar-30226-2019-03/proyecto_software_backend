@@ -214,6 +214,34 @@ UsersIdSubjects:
     security:
       - bearerAuth: []
 
+UsersIdSubjectsAsProfessor:
+  get:
+    tags:
+      - user
+    summary: Obtener las las asignaturas para las que sea profesor el usuario
+    operationId: getSubjectsAsProfessor
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SubjectProjectionParameter'
+      - name: id
+        in: path
+        description: Id del usuario
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve las asignaturas para las que sea profesor el usuario
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/SubjectGetEmbedded'
+    security:
+      - bearerAuth: []
+
 UsersIdDegree:
   get:
     tags:
@@ -415,5 +443,94 @@ UsersSearchSurnamesContaining:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/UserGetEmbedded'
+    security:
+      - bearerAuth: []
+
+UsersSetDisabled:
+  patch:
+    tags:
+      - user
+    summary: Deshabilita (en vez de borrarlo de la base de datos) al usuario actual
+    operationId: disableUser
+    responses:
+      200:
+        description: Se ha deshabilitado al usuario actual
+    security:
+      - bearerAuth: []
+
+DeleteUser:
+  delete:
+    tags:
+      - user
+    summary: Eliminacion de un usuario (junto a todo su contenido)
+    operationId: deleteUser
+    requestBody:
+      description: Usuario que se va a eliminar
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+                format: int64
+            required:
+              - id
+    responses:
+      204:
+        description: Usuario eliminada con exito
+    security:
+      - bearerAuth: []
+
+MakeProfessor:
+  patch:
+    tags:
+      - user
+    summary: Convierte un usuario a profesor
+    description: Convierte un usuario a profesor
+    operationId: makeProfessor
+    requestBody:
+      description: Id del usuario al que hacer profesor
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              user_id:
+                description: Id del usuario
+                type: integer
+            required:
+              - user_id
+    responses:
+      200:
+        description: El usuario se ha hecho profesor
+    security:
+      - bearerAuth: []
+
+EraseProfessor:
+  patch:
+    tags:
+      - user
+    summary: Elimina un profesor
+    description: Convierte a un profesor a usuario
+    operationId: eraseProfessor
+    requestBody:
+      description: Id del profesor al que hacer usuario
+      required: true
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              user_id:
+                description: Id del usuario
+                type: integer
+            required:
+              - user_id
+    responses:
+      200:
+        description: El profesor se ha hecho usuario
     security:
       - bearerAuth: []

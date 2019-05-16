@@ -39,7 +39,7 @@ Degrees:
     security:
       - bearerAuth: []
 
-GetDegree:
+DegreesId:
   patch:
     tags:
       - degree
@@ -67,6 +67,24 @@ GetDegree:
           application/hal+json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/Degree'
+    security:
+      - bearerAuth: []
+  delete:
+    tags:
+      - degree
+    summary: Elimina la carrera
+    operationId: deleteDegree
+    parameters:
+      - name: id
+        in: path
+        description: Id de la carrera
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      204:
+        description: Se ha eliminado con exito
     security:
       - bearerAuth: []
 

@@ -21,10 +21,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(
+    prePostEnabled = true, 
+    securedEnabled = true, 
+    jsr250Enabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -48,6 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .antMatchers(HttpMethod.GET, "/api/degrees/search/nameContaining").permitAll()
             .antMatchers(HttpMethod.GET, "/api/degrees/search/name").permitAll()
             .antMatchers(HttpMethod.GET, "/api/universities").permitAll()
+            .antMatchers(HttpMethod.GET, "/api/universities/{id}/degrees").permitAll()
             .antMatchers(HttpMethod.GET, "/api/universities/search/nameStartsWith").permitAll()
             .antMatchers(HttpMethod.GET, "/api/universities/search/nameContaining").permitAll()
             .antMatchers(HttpMethod.GET, "/api/degrees").permitAll()

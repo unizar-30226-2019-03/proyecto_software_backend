@@ -21,6 +21,7 @@ import org.hibernate.annotations.Formula;
 import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.JoinColumnsOrFormulas;
 import org.hibernate.annotations.JoinFormula;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 import lombok.Data;
 
@@ -69,7 +70,8 @@ public class Video {
     private Collection<Vote> votes;
 
     @JsonIgnore
-	@OneToMany(mappedBy = "video")
+    @OneToMany(mappedBy = "video")
+    @RestResource(exported = false)
 	private Collection<Display> displays;
 
     @ManyToMany

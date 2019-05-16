@@ -3,12 +3,15 @@ package com.unicast.unicast_backend.controllers;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import com.unicast.unicast_backend.assemblers.UserResourceAssembler;
 import com.unicast.unicast_backend.configuration.SecurityConfiguration;
+import com.unicast.unicast_backend.persistance.model.Role;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.repository.DegreeRepository;
-import com.unicast.unicast_backend.persistance.repository.SubjectRepository;
+import com.unicast.unicast_backend.persistance.repository.RoleRepository;
 import com.unicast.unicast_backend.persistance.repository.UniversityRepository;
 import com.unicast.unicast_backend.persistance.repository.UserRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
@@ -17,8 +20,12 @@ import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -38,7 +45,7 @@ public class UserController {
     private DegreeRepository degreeRepository;
 
     @Autowired
-    private SubjectRepository subjectRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
     private UserResourceAssembler userAssembler;
@@ -54,14 +61,13 @@ public class UserController {
             @RequestParam("name") String name, @RequestParam("surnames") String surnames,
             @RequestParam("password") String password, @RequestParam("description") String description,
             @RequestParam("email") String email, @RequestParam("university_id") Long universityId,
-            @RequestParam("degree_id") Long degreeId,
-            @RequestPart("photo") MultipartFile photo) {
+            @RequestParam("degree_id") Long degreeId, @RequestPart("photo") MultipartFile photo) {
 
         // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un
         // usuario con nombre/email iguales
 
         try {
-            
+
             User user = new User();
             user.setUsername(username);
             user.setName(name);
@@ -72,6 +78,8 @@ public class UserController {
             user.setDescription(description);
             user.setUniversity(universityRepository.findById(universityId).get());
             user.setEnabled(true);
+            Role userRole = roleRepository.findByName("ROLE_USER");
+            user.setRolesAndPrivileges(Arrays.asList(userRole));
 
             URI photoURL = s3ImageHandler.uploadFile(photo);
             user.setPhoto(photoURL);
@@ -81,8 +89,7 @@ public class UserController {
 
             Resource<User> resourceUser = userAssembler.toResource(user);
 
-            return ResponseEntity.created(new URI(resourceUser.getId().getHref()))
-                    .body(resourceUser);
+            return ResponseEntity.created(new URI(resourceUser.getId().getHref())).body(resourceUser);
         } catch (IOException ioE) {
             // TODO: hacer algo
             return ResponseEntity.badRequest().build();
@@ -156,5 +163,65 @@ public class UserController {
         // HttpStatus.BAD_REQUEST);
         // return res;
         // }
+    }
+
+    @PatchMapping(value = "/api/users/setDisabled")
+    public ResponseEntity<?> setDisabled(@AuthenticationPrincipal UserDetailsImpl userAuth) {
+        // TODO: gestionar tags y errores
+        User user = userAuth.getUser();
+
+        user.setEnabled(false);
+
+        // s3ImageHandler.deleteFile(user.getPhoto().getPath());
+
+        // userRepository.delete(user);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping(value = "/api/users/makeProfessor", consumes = "multipart/form-data")
+    @PreAuthorize("hasAuthority('MAKE_PROFESSOR_PRIVILEGE')")
+    public ResponseEntity<?> makeProfessor(@RequestParam("user_id") Long userId) {
+        // TODO: gestionar tags y errores
+        User user = userRepository.findById(userId).get();
+        Role professorRole = roleRepository.findByName("ROLE_PROFESSOR");
+        ArrayList<Role> l = new ArrayList<>();
+        l.add(professorRole);
+        user.setRolesAndPrivileges(l);
+
+        userRepository.save(user);
+        
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping(value = "/api/users/eraseProfessor", consumes = "multipart/form-data")
+    @PreAuthorize("hasAuthority('ERASE_PROFESSOR_PRIVILEGE')")
+    public ResponseEntity<?> eraseProfessor(@RequestParam("user_id") Long userId) {
+        // TODO: gestionar tags y errores
+        User user = userRepository.findById(userId).get();
+        Role userRole = roleRepository.findByName("ROLE_USER");
+        ArrayList<Role> l = new ArrayList<>();
+        l.add(userRole);
+        user.setRolesAndPrivileges(l);
+
+        userRepository.save(user);
+        
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping(value = "/api/users/delete", consumes = "multipart/form-data")
+    @PreAuthorize("hasAuthority('DELETE_USER_PRIVILEGE')")
+    public ResponseEntity<?> deleteUser(@RequestParam("id") Long userId)
+            throws Exception, IllegalStateException, IOException, URISyntaxException {
+        // TODO: gestionar tags y errores
+        User user = userRepository.findById(userId).get();
+
+        if (user.getPhoto() != null) {
+            s3ImageHandler.deleteFile(user.getPhoto().getPath());
+        }
+
+        userRepository.delete(user);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

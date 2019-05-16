@@ -25,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,7 +55,8 @@ public class VideoController {
     @Autowired
     private NotificationAsync notificationAsync;
     
-    @PostMapping(value = "/api/upload/video", produces = "application/json", consumes = "multipart/form-data")
+    @PostMapping(value = "/api/videos/upload", produces = "application/json", consumes = "multipart/form-data")
+    @PreAuthorize("hasAuthority('CREATE_VIDEO_PRIVILEGE')")
     public ResponseEntity<?> uploadVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestPart("file") MultipartFile videoFile, @RequestPart("thumbnail") MultipartFile thumbnail,
             @RequestParam("title") String title, @RequestParam("description") String description,
@@ -66,7 +68,7 @@ public class VideoController {
 
         Subject subject = subjectRepository.findById(subjectId).get();
 
-        if (!subject.getUsers().contains(user) /* y no es profesor el que sube */) {
+        if (!subject.getProfessors().contains(user) /* y no es profesor el que sube */) {
             // TODO: hacer eso una nueva clase/loqsea
             throw new Exception("El que sube video debe pertenecer a la asignatura del video");
         }
@@ -108,9 +110,10 @@ public class VideoController {
         return ResponseEntity.created(new URI(resourceVideo.getId().expand().getHref())).body(resourceVideo);
     }
 
-    @DeleteMapping(value = "/api/delete/video", consumes = "multipart/form-data")
-    public ResponseEntity<?> uploadVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam("id") Long videoId) throws Exception, IllegalStateException, IOException, URISyntaxException {
+    @DeleteMapping(value = "/api/videos/delete", consumes = "multipart/form-data")
+    @PreAuthorize("hasAuthority('DELETE_VIDEO_PRIVILEGE')")
+    public ResponseEntity<?> deleteVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
+            @RequestParam("id") Long videoId) {
         // TODO: gestionar tags y errores
         User user = userAuth.getUser();
         Video video = videoRepository.findById(videoId).get();

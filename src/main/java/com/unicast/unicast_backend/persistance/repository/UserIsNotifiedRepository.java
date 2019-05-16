@@ -5,13 +5,12 @@ import com.unicast.unicast_backend.persistance.model.UserIsNotifiedKey;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 @RepositoryRestResource(collectionResourceRel = "usersAreNotified", path = "usersAreNotified")
-public interface UserIsNotifiedRepository extends JpaRepository<UserIsNotified,UserIsNotifiedKey> {
+public interface UserIsNotifiedRepository extends JpaRepositoryExportedFalse<UserIsNotified,UserIsNotifiedKey> {
 
     @RestResource(path = "userUncheckedNotifications", rel = "userUncheckedNotifications")
     @Query("select un from Notification n join UserIsNotified un on n = un.notification where un.user.id = ?#{ principal?.id } and un.checked = false order by n.timestamp desc")

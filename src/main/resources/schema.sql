@@ -174,6 +174,14 @@ CREATE TABLE app_user_subject (
     CONSTRAINT pk_app_user_subject PRIMARY KEY (fk_subject, fk_app_user)
 );
 
+CREATE TABLE app_professor_subject (
+    fk_subject INTEGER NOT NULL,
+    fk_professor INTEGER NOT NULL,
+    CONSTRAINT fk_app_professor_subject_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE,
+    CONSTRAINT fk_app_professor_subject_app_user FOREIGN KEY (fk_professor) REFERENCES app_user(id) ON DELETE CASCADE,
+    CONSTRAINT pk_app_professor_subject PRIMARY KEY (fk_subject, fk_professor)
+);
+
 CREATE TABLE video_video_tag (
     fk_video INTEGER NOT NULL,
     fk_video_tag INTEGER NOT NULL,

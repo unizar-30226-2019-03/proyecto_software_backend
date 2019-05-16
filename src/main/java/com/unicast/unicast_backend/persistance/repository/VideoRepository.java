@@ -6,14 +6,18 @@ import com.unicast.unicast_backend.persistance.model.Video;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 @RepositoryRestResource(collectionResourceRel = "videos", path = "videos")
-public interface VideoRepository extends JpaRepository<Video, Long> {
+public interface VideoRepository extends JpaRepositoryExportedFalse<Video, Long> {
+
+	@Override
+    @RestResource(exported = true)
+    Page<Video> findAll(Pageable pageable);
+
     @RestResource(path = "title", rel = "title")
     public Video findByTitleIgnoreCase(@Param("title") String title);
 
@@ -31,6 +35,6 @@ public interface VideoRepository extends JpaRepository<Video, Long> {
     public Page<Video> findBySubjectId(@Param("subject_id") Long subjectId, Pageable page);
 
     @RestResource(path = "userSubjects", rel = "userSubjects")
-    @Query("select v from Video v join Subject s on v.subject = s join User u on u.id = ?#{ principal?.id } where u member of s.users")
+    @Query("select v from Video v join Subject s on v.subject = s join User u on u.id = ?#{ principal?.id } where u member of s.followers")
     public Page<Video> findBySubjectsAndUserId(Pageable Page);
 }

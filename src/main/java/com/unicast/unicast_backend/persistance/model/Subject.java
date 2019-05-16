@@ -34,7 +34,8 @@ public class Subject {
         this.name = s.name;
         this.abbreviation = s.abbreviation;
         this.university = s.university;
-        this.users = s.users;
+        this.followers = s.followers;
+        this.professors = s.professors;
         this.videos = s.videos;
 
         this.avgScore = avgScore;
@@ -55,12 +56,17 @@ public class Subject {
     @JoinColumn(name = "fk_university")
     private University university;
 
-    // TODO: mirar lo de los roles
     @ManyToMany
     @JoinTable(name = "app_user_subject", 
         joinColumns = @JoinColumn(name = "fk_subject"), 
         inverseJoinColumns = @JoinColumn(name = "fk_app_user"))
-    private Collection<User> users;
+    private Collection<User> followers;
+
+    @ManyToMany
+    @JoinTable(name = "app_professor_subject", 
+        joinColumns = @JoinColumn(name = "fk_subject"), 
+        inverseJoinColumns = @JoinColumn(name = "fk_professor"))
+    private Collection<User> professors;
 
     @JsonIgnore
     @OneToMany(mappedBy = "subject")

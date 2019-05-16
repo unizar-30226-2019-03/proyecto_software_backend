@@ -23,7 +23,7 @@ public class UserDetailsImpl implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return getGrantedAuthorities(getPrivileges(user.getRoles()));
+		return getGrantedAuthorities(getPrivileges(user.getRolesAndPrivileges()));
 	}
 
 	public User getUser() {

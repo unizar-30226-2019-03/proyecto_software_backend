@@ -38,7 +38,7 @@ public class CommentController {
         this.commentAssembler = commentAssembler;
     }
 
-    @PostMapping(value = "/api/comments/add", produces = "application/json", consumes = "multipart/form-data")
+    @PostMapping(value = "/api/comments", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> addNewComment(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam("text") String text, @RequestParam("secs_from_beg") Integer secondsFromBeginning,
             @RequestParam("video_id") Long videoId,

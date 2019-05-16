@@ -21,6 +21,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
+import org.hibernate.annotations.Formula;
+import org.springframework.data.rest.core.annotation.RestResource;
+
 import lombok.Data;
 
 @Data
@@ -39,6 +42,7 @@ public class User {
 	private String surnames;
 	
 	@Email
+	@JsonIgnore
 	private String email;
 	
 	@Column(name = "photo_path")
@@ -58,6 +62,7 @@ public class User {
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
+	@RestResource(exported = false)
 	private Collection<UserIsNotified> notifications;
 	
 	@JsonIgnore
@@ -66,22 +71,32 @@ public class User {
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "receiver")
+	@RestResource(exported = false)
 	private Collection<Message> messagesAsReceiver;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "sender")
+	@RestResource(exported = false)
 	private Collection<Message> messagesAsSender;
 
+	@JsonIgnore
 	@OneToMany(mappedBy = "user")
+	@RestResource(exported = false)
 	private Collection<ReproductionList> reproductionLists;
 
 	@OneToMany(mappedBy = "uploader")
 	private Collection<Video> uploadedVideos;
 	
-	// Vale tanto para alumnos como para profesores, cambiara segun el rol que tenga este usuario
-	@ManyToMany(mappedBy = "users")
+	@ManyToMany(mappedBy = "followers")
 	private Collection<Subject> subjects;
 
+	@ManyToMany(mappedBy = "professors")
+	private Collection<Subject> subjectsAsProfessor;
+
+	@Formula("(select r.name from role r join role_app_user rau on r.id = rau.fk_role and id = rau.fk_app_user)")
+	private String role;
+
+	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
 		name = "role_app_user",
@@ -89,14 +104,16 @@ public class User {
 			name = "fk_app_user", referencedColumnName = "id"),
 			inverseJoinColumns = @JoinColumn(
 				name = "fk_role", referencedColumnName = "id"))
-	private Collection<Role> roles;
+	private Collection<Role> rolesAndPrivileges;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
+	@RestResource(exported = false)
 	private Collection<Display> displays;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "user")
+	@RestResource(exported = false)
 	private Collection<Vote> votes;
 
 	@ManyToOne

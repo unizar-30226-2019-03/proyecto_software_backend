@@ -38,7 +38,7 @@ public class NotificationAsync {
         NotificationCategory notificationCat = notificationCatRepository.findByName("videos").get();
 
         Notification notification = new Notification();
-        notification.setText("HOLA");
+        notification.setText("Notificacion de video");
         notification.setTimestamp(now);
         notification.setCategory(notificationCat);
 
@@ -46,7 +46,7 @@ public class NotificationAsync {
 
         List<UserIsNotified> usersNotifications = new ArrayList<>();
 
-        for (User user : subject.getUsers()) {
+        for (User user : subject.getFollowers()) {
             UserIsNotifiedKey userIsNotifiedKey = new UserIsNotifiedKey();
             userIsNotifiedKey.setNotificationId(notification.getId());
             userIsNotifiedKey.setUserId(user.getId());
@@ -66,7 +66,7 @@ public class NotificationAsync {
         NotificationCategory notificationCat = notificationCatRepository.findByName("messages").get();
 
         Notification notification = new Notification();
-        notification.setText("HOLAMessahe");
+        notification.setText("Notificacion de mensaje");
         notification.setTimestamp(now);
         notification.setCategory(notificationCat);
 
