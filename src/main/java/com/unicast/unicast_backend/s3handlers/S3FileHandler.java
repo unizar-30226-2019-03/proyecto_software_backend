@@ -30,7 +30,6 @@ public abstract class S3FileHandler {
         File file = File.createTempFile(getFilePrefix(), uploadedFile.getOriginalFilename());
         uploadedFile.transferTo(file);
 
-
         final String s3Key = getFileFolder() + "/" + getFilePrefix()
                 + RandomStringUtils.randomAlphanumeric(FILE_KEY_LENGTH);
         // TODO: excepcion sin tratar
@@ -41,9 +40,10 @@ public abstract class S3FileHandler {
     }
 
     public void deleteFile(String fileName) {
+        System.out.println(fileName);
         s3Constants.s3.deleteObject(s3Constants.BUCKET_NAME, fileName);
     }
-
+ 
     public File getLastUploadedTmpFile() {
         return lastFile;
     }
