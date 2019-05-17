@@ -1,5 +1,4 @@
-package com.unicast.unicast_backend.persistance.repository;
-
+package com.unicast.unicast_backend.persistance.repository.rest;
 import java.util.List;
 import java.util.Optional;
 

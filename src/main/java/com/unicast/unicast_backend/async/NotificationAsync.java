@@ -12,9 +12,9 @@ import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.UserIsNotified;
 import com.unicast.unicast_backend.persistance.model.UserIsNotifiedKey;
-import com.unicast.unicast_backend.persistance.repository.NotificationCategoryRepository;
 import com.unicast.unicast_backend.persistance.repository.NotificationRepository;
-import com.unicast.unicast_backend.persistance.repository.UserIsNotifiedRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.NotificationCategoryRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.UserIsNotifiedRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -78,7 +78,7 @@ public class NotificationAsync {
         UserIsNotified userIsNotified = new UserIsNotified();
         userIsNotified.setId(userIsNotifiedKey);
         userIsNotified.setChecked(false);
-        userIsNotifiedRepository.save(userIsNotified);
+        userIsNotifiedRepository.saveInternal(userIsNotified);
 
         return CompletableFuture.completedFuture(notification);
     }

@@ -3,7 +3,7 @@ package com.unicast.unicast_backend.services;
 import java.util.Optional;
 
 import com.unicast.unicast_backend.persistance.model.User;
-import com.unicast.unicast_backend.persistance.repository.UserRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.UserRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;

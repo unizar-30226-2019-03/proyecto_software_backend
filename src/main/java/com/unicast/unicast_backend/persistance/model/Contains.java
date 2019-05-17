@@ -27,5 +27,5 @@ public class Contains {
     @JoinColumn(name = "fk_list")
     private ReproductionList list;
 	
-	private int position;
+	private Integer position;
 }

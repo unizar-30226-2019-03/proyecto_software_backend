@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.3.0
+  version: 1.3.1
   title: Swagger Unicast
 
 servers:
@@ -563,14 +563,6 @@ components:
       required:
           - name
 
-    ReproductionListList:
-      type: object
-      properties:
-        degrees:
-          type: array
-          items:
-                $ref: '#/components/schemas/ReproductionList'
-
     ReproductionListGetResponse:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
@@ -778,6 +770,9 @@ paths:
 
   /videos/delete:
     $ref: 'video_endpoints.yml#/DeleteVideo'
+  
+  /videos/search/reproductionList:
+    $ref: 'video_endpoints.yml#/FindVideoByReproductionList'
 
   #Comment endpoints
 
@@ -827,15 +822,17 @@ paths:
 
   #ReproductionList endpoints
 
-  # /reproductionLists:
-  #   $ref: 'reproduction_list_endpoints.yml#/ReproductionLists'
+  /reproductionLists/add:
+    $ref: 'reproduction_list_endpoints.yml#/AddReproductionList'
 
-  # /reproductionList/{id}:
-  #   $ref: 'reproduction_list_endpoints.yml#/GetReproductionList'
+  /reproductionLists/{id}:
+    $ref: 'reproduction_list_endpoints.yml#/DeleteReproductionList'
 
-  # /reproductionList/search/AddReproductionList:
-  #    $ref: 'reproduction_list_endpoints.yml#/AddReproductionList'
+  /reproductionLists/search/user:
+    $ref: 'reproduction_list_endpoints.yml#/GetUserReproductionLists'
 
-  # /reproductionList/search/DeleteReproductionList:
-  #    $ref: 'reproduction_list_endpoints.yml#/DeleteReproductionList'
+  /reproductionLists/addVideo:
+    $ref: 'reproduction_list_endpoints.yml#/AddVideo'
 
+  /reproductionLists/deleteVideo:
+    $ref: 'reproduction_list_endpoints.yml#/DeleteVideo'

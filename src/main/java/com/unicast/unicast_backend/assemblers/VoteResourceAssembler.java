@@ -1,7 +1,7 @@
 package com.unicast.unicast_backend.assemblers;
 
 import com.unicast.unicast_backend.persistance.model.Vote;
-import com.unicast.unicast_backend.persistance.repository.VoteRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.VoteRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;

@@ -1,172 +1,136 @@
 package com.unicast.unicast_backend.controllers;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.net.URI;
 
-import com.unicast.unicast_backend.persistance.model.Video;
-import com.unicast.unicast_backend.persistance.model.ReproductionList;
+import com.unicast.unicast_backend.assemblers.ReproductionListAssembler;
 import com.unicast.unicast_backend.persistance.model.Contains;
 import com.unicast.unicast_backend.persistance.model.ContainsKey;
+import com.unicast.unicast_backend.persistance.model.ReproductionList;
 import com.unicast.unicast_backend.persistance.model.User;
-import com.unicast.unicast_backend.persistance.repository.ReproductionListRepository;
+import com.unicast.unicast_backend.persistance.model.Video;
+import com.unicast.unicast_backend.persistance.repository.ContainsRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.ReproductionListRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.VideoRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.hateoas.Resource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.RestController;
 
-
-@RepositoryRestController
+@RestController
 public class ReproductionListController {
 
-    private final ReproductionListRepository repo;
+    private final ReproductionListRepository reproductionListRepository;
+
+    private final VideoRepository videoRepository;
+
+    private final ReproductionListAssembler reproductionListAssembler;
+
+    private final ContainsRepository containsRepository;
 
     @Autowired
-    public ReproductionListController(ReproductionListRepository u) {
-        this.repo = u;
+    public ReproductionListController(ReproductionListRepository u, ReproductionListAssembler assembler,
+            VideoRepository videoRepository, ContainsRepository containsRepository) {
+        this.reproductionListRepository = u;
+        this.reproductionListAssembler = assembler;
+        this.videoRepository = videoRepository;
+        this.containsRepository = containsRepository;
     }
 
-    
-    @GetMapping(value = "api/reproductionList/mostrar", produces = "application/json")
-    public Collection<ReproductionList> getUserReproducctionLists(User user)throws Exception {
-         // Obtencion de la coleccion de listas de reproduccion del usuario loggeado
-         Collection<ReproductionList> reproductionLists = user.getReproductionLists();
-
-         // Retorno de las listas
-         return reproductionLists;
-    }
-
-
-    @GetMapping(value = "api/reproductionList/obternerUna", produces = "application/json")
-    public ReproductionList getReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth, int id)throws Exception {		 
-		 // Obtencion de los datos del usuario loggeado
-        User user = userAuth.getUser();
-		 
-         Collection<ReproductionList> reproductionLists = user.getReproductionLists();
-
-         LinkedList<ReproductionList> newList = new LinkedList<>(reproductionLists);
-         // Retorno de las listas
-         return newList.get(id);
-    }
-	
-
-    @PostMapping(value = "/api/reproductionList/updateAdd", produces = "application/json")
-    public void addReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
-                                       @RequestParam ReproductionList newUserList)throws Exception {
+    @PostMapping(value = "/api/reproductionLists/add", produces = "application/json", consumes = "multipart/form-data")
+    public ResponseEntity<?> addReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
+            @RequestParam("name") String name) throws Exception {
 
         // Obtencion de los datos del usuario loggeado
         User user = userAuth.getUser();
-        
-        // Obtencion de la coleccion de listas de reproduccion del usuario loggeado
-        Collection<ReproductionList> reproductionLists = getUserReproducctionLists(user);
 
-        //Comprobar si existe la lista en las que ya tiene el ususario
-        try {
-            // Comprobar la existencia de esa lista
-            reproductionLists.contains(newUserList);
+        ReproductionList reproList = new ReproductionList();
+        reproList.setUser(user);
+        reproList.setName(name);
 
-            // La lista no existe y se debe añadir
-            reproductionLists.add(newUserList);
+        reproductionListRepository.save(reproList);
 
-            // Asignar la nueva coleccion de listas al usuario
-            user.setReproductionLists(reproductionLists);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+        Resource<ReproductionList> resourceReproList = reproductionListAssembler.toResource(reproList);
+
+        return ResponseEntity.created(new URI(resourceReproList.getId().expand().getHref())).body(resourceReproList);
     }
 
+    @DeleteMapping(value = "/api/reproductionLists/{id}")
+    public ResponseEntity<?> deleteReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
+            @PathVariable(name = "id", required = true) Long reproListId) {
 
-    @PostMapping(value = "/api/reproductionList/updateRemove", produces = "application/json")
-    public void deleteReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
-                                       @RequestParam ReproductionList newUserList)throws Exception {
+        User user = userAuth.getUser();
 
-       // Obtencion de los datos del usuario loggeado
-       User user = userAuth.getUser();
-        
-        // Obtencion de la coleccion de listas de reproduccion del usuario loggeado
-        Collection<ReproductionList> reproductionLists = getUserReproducctionLists(user);
+        ReproductionList reproList = reproductionListRepository.findById(reproListId).get();
 
-        //Comprobar si existe la lista en las que ya tiene el ususario
-        try {
-            // Comprobar la existencia de esa lista
-            reproductionLists.contains(newUserList);
-
-            // La lista no existe y se debe añadir
-            reproductionLists.remove(newUserList);
-
-            // Asignar la nueva coleccion de listas al usuario
-            user.setReproductionLists(reproductionLists);
+        if (reproList.getUser().getId() != user.getId()) {
+            // TODO: gestionar excepcion en condiciones
+            throw new Error();
         }
-        catch(Exception e){
-            e.printStackTrace();
-        }
+
+        reproductionListRepository.delete(reproList);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PostMapping(value = "/api/reproductionLists/addVideo", produces = "application/json", consumes = "multipart/form-data")
+    public ResponseEntity<?> anyadirVideoReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
+            @RequestParam("repro_list_id") Long reproListId, @RequestParam("video_id") Long videoId) throws Exception {
+        User user = userAuth.getUser();
 
-    @PostMapping(value = "/api/reproductionList/addVideoReproductionList", produces = "application/json")
-    public void anyadirVideoReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam ReproductionList list, @RequestParam Video v) throws Exception {
+        Video video = videoRepository.findById(videoId).get();
+        ReproductionList reproList = reproductionListRepository.findById(reproListId).get();
 
-            int position = list.getVideoList().size();
+        if (reproList.getUser().getId() != user.getId()) {
+            // TODO: gestionar excepcion en condiciones
+            throw new Error();
+        }
 
-            // Crear el contains Key
-            ContainsKey ck = new ContainsKey();
-            ck.setListId(list.getId());
-            ck.setVideoId(v.getId());
+        // Crear el contains Key
+        ContainsKey ck = new ContainsKey();
+        ck.setListId(reproList.getId());
+        ck.setVideoId(video.getId());
 
-            // Crear contains
-            Contains c = new Contains();
+        // Crear contains
+        Contains c = new Contains();
 
-            c.setId(ck);
-            c.setList(list);
-            c.setVideo(v);
-            c.setPosition(position);
+        c.setId(ck);
+        c.setList(reproList);
+        c.setVideo(video);
+        c.setPosition(reproList.getVideoList().size() + 1);
 
-            // añadir el video
-            Collection<Contains> totalContains = list.getVideoList();
+        containsRepository.save(c);
 
-            // añadir contain
-            totalContains.add(c);
+        return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping(value = "/api/reproductionLists/deleteVideo", produces = "application/json", consumes = "multipart/form-data")
+    public ResponseEntity<?> deleteReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
+            @RequestParam("repro_list_id") Long reproListId, @RequestParam("video_id") Long videoId) throws Exception {
 
-    @PostMapping(value = "/api/reproductionList/borrarVideoReproductionList", produces = "application/json")
-    public void borrarVideoReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam ReproductionList list, @RequestParam Video v,
-            @RequestParam int position) throws Exception {
+        // Obtencion de los datos del usuario loggeado
+        User user = userAuth.getUser();
 
-            // Crear el contains Key con los datos que nos pasan
-            ContainsKey ck = new ContainsKey();
-            ck.setListId(list.getId());
-            ck.setVideoId(v.getId());
+        ReproductionList reproList = reproductionListRepository.findById(reproListId).get();
 
-            // Crear contains
-            Contains c = new Contains();
+        if (reproList.getUser().getId() != user.getId()) {
+            // TODO: gestionar excepcion en condiciones
+            throw new Error();
+        }
 
-            c.setId(ck);
-            c.setList(list);
-            c.setVideo(v);
-            c.setPosition(position);
+        ContainsKey ck = new ContainsKey();
+        ck.setListId(reproListId);
+        ck.setVideoId(videoId);
 
-            // obtencion de todos los videos asociados a la lista
-            Collection<Contains> totalContains = list.getVideoList();
+        containsRepository.deleteById(ck);
 
-            try {
-                // Comprobar que esta el video en la lista
-                totalContains.contains(c);
-
-                // Borrar el video asociado
-                totalContains.remove(c);
-            }
-            catch (Exception e){
-                // Mostrar excepcion 
-                e.printStackTrace();
-            }
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

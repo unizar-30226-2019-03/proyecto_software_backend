@@ -9,8 +9,8 @@ import com.unicast.unicast_backend.assemblers.CommentResourceAssembler;
 import com.unicast.unicast_backend.persistance.model.Comment;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.Video;
-import com.unicast.unicast_backend.persistance.repository.CommentRepository;
-import com.unicast.unicast_backend.persistance.repository.VideoRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.CommentRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.VideoRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +63,7 @@ public class CommentController {
 
         comment.setUser(user);
 
-        commentRepository.save(comment);
+        commentRepository.saveInternal(comment);
 
         Resource<Comment> resourceComment = commentAssembler.toResource(comment);
 

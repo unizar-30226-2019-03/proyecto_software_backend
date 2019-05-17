@@ -8,8 +8,8 @@ import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.Video;
 import com.unicast.unicast_backend.persistance.model.Vote;
 import com.unicast.unicast_backend.persistance.model.VoteKey;
-import com.unicast.unicast_backend.persistance.repository.VideoRepository;
-import com.unicast.unicast_backend.persistance.repository.VoteRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.VideoRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.VoteRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +57,7 @@ public class VoteController {
         vote.setUser(user);
         vote.setVideo(video);
 
-        voteRepository.save(vote);
+        voteRepository.saveInternal(vote);
 
         Resource<Vote> resourceVote = voteAssembler.toResource(vote);
 

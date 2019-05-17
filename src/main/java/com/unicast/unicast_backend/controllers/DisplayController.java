@@ -9,8 +9,8 @@ import com.unicast.unicast_backend.persistance.model.Display;
 import com.unicast.unicast_backend.persistance.model.DisplayKey;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.Video;
-import com.unicast.unicast_backend.persistance.repository.DisplayRepository;
-import com.unicast.unicast_backend.persistance.repository.VideoRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.DisplayRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.VideoRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class DisplayController {
 
         display.setId(key);
 
-        displayRepository.save(display);
+        displayRepository.saveInternal(display);
 
         Resource<Display> resourceDisplay = displayAssembler.toResource(display);
 

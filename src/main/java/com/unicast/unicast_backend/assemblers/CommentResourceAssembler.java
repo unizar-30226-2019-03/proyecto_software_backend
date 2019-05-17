@@ -1,7 +1,7 @@
 package com.unicast.unicast_backend.assemblers;
 
 import com.unicast.unicast_backend.persistance.model.Comment;
-import com.unicast.unicast_backend.persistance.repository.CommentRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.CommentRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;

@@ -2,8 +2,8 @@ package com.unicast.unicast_backend.controllers;
 
 import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.User;
-import com.unicast.unicast_backend.persistance.repository.SubjectRepository;
-import com.unicast.unicast_backend.persistance.repository.UserRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.SubjectRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.UserRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class SubjectController {
         Subject subject = subjectRepository.findById(subjectId).get();
         User user = userAuth.getUser();
         subject.getFollowers().add(user);
-        subjectRepository.save(subject);
+        subjectRepository.saveInternal(subject);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -44,7 +44,7 @@ public class SubjectController {
         Subject subject = subjectRepository.findById(subjectId).get();
         User user = userAuth.getUser();
         subject.getFollowers().remove(user);
-        subjectRepository.save(subject);
+        subjectRepository.saveInternal(subject);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -60,7 +60,7 @@ public class SubjectController {
             // TODO: lanzar excepcion
         }
         subject.getProfessors().add(user);
-        subjectRepository.save(subject);
+        subjectRepository.saveInternal(subject);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -73,7 +73,7 @@ public class SubjectController {
         Subject subject = subjectRepository.findById(subjectId).get();
         User user = userRepository.findById(professorId).get();
         subject.getProfessors().remove(user);
-        subjectRepository.save(subject);
+        subjectRepository.saveInternal(subject);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

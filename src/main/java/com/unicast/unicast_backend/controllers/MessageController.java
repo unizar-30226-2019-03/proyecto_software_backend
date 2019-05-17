@@ -9,8 +9,8 @@ import com.unicast.unicast_backend.assemblers.MessageResourceAssembler;
 import com.unicast.unicast_backend.async.NotificationAsync;
 import com.unicast.unicast_backend.persistance.model.Message;
 import com.unicast.unicast_backend.persistance.model.User;
-import com.unicast.unicast_backend.persistance.repository.MessageRepository;
-import com.unicast.unicast_backend.persistance.repository.UserRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.MessageRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.UserRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,7 +69,7 @@ public class MessageController {
                 message.setReceiver(receiver);
                 message.setSender(user);
         
-                messageRepository.save(message);
+                messageRepository.saveInternal(message);
         
                 notificationAsync.createUserNotificationsMessage(message, now);
         
