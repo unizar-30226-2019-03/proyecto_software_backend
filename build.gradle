@@ -27,12 +27,6 @@ compileJava {
 	options.compilerArgs << "-Xlint:deprecation"
 }
 
-dependencyManagement {
-    imports {
-        mavenBom 'com.amazonaws:aws-java-sdk-bom:1.11.228'
-    }
-}
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
