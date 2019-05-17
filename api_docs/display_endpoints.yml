@@ -62,7 +62,7 @@ DisplaysDelete:
     tags:
       - display
     summary: Elimina la visualizacion dada
-    operartionId: deleteDisplay
+    operationId: deleteDisplay
     parameters:
       - name: video_id
         in: path
