@@ -5,6 +5,7 @@ import com.unicast.unicast_backend.persistance.model.Degree;
 import com.unicast.unicast_backend.persistance.model.Display;
 import com.unicast.unicast_backend.persistance.model.Message;
 import com.unicast.unicast_backend.persistance.model.Notification;
+import com.unicast.unicast_backend.persistance.model.ReproductionList;
 import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.University;
 import com.unicast.unicast_backend.persistance.model.User;
@@ -33,6 +34,7 @@ public class RestConfiguration implements RepositoryRestConfigurer {
         config.exposeIdsFor(Vote.class);
         config.exposeIdsFor(Message.class);
         config.exposeIdsFor(Notification.class);
+        config.exposeIdsFor(ReproductionList.class);
         config.setRepositoryDetectionStrategy(RepositoryDetectionStrategies.ANNOTATED);
     }
 

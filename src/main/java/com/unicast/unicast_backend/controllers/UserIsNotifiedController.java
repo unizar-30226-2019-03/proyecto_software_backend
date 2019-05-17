@@ -3,7 +3,7 @@ package com.unicast.unicast_backend.controllers;
 import com.unicast.unicast_backend.assemblers.UserIsNotifiedResourceAssembler;
 import com.unicast.unicast_backend.persistance.model.UserIsNotified;
 import com.unicast.unicast_backend.persistance.model.UserIsNotifiedKey;
-import com.unicast.unicast_backend.persistance.repository.UserIsNotifiedRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.UserIsNotifiedRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class UserIsNotifiedController {
 
         userIsNotified.setChecked(true);
 
-        userIsNotifiedRepository.save(userIsNotified);
+        userIsNotifiedRepository.saveInternal(userIsNotified);
 
         Resource<UserIsNotified> resourceUserIsNotified = userIsNotifiedAssembler.toResource(userIsNotified);
 

@@ -1,6 +1,6 @@
 package com.unicast.unicast_backend;
 
-import com.unicast.unicast_backend.persistance.repository.UserRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.UserRepository;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

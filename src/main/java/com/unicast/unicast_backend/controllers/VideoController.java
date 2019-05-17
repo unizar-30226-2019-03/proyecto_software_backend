@@ -15,8 +15,8 @@ import com.unicast.unicast_backend.async.NotificationAsync;
 import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.Video;
-import com.unicast.unicast_backend.persistance.repository.SubjectRepository;
-import com.unicast.unicast_backend.persistance.repository.VideoRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.SubjectRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.VideoRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 import com.unicast.unicast_backend.s3handlers.S3VideoHandler;
@@ -101,7 +101,7 @@ public class VideoController {
         s3VideoHandler.deleteLastUploadedTmpFile();
         s3ImageHandler.deleteLastUploadedTmpFile();
 
-        videoRepository.save(video);
+        videoRepository.saveInternal(video);
 
         notificationAsync.createUserNotificationsVideo(subject, now);
         

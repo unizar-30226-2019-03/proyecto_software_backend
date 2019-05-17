@@ -6,7 +6,7 @@ import java.net.URISyntaxException;
 
 import com.unicast.unicast_backend.assemblers.UniversityResourceAssembler;
 import com.unicast.unicast_backend.persistance.model.University;
-import com.unicast.unicast_backend.persistance.repository.UniversityRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.UniversityRepository;
 import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +48,7 @@ public class UniversityController {
 
             s3ImageHandler.deleteLastUploadedTmpFile();
 
-            universityRepository.save(university);
+            universityRepository.saveInternal(university);
 
             Resource<University> resourceUniversity = universityAssembler.toResource(university);
 

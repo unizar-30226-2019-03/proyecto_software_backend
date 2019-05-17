@@ -45,6 +45,7 @@ CREATE TABLE reproduction_list (
     id SERIAL PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
     fk_app_user INTEGER NOT NULL,
+    CONSTRAINT name_app_user_unique UNIQUE(name, fk_app_user),
     CONSTRAINT fk_reproduction_list_app_user FOREIGN KEY (fk_app_user) REFERENCES app_user(id) ON DELETE CASCADE
 );
 

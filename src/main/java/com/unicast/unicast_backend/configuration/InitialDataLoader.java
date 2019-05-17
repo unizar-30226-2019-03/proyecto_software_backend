@@ -8,10 +8,10 @@ import com.unicast.unicast_backend.persistance.model.NotificationCategory;
 import com.unicast.unicast_backend.persistance.model.Privilege;
 import com.unicast.unicast_backend.persistance.model.Role;
 import com.unicast.unicast_backend.persistance.model.User;
-import com.unicast.unicast_backend.persistance.repository.NotificationCategoryRepository;
 import com.unicast.unicast_backend.persistance.repository.PrivilegeRepository;
 import com.unicast.unicast_backend.persistance.repository.RoleRepository;
-import com.unicast.unicast_backend.persistance.repository.UserRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.NotificationCategoryRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -102,7 +102,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             user.setEnabled(true);
             Role adminRole = roleRepository.findByName("ROLE_ADMIN");
             user.setRolesAndPrivileges(Arrays.asList(adminRole));
-            userRepository.save(user);
+            userRepository.saveInternal(user);
         }
 
         userOpt = userRepository.findByUsername("professor");
@@ -118,7 +118,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             user.setEnabled(true);
             Role professorRole = roleRepository.findByName("ROLE_PROFESSOR");
             user.setRolesAndPrivileges(Arrays.asList(professorRole));
-            userRepository.save(user);
+            userRepository.saveInternal(user);
         }
 
         // LAS CATEGORIAS DE LAS NOTIFICACIONES SE CREAN AQUI
@@ -126,23 +126,14 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         if (!notificationCatRepository.findByName("videos").isPresent()) {
             NotificationCategory videosCategory = new NotificationCategory();
             videosCategory.setName("videos");
-            notificationCatRepository.save(videosCategory);
+            notificationCatRepository.saveInternal(videosCategory);
         }
 
         if (!notificationCatRepository.findByName("messages").isPresent()) {
             NotificationCategory videosCategory = new NotificationCategory();
             videosCategory.setName("messages");
-            notificationCatRepository.save(videosCategory);
+            notificationCatRepository.saveInternal(videosCategory);
         }
-
-        // TODO: crear privilegios y roles apropiados
-        // Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
-        // Privilege writePrivilege = createPrivilegeIfNotFound("WRITE_PRIVILEGE");
-
-        // List<Privilege> adminPrivileges = Arrays.asList(readPrivilege,
-        // writePrivilege);
-        // createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        // createRoleIfNotFound("ROLE_USER", Arrays.asList(readPrivilege));
 
         alreadySetup = true;
     }

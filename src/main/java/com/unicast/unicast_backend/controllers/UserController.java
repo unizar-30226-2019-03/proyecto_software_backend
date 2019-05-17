@@ -10,10 +10,10 @@ import com.unicast.unicast_backend.assemblers.UserResourceAssembler;
 import com.unicast.unicast_backend.configuration.SecurityConfiguration;
 import com.unicast.unicast_backend.persistance.model.Role;
 import com.unicast.unicast_backend.persistance.model.User;
-import com.unicast.unicast_backend.persistance.repository.DegreeRepository;
 import com.unicast.unicast_backend.persistance.repository.RoleRepository;
-import com.unicast.unicast_backend.persistance.repository.UniversityRepository;
-import com.unicast.unicast_backend.persistance.repository.UserRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.DegreeRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.UniversityRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.UserRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
 import com.unicast.unicast_backend.s3handlers.S3ImageHandler;
 
@@ -85,7 +85,7 @@ public class UserController {
             user.setPhoto(photoURL);
 
             s3ImageHandler.deleteLastUploadedTmpFile();
-            userRepository.save(user);
+            userRepository.saveInternal(user);
 
             Resource<User> resourceUser = userAssembler.toResource(user);
 
@@ -156,7 +156,7 @@ public class UserController {
             s3ImageHandler.deleteLastUploadedTmpFile();
         }
 
-        userRepository.save(user);
+        userRepository.saveInternal(user);
         return ResponseEntity.ok(userAssembler.toResource(user));
         // } catch (org.springframework.dao.DataIntegrityViolationException e) {
         // ResponseEntity<String> res = new ResponseEntity("El username ya existe",
@@ -172,12 +172,14 @@ public class UserController {
 
         user.setEnabled(false);
 
+        userRepository.saveInternal(user);
         // s3ImageHandler.deleteFile(user.getPhoto().getPath());
 
         // userRepository.delete(user);
 
         return ResponseEntity.ok().build();
     }
+    
 
     @PatchMapping(value = "/api/users/makeProfessor", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('MAKE_PROFESSOR_PRIVILEGE')")
@@ -189,7 +191,7 @@ public class UserController {
         l.add(professorRole);
         user.setRolesAndPrivileges(l);
 
-        userRepository.save(user);
+        userRepository.saveInternal(user);
         
         return ResponseEntity.ok().build();
     }
@@ -204,7 +206,7 @@ public class UserController {
         l.add(userRole);
         user.setRolesAndPrivileges(l);
 
-        userRepository.save(user);
+        userRepository.saveInternal(user);
         
         return ResponseEntity.ok().build();
     }

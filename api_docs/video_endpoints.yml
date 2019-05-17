@@ -199,7 +199,6 @@ VideosSubjectVideos:
         schema:
           type: integer
           format: int64
-
     responses:
       200:
         description: Devuelve una lista de videos
@@ -285,3 +284,34 @@ DeleteVideo:
         description: Video eliminado con exito
     security:
       - bearerAuth: []
+
+
+FindVideoByReproductionList:
+  get:
+    tags:
+      - video
+    summary: Lista de videos de una lista de reproduccion
+    operationId: getVideosFromReproductionList
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
+      - name: repro_list_id
+        in: query
+        description: Id de la lista
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve una lista de videos
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/VideoGetResponse'
+    security:
+      - bearerAuth: []        

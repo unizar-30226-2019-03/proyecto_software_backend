@@ -77,7 +77,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 if (StringUtils.isNotEmpty(userIdStr)) {
                     Long userId = Long.parseLong(parsedToken.getBody().getSubject());
                     UserDetails user = this.userDetailsService.loadUserById(userId);
-                    return new UsernamePasswordAuthenticationToken(user, null, authorities);
+                    if (user.isEnabled()) {
+                        return new UsernamePasswordAuthenticationToken(user, null, authorities);
+                    }
+
+                    // TODO: lanzar error en condiciones
+                    throw new Error();
 
                 }
             } catch (ExpiredJwtException exception) {
