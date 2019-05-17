@@ -72,7 +72,7 @@ public class UniversityController {
     public ResponseEntity<?> deleteUniversity(@RequestParam("id") Long universityId) {
         University university = universityRepository.findById(universityId).get();
 
-        s3ImageHandler.deleteFile(university.getPhoto().getPath());
+        s3ImageHandler.deleteFile(university.getPhoto());
 
         universityRepository.delete(university);
 

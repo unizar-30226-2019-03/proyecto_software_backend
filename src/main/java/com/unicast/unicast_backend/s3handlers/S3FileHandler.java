@@ -39,9 +39,9 @@ public abstract class S3FileHandler {
         return new URI(s3Constants.s3.getResourceUrl(s3Constants.BUCKET_NAME, s3Key));
     }
 
-    public void deleteFile(String fileName) {
-        System.out.println(fileName);
-        s3Constants.s3.deleteObject(s3Constants.BUCKET_NAME, fileName);
+    public void deleteFile(URI file) {
+        String fileName = file.getPath();
+        s3Constants.s3.deleteObject(s3Constants.BUCKET_NAME, fileName.substring(1, fileName.length()));
     }
  
     public File getLastUploadedTmpFile() {

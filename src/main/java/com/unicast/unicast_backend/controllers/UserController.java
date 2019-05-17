@@ -173,7 +173,7 @@ public class UserController {
         user.setEnabled(false);
 
         userRepository.saveInternal(user);
-        // s3ImageHandler.deleteFile(user.getPhoto().getPath());
+        // s3ImageHandler.deleteFile(user.getPhoto());
 
         // userRepository.delete(user);
 
@@ -219,7 +219,7 @@ public class UserController {
         User user = userRepository.findById(userId).get();
 
         if (user.getPhoto() != null) {
-            s3ImageHandler.deleteFile(user.getPhoto().getPath());
+            s3ImageHandler.deleteFile(user.getPhoto());
         }
 
         userRepository.delete(user);

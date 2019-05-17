@@ -122,8 +122,8 @@ public class VideoController {
             // TODO: lanzar excepcion o algo
         }
 
-        s3VideoHandler.deleteFile(video.getUrl().getPath());
-        s3ImageHandler.deleteFile(video.getThumbnailUrl().getPath());
+        s3VideoHandler.deleteFile(video.getUrl());
+        s3ImageHandler.deleteFile(video.getThumbnailUrl());
 
         videoRepository.delete(video);
 
