@@ -6,7 +6,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +41,7 @@ public abstract class S3FileHandler {
     }
 
     public void deleteFile(String fileName) {
-        s3Constants.s3.deleteObject(new DeleteObjectRequest(s3Constants.BUCKET_NAME, fileName));
+        s3Constants.s3.deleteObject(s3Constants.BUCKET_NAME, fileName);
     }
 
     public File getLastUploadedTmpFile() {
