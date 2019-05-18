@@ -13,6 +13,7 @@ import com.unicast.unicast_backend.persistance.model.Role;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.repository.RoleRepository;
 import com.unicast.unicast_backend.persistance.repository.rest.DegreeRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.ReproductionListRepository;
 import com.unicast.unicast_backend.persistance.repository.rest.UniversityRepository;
 import com.unicast.unicast_backend.persistance.repository.rest.UserRepository;
 import com.unicast.unicast_backend.principal.UserDetailsImpl;
@@ -41,6 +42,9 @@ public class UserController {
 
     @Autowired
     private UniversityRepository universityRepository;
+
+    @Autowired
+    private ReproductionListRepository reproductionListRepository;
 
     @Autowired
     private DegreeRepository degreeRepository;
@@ -90,6 +94,8 @@ public class UserController {
             ReproductionList reproList = new ReproductionList();
             reproList.setUser(user);
             reproList.setName("Favoritos");
+
+            reproductionListRepository.save(reproList);
             
             Resource<User> resourceUser = userAssembler.toResource(user);
 

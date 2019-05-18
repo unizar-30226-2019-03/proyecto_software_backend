@@ -60,22 +60,22 @@ public class MessageController {
 
         // TODO: comprobar que receiver sea un profesor de una de las asignaturas del
         // usuario
-        if ((user.getRole().equals("ROLE_USER") && receiver.getRole().equals("ROLE_PROFESSOR")) ||
-            (user.getRole().equals("ROLE_PROFESSOR") && receiver.getRole().equals("ROLE_USER"))) {
-                Timestamp now = Timestamp.from(Instant.now());
-        
-                message.setTimestamp(now);
-                message.setText(text);
-                message.setReceiver(receiver);
-                message.setSender(user);
-        
-                messageRepository.saveInternal(message);
-        
-                notificationAsync.createUserNotificationsMessage(message, now);
-        
-                Resource<Message> messageResource = messageAssembler.toResource(message);
-        
-                return ResponseEntity.created(new URI(message.getId().toString())).body(messageResource);
+        if ((user.getRole().equals("ROLE_USER") && receiver.getRole().equals("ROLE_PROFESSOR"))
+                || (user.getRole().equals("ROLE_PROFESSOR") && receiver.getRole().equals("ROLE_USER"))) {
+            Timestamp now = Timestamp.from(Instant.now());
+
+            message.setTimestamp(now);
+            message.setText(text);
+            message.setReceiver(receiver);
+            message.setSender(user);
+
+            messageRepository.saveInternal(message);
+
+            notificationAsync.createUserNotificationsMessage(message, now);
+
+            Resource<Message> messageResource = messageAssembler.toResource(message);
+
+            return ResponseEntity.created(new URI(message.getId().toString())).body(messageResource);
         }
 
         // TODO: lanzar excepcion en condiciones

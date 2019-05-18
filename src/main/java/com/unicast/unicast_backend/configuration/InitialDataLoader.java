@@ -10,7 +10,6 @@ import com.unicast.unicast_backend.persistance.model.Role;
 import com.unicast.unicast_backend.persistance.repository.PrivilegeRepository;
 import com.unicast.unicast_backend.persistance.repository.RoleRepository;
 import com.unicast.unicast_backend.persistance.repository.rest.NotificationCategoryRepository;
-import com.unicast.unicast_backend.persistance.repository.rest.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -29,13 +28,7 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     private RoleRepository roleRepository;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     private NotificationCategoryRepository notificationCatRepository;
-
-    @Autowired
-    private SecurityConfiguration securityConfiguration;
 
     @Autowired
     private PrivilegeRepository privilegeRepository;

@@ -3,9 +3,11 @@ package com.unicast.unicast_backend.cli;
 import java.util.Arrays;
 
 import com.unicast.unicast_backend.configuration.SecurityConfiguration;
+import com.unicast.unicast_backend.persistance.model.ReproductionList;
 import com.unicast.unicast_backend.persistance.model.Role;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.repository.RoleRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.ReproductionListRepository;
 import com.unicast.unicast_backend.persistance.repository.rest.UserRepository;
 
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +25,9 @@ public class AdminCommandLineRunner implements CommandLineRunner {
 
 	@Autowired 
 	private UserRepository userRepository;
+
+    @Autowired
+    private ReproductionListRepository reproductionListRepository;
 
     @Override
     public void run(String... args) throws Exception {
@@ -42,6 +47,12 @@ public class AdminCommandLineRunner implements CommandLineRunner {
                     Role adminRole = roleRepository.findByName("ROLE_ADMIN");
                     user.setRolesAndPrivileges(Arrays.asList(adminRole));
                     user.setEnabled(true);
+
+                    ReproductionList reproList = new ReproductionList();
+                    reproList.setUser(user);
+                    reproList.setName("Favoritos");
+        
+                    reproductionListRepository.save(reproList);
         
                     userRepository.saveInternal(user);
                 }
