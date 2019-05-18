@@ -55,7 +55,7 @@ public interface SubjectRepository extends JpaRepositoryExportedFalse<Subject, L
     public List<Subject> findByNameContainingIgnoreCase(@Param("name") String name);
 
     @RestResource(path = "name", rel = "name")
-    public Subject findByNameIgnoreCase(@Param("name") String name);
+    public List<Subject> findByNameIgnoreCase(@Param("name") String name);
 
     @RestResource(path = "ranking", rel = "ranking")
     public Page<Subject> findRanking(Pageable page);

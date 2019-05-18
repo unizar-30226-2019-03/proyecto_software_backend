@@ -75,6 +75,11 @@ public class ReproductionListController {
             throw new Error();
         }
 
+        if (reproList.getName().equals("Favoritos")) {
+            // TODO: gestionar excepcion en condiciones
+            throw new Error();
+        }
+
         reproductionListRepository.delete(reproList);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

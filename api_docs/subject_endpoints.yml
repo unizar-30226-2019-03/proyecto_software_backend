@@ -89,6 +89,34 @@ SubjectsId:
         description: Se ha eliminado con exito
     security:
       - bearerAuth: []
+  get:
+    tags:
+      - subject
+    summary: Obtener una asignatura
+    operationId: getSubjectById
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SubjectProjectionParameter'
+      - name: id
+        in: path
+        description: Id de la asignatura
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve la asignatura que se ha obtenido
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Subject'
+    security:
+      - bearerAuth: []
+
+  
 
 SubjectsIdUniversity:
   put:
@@ -215,7 +243,7 @@ SubjectsSearchName:
         content:
           application/json:
             schema:
-              $ref: 'api-spec.yml#/components/schemas/Subject'
+              $ref: 'api-spec.yml#/components/schemas/SubjectGetEmbedded'
 
 SubjectsUserIn:
   get:

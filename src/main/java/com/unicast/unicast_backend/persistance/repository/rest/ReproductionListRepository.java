@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.data.rest.core.annotation.RestResource;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +20,10 @@ public interface ReproductionListRepository extends JpaRepositoryExportedFalse<R
     @RestResource(path = "user", rel = "user")
     @Query("select rl from ReproductionList rl where rl.user.id = ?#{ principal?.id }")
     public Page<ReproductionList> findByUserId(Pageable page);
+
+    @RestResource(path = "videoAndUser", rel = "videoAndUser")
+    @Query("select rl from ReproductionList rl join Contains c on c.list = rl and c.video.id = ?1 where rl.user.id = ?#{ principal?.id } and c member of rl.videoList")
+    public List<ReproductionList> findByUserIdAndVideoId(@Param("video_id") Long videoId);
 
     @Transactional
     @Modifying

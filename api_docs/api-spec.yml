@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.3.1
+  version: 1.3.2
   title: Swagger Unicast
 
 servers:
@@ -574,7 +574,7 @@ components:
         _embedded:
           type: object
           properties:
-            degrees:
+            reproductionLists:
               type: array
               items:
                 $ref: '#/components/schemas/ReproductionList'
@@ -798,6 +798,9 @@ paths:
   
   /displays/{video_id}:
     $ref: 'display_endpoints.yml#/DisplaysDelete'
+  
+  /displays/search/userAndVideo:
+    $ref: 'display_endpoints.yml#/FindByUserIdAndVideoId'
 
   #Vote endpoint
 
@@ -836,3 +839,6 @@ paths:
 
   /reproductionLists/deleteVideo:
     $ref: 'reproduction_list_endpoints.yml#/DeleteVideo'
+
+  /reproductionLists/search/videoAndUser:
+    $ref: 'reproduction_list_endpoints.yml#/GetReproductionListVideoIn'

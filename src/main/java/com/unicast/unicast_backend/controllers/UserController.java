@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import com.unicast.unicast_backend.assemblers.UserResourceAssembler;
 import com.unicast.unicast_backend.configuration.SecurityConfiguration;
+import com.unicast.unicast_backend.persistance.model.ReproductionList;
 import com.unicast.unicast_backend.persistance.model.Role;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.repository.RoleRepository;
@@ -67,7 +68,6 @@ public class UserController {
         // usuario con nombre/email iguales
 
         try {
-
             User user = new User();
             user.setUsername(username);
             user.setName(name);
@@ -87,6 +87,10 @@ public class UserController {
             s3ImageHandler.deleteLastUploadedTmpFile();
             userRepository.saveInternal(user);
 
+            ReproductionList reproList = new ReproductionList();
+            reproList.setUser(user);
+            reproList.setName("Favoritos");
+            
             Resource<User> resourceUser = userAssembler.toResource(user);
 
             return ResponseEntity.created(new URI(resourceUser.getId().getHref())).body(resourceUser);

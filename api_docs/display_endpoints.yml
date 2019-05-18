@@ -76,3 +76,31 @@ DisplaysDelete:
         description: La visualizacion ha sido borrada
     security:
       - bearerAuth: []
+
+FindByUserIdAndVideoId:
+  get:
+    tags:
+      - display
+    summary: Obtener la display de un video y de un usuario concretos
+    operationId: findByUserIdAndVideoId
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/DisplayProjectionParameter'
+      - in: query
+        name: video_id
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: Id del video que se quiere mirar
+    responses:
+      200:
+        description: Devuelve el display
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Display'
+    security:
+      - bearerAuth: []

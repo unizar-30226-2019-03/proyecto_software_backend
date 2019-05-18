@@ -19,7 +19,7 @@ AddReproductionList:
             required:
               - name
     responses:
-      204:
+      201:
         description: Se he creado la lista
     security:
       - bearerAuth: []
@@ -120,5 +120,33 @@ AddVideo:
     responses:
       200:
         description: Video añdido con exito de la lista
+    security:
+      - bearerAuth: []
+
+GetReproductionListVideoIn:
+  get:
+    tags:
+      - reproductionList
+    summary: Obtiene la lista de listas de reproduccion en las que esta un video
+    operationId: getReproductionListVideoIn
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
+      - in: query
+        name: video_id
+        required: true
+        schema:
+          type: integer
+          format: int64
+        description: Id del video que se quiere mirar
+    responses:
+      200:
+        description: Devuelve una lista de asignaturas
+        content:
+          application/hal+json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/ReproductionListGetResponse'
     security:
       - bearerAuth: []
