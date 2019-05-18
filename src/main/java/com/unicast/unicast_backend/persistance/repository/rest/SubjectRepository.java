@@ -1,6 +1,7 @@
 package com.unicast.unicast_backend.persistance.repository.rest;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.unicast.unicast_backend.persistance.model.Subject;
 
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RepositoryRestResource(collectionResourceRel = "subjects", path = "subjects")
 public interface SubjectRepository extends JpaRepositoryExportedFalse<Subject, Long> {
 
-	@Override
+    @Override
     @RestResource(exported = true)
     Page<Subject> findAll(Pageable pageable);
 
@@ -31,6 +32,10 @@ public interface SubjectRepository extends JpaRepositoryExportedFalse<Subject, L
     @RestResource(exported = true)
     void delete(Subject subject);
 
+    @Override
+    @RestResource(exported = true)
+    Optional<Subject> findById(Long id);
+
     @PreAuthorize("hasAnyAuthority('CREATE_SUBJECT_PRIVILEGE, UPDATE_SUBJECT_PRIVILEGE')")
     @Override
     @RestResource(exported = true)
@@ -40,7 +45,7 @@ public interface SubjectRepository extends JpaRepositoryExportedFalse<Subject, L
     @Modifying
     @RestResource(exported = false)
     default <S extends Subject> S saveInternal(final S entity) {
-      return save(entity);
+        return save(entity);
     }
 
     @RestResource(path = "nameStartsWith", rel = "nameStartsWith")

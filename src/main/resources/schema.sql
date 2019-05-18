@@ -63,9 +63,10 @@ CREATE TABLE message (
 
 CREATE TABLE subject (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) UNIQUE NOT NULL,
+    name VARCHAR(100) NOT NULL,
     abbreviation VARCHAR(10) UNIQUE NOT NULL,
     fk_university INTEGER,
+    CONSTRAINT name_university_unique UNIQUE(name, fk_university),
     CONSTRAINT fk_subject_university FOREIGN KEY (fk_university) REFERENCES university(id) ON DELETE SET NULL
 );
 

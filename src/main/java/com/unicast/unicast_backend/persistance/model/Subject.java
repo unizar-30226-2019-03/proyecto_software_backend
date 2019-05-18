@@ -29,7 +29,7 @@ public class Subject {
 
     public Subject() {}
 
-    public Subject(double avgScore, Subject s) {
+    public Subject(Double avgScore, Subject s) {
         this.id = s.id;
         this.name = s.name;
         this.abbreviation = s.abbreviation;
