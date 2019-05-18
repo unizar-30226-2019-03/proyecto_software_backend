@@ -69,15 +69,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 Jws<Claims> parsedToken = Jwts.parser().setSigningKey(signingKey)
                         .parseClaimsJws(token.replace("Bearer ", ""));
 
-                String userIdStr = parsedToken.getBody().getSubject();
+                String tokenBody = parsedToken.getBody().getSubject();
 
                 List<SimpleGrantedAuthority> authorities = ((List<?>) parsedToken.getBody().get("rol")).stream()
                         .map(authority -> new SimpleGrantedAuthority((String) authority)).collect(Collectors.toList());
 
-                if (StringUtils.isNotEmpty(userIdStr)) {
-                    Long userId = Long.parseLong(parsedToken.getBody().getSubject());
+                if (StringUtils.isNotEmpty(tokenBody)) {
+                    String[] idAndDoublyHashedPassword = tokenBody.split(";");
+                    Long userId = Long.parseLong(idAndDoublyHashedPassword[0]);
                     UserDetails user = this.userDetailsService.loadUserById(userId);
-                    if (user.isEnabled()) {
+                    if (user.isEnabled() && idAndDoublyHashedPassword[1].equals(JwtAuthenticationFilter.getSHA(user.getPassword()))) {
                         return new UsernamePasswordAuthenticationToken(user, null, authorities);
                     }
 

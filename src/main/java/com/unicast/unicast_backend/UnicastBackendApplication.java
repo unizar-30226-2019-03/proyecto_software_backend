@@ -9,5 +9,4 @@ public class UnicastBackendApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(UnicastBackendApplication.class, args);
 	}
-
 }

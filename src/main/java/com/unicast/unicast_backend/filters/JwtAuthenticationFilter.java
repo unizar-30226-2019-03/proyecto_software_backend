@@ -1,6 +1,9 @@
 package com.unicast.unicast_backend.filters;
 
 import java.io.IOException;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,12 +30,26 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
     private final SecurityConstants securityConstants;
+    static private MessageDigest mdSha256;
+
+    static {
+        try {
+            mdSha256 = MessageDigest.getInstance("SHA-256");
+            // nunca deberia llegar a catch
+        } catch (NoSuchAlgorithmException e) {}
+    }
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, SecurityConstants securityConstants) {
         this.authenticationManager = authenticationManager;
         this.securityConstants = securityConstants;
 
         setFilterProcessesUrl(securityConstants.AUTH_LOGIN_URL);
+    }
+
+    public static String getSHA(String string) {
+        byte[] hashedString = mdSha256.digest(string.getBytes());
+
+        return (new BigInteger(1, hashedString)).toString(16);
     }
 
     @Override
@@ -59,7 +76,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         String token = Jwts.builder().signWith(Keys.hmacShaKeyFor(signingKey), SignatureAlgorithm.HS512)
                 .setHeaderParam("typ", securityConstants.TOKEN_TYPE).setIssuer(securityConstants.TOKEN_ISSUER)
-                .setAudience(securityConstants.TOKEN_AUDIENCE).setSubject(user.getId().toString())
+                .setAudience(securityConstants.TOKEN_AUDIENCE).setSubject(user.getId().toString() + ";" + getSHA(user.getPassword()))
                 .setExpiration(new Date(System.currentTimeMillis() + securityConstants.TOKEN_TTL_MS))
                 .claim("rol", roles).compact();
 

@@ -362,6 +362,11 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/User'
+      
+    UserGetResponse:
+      allOf:
+        - $ref: '#/components/schemas/GetResponse'
+        - $ref: '#/components/schemas/UserGetEmbedded'
 
     Degree:
       type: object
@@ -653,6 +658,9 @@ paths:
 
   /users/eraseProfessor:
     $ref: 'user_endpoints.yml#/EraseProfessor'
+
+  /users/search/professors:
+    $ref: 'user_endpoints.yml#/GetProfessors'
 
 
   #Subject endpoints

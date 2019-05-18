@@ -534,3 +534,25 @@ EraseProfessor:
         description: El profesor se ha hecho usuario
     security:
       - bearerAuth: []
+
+GetProfessors:
+  get:
+    tags:
+      - user
+    summary: Busca los profesores de un usuario
+    operationId: findUserProfessors
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+    responses:
+      200:
+        description: Lista de las usuarios encontradas
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/UserGetResponse'
+    security:
+      - bearerAuth: []

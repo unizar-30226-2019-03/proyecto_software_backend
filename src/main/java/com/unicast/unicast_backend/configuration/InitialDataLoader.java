@@ -7,7 +7,6 @@ import java.util.List;
 import com.unicast.unicast_backend.persistance.model.NotificationCategory;
 import com.unicast.unicast_backend.persistance.model.Privilege;
 import com.unicast.unicast_backend.persistance.model.Role;
-import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.repository.PrivilegeRepository;
 import com.unicast.unicast_backend.persistance.repository.RoleRepository;
 import com.unicast.unicast_backend.persistance.repository.rest.NotificationCategoryRepository;
@@ -87,39 +86,6 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         createRoleIfNotFound("ROLE_USER", userPrivileges);
         createRoleIfNotFound("ROLE_PROFESSOR", professorPrivileges);
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-
-        // TODO: cambiar y crear la cuenta de admin y profesores en condiciones
-        User userOpt = userRepository.findByUsername("admin");
-
-        if (userOpt == null) {
-            User user = new User();
-            user.setUsername("admin");
-            user.setName("admin name");
-            user.setSurnames("surnames");
-            user.setPassword(securityConfiguration.passwordEncoder().encode("password1234"));
-            user.setEmail("a@a.com");
-            user.setDescription("blablabla");
-            user.setEnabled(true);
-            Role adminRole = roleRepository.findByName("ROLE_ADMIN");
-            user.setRolesAndPrivileges(Arrays.asList(adminRole));
-            userRepository.saveInternal(user);
-        }
-
-        userOpt = userRepository.findByUsername("professor");
-
-        if (userOpt == null) {
-            User user = new User();
-            user.setUsername("professor");
-            user.setName("professor name");
-            user.setSurnames("surnames");
-            user.setPassword(securityConfiguration.passwordEncoder().encode("password1234"));
-            user.setEmail("a@a2.com");
-            user.setDescription("aaaaaaaa");
-            user.setEnabled(true);
-            Role professorRole = roleRepository.findByName("ROLE_PROFESSOR");
-            user.setRolesAndPrivileges(Arrays.asList(professorRole));
-            userRepository.saveInternal(user);
-        }
 
         // LAS CATEGORIAS DE LAS NOTIFICACIONES SE CREAN AQUI
 
