@@ -67,4 +67,6 @@ public interface UserRepository extends JpaRepositoryExportedFalse<User, Long> {
 	@RestResource(path = "surnamesContaining", rel = "surnamesContaining")
 	public List<User> findBySurnamesContainingIgnoreCase(@Param("surnames") String surnames);
 
+	public List<User> findByIdNotIn(List<Long> userIds);
+
 }

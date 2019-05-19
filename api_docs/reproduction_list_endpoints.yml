@@ -21,6 +21,10 @@ AddReproductionList:
     responses:
       201:
         description: Se he creado la lista
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/ReproductionList'
     security:
       - bearerAuth: []
 
@@ -34,7 +38,6 @@ GetUserReproductionLists:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
     responses:
       200:
         description: Devuelve una lista de asignaturas
@@ -133,7 +136,6 @@ GetReproductionListVideoIn:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
       - in: query
         name: video_id
         required: true

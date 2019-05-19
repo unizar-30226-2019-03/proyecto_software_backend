@@ -72,7 +72,10 @@ public class Video {
     @JsonIgnore
     @OneToMany(mappedBy = "video")
     @RestResource(exported = false)
-	private Collection<Display> displays;
+    private Collection<Display> displays;
+    
+    // @Formula("(select count(d.video) from app_user_video_watches d where d.fk_video = id)")
+    // private Integer numViews;
 
     @ManyToMany
     @JoinTable(name = "video_video_tag", joinColumns = @JoinColumn(name = "fk_video"), inverseJoinColumns = @JoinColumn(name = "fk_video_tag"))

@@ -23,7 +23,7 @@ import lombok.Data;
 @Data
 @Entity
 @NamedQuery(name = "Subject.findRanking",
-    query = "select new Subject(sum(v.score) / count(v), s) from Subject s join Video v on s.id = v.subject.id group by s.id order by sum(v.score) / count(v) desc")
+    query = "select new Subject(sum(v.score) / count(v), s) from Subject s join Video v on s.id = v.subject.id group by s.id order by (sum(v.score) / count(v)) desc nulls last")
 @Table(name = "subject")
 public class Subject {
 
@@ -38,7 +38,11 @@ public class Subject {
         this.professors = s.professors;
         this.videos = s.videos;
 
-        this.avgScore = avgScore;
+        if (avgScore == null) {
+            this.avgScore = 0.0;
+        } else {
+            this.avgScore = avgScore;
+        }
     }
 
     @Id

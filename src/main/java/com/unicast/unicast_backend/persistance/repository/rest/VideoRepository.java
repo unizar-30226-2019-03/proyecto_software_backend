@@ -32,6 +32,10 @@ public interface VideoRepository extends JpaRepositoryExportedFalse<Video, Long>
         return save(entity);
     }
 
+    @RestResource(path = "recommendations", rel = "recommendations")
+    @Query("select r.video from Recommendation r where r.user.id = ?#{ principal?.id } order by r.position asc")
+    public List<Video> findRecommendedVideos();
+
     @RestResource(path = "title", rel = "title")
     public Video findByTitleIgnoreCase(@Param("title") String title);
 
@@ -55,4 +59,7 @@ public interface VideoRepository extends JpaRepositoryExportedFalse<Video, Long>
     @RestResource(path = "reproductionList", rel = "reproductionList")
     @Query("select c.video from Contains c where c.list.id = ?1 and c.list.user.id = ?#{ principal?.id }")
     public Page<Video> findByReproductionList(@Param("repro_list_id") Long reproListId, Pageable page);
+
+    @Query("select v from Video v order by size(v.displays) desc nulls last")
+    public List<Video> findOrderBySizeDisplays();
 }

@@ -24,7 +24,7 @@ public class AdminCommandLineRunner implements CommandLineRunner {
 	private RoleRepository roleRepository;
 
 	@Autowired 
-	private UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private ReproductionListRepository reproductionListRepository;

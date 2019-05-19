@@ -16,10 +16,12 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.Transactional;
 
 @Configuration
 @EnableAsync
+@EnableScheduling
 public class InitialDataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private boolean alreadySetup = false;

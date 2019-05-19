@@ -4,8 +4,6 @@ import java.util.List;
 
 import com.unicast.unicast_backend.persistance.model.ReproductionList;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,7 +17,7 @@ public interface ReproductionListRepository extends JpaRepositoryExportedFalse<R
 
     @RestResource(path = "user", rel = "user")
     @Query("select rl from ReproductionList rl where rl.user.id = ?#{ principal?.id }")
-    public Page<ReproductionList> findByUserId(Pageable page);
+    public List<ReproductionList> findByUserId();
 
     @RestResource(path = "videoAndUser", rel = "videoAndUser")
     @Query("select rl from ReproductionList rl join Contains c on c.list = rl and c.video.id = ?1 where rl.user.id = ?#{ principal?.id } and c member of rl.videoList")

@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.3.3
+  version: 1.3.4
   title: Swagger Unicast
 
 servers:
@@ -565,6 +565,11 @@ components:
           format: int64
         name:
           type: string
+        numVideos:
+          type: integer
+        thumbnail:
+          type: string
+          format: url
       required:
           - name
 

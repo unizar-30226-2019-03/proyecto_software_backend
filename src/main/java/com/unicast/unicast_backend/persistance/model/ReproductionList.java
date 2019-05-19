@@ -1,5 +1,6 @@
 package com.unicast.unicast_backend.persistance.model;
 
+import java.net.URI;
 import java.util.Collection;
 
 import javax.persistence.Entity;
@@ -12,6 +13,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.hibernate.annotations.Formula;
 
 import lombok.Data;
 
@@ -33,5 +36,10 @@ public class ReproductionList {
     @JsonIgnore
     @OneToMany(mappedBy = "list")
     private Collection<Contains> videoList;
+
+    @Formula("(select count(*) from video_list vl where vl.fk_list = id)")
+    private Integer numVideos;
     
+    @Formula("(select v.thumbnail_url from video_list vl join video v on vl.fk_video = v.id where vl.fk_list = id and vl.position = 1)")
+    private URI thumbnail;
 }

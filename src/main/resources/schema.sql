@@ -130,6 +130,15 @@ CREATE TABLE video_list (
     CONSTRAINT pk_video_list PRIMARY KEY (fk_video, fk_list)
 );
 
+CREATE TABLE app_user_recommendation (
+    fk_app_user INTEGER NOT NULL,
+    fk_video INTEGER NOT NULL,
+    position INTEGER NOT NULL,
+    CONSTRAINT fk_app_user_recommendation_video FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE,
+    CONSTRAINT fk_app_user_recommendation_app_user FOREIGN KEY (fk_app_user) REFERENCES app_user(id) ON DELETE CASCADE,
+    CONSTRAINT pk_app_user_recommendation PRIMARY KEY (fk_video, fk_app_user)
+);
+
 CREATE TABLE app_user_video_vote (
     fk_app_user INTEGER NOT NULL,
     fk_video INTEGER NOT NULL,

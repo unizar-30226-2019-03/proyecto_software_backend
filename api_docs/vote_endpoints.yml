@@ -14,7 +14,7 @@ Votes:
             type: object
             properties:
               video_id:
-                description: Id de la asignatura de la que se va a borar  el profesor
+                description: Id del video sobre el que votar
                 type: integer
               suitability:
                 description: adecuacion
