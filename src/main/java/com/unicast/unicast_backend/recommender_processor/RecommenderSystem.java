@@ -113,10 +113,11 @@ public class RecommenderSystem {
             position++;
         }
 
-        List<Video> topVideos = videoRepository.findOrderBySizeDisplays().subList(0, 10);
+        List<Video> topVideos = videoRepository.findOrderBySizeDisplays();
+        List<Video> top10Videos = topVideos.subList(0, Math.min(topVideos.size(), 10));
 
         for (User u : userRepository.findByIdNotIn(fileAndUserIds.getValue())) {
-            for (Video v : topVideos) {
+            for (Video v : top10Videos) {
                 RecommendationKey rKey = new RecommendationKey();
                 rKey.setUserId(Long.valueOf(u.getId()));
                 rKey.setVideoId(Long.valueOf(v.getId()));
