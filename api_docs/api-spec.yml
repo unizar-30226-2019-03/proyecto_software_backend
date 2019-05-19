@@ -754,6 +754,9 @@ paths:
   /videos:
     $ref: 'video_endpoints.yml#/Videos'
 
+  /videos/search/recommendations:
+    $ref: 'video_endpoints.yml#/Recommendations'
+
   /videos/upload:
     $ref: 'video_endpoints.yml#/UploadVideo'
 
