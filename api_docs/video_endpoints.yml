@@ -28,7 +28,7 @@ Recommendations:
     tags:
       - video
     summary: Devuelve una lista de hasta 10 videos recomendados
-    operationId: findVideosStartsWithTitle
+    operationId: findRecommendedVideos
     parameters:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
       - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
