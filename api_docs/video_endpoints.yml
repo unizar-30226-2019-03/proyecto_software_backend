@@ -23,6 +23,27 @@ Videos:
     security:
       - bearerAuth: []
 
+Recommendations:
+  get:
+    tags:
+      - video
+    summary: Devuelve una lista de hasta 10 videos recomendados
+    operationId: findVideosStartsWithTitle
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/VideoProjectionParameter'
+    responses:
+      200:
+        description: Lista de los videos recomendados
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/VideoGetEmbedded'
+    security:
+      - bearerAuth: []
+
 UploadVideo:
   post:
     tags:
@@ -69,7 +90,7 @@ VideosSearchTitleContaining:
         content:
           application/json:
             schema:
-              $ref: 'api-spec.yml#/components/schemas/VideoGetResponse'
+              $ref: 'api-spec.yml#/components/schemas/VideoGetEmbedded'
     security:
       - bearerAuth: []
 
@@ -95,7 +116,7 @@ VideosSearchTitleStartsWith:
         content:
           application/json:
             schema:
-              $ref: 'api-spec.yml#/components/schemas/Video'
+              $ref: 'api-spec.yml#/components/schemas/VideoGetEmbedded'
     security:
       - bearerAuth: []
 
