@@ -42,14 +42,14 @@ public interface UserRepository extends JpaRepositoryExportedFalse<User, Long> {
 	  return save(entity);
 	}
 
-	@Query("select s.followers from Subject s where ?1 member of s.professors")
+	@Query("select distinct s.followers from Subject s where ?1 member of s.professors")
 	public List<User> findFollowersOfProfessorSubjects(User professor);
 
 	@RestResource(path = "professors", rel = "professors")
-	@Query("select s.professors from Subject s join User u on u.id = ?#{ principal?.id } where u member of s.followers")
+	@Query("select distinct s.professors from Subject s join User u on u.id = ?#{ principal?.id } where u member of s.followers")
 	public Page<User> findProfessors(Pageable page);
 
-	@Query("select s.professors from Subject s join User u on u.id = ?#{ principal?.id } where u member of s.followers")
+	@Query("select distinct s.professors from Subject s join User u on u.id = ?#{ principal?.id } where u member of s.followers")
 	public List<User> findProfessors(User user);
 
 	// Busquedas de usuarios que comienzan con un string dado
