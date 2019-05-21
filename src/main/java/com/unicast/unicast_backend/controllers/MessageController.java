@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import com.unicast.unicast_backend.assemblers.MessageResourceAssembler;
@@ -135,8 +136,8 @@ public class MessageController {
         }
 
         for (User receiver : receivers) {
-            Message message1 = messageRepository.findTopByReceiverAndSenderOrderByTimestampDesc(receiver, user);
-            Message message2 = messageRepository.findTopByReceiverAndSenderOrderByTimestampDesc(user, receiver);
+            Message message1 = messageRepository.findTop1ByReceiverAndSenderOrderByTimestampDesc(receiver, user);
+            Message message2 = messageRepository.findTop1ByReceiverAndSenderOrderByTimestampDesc(user, receiver);
             if (message1 != null && message2 != null) {
                 if (message1.getTimestamp().after(message2.getTimestamp())) {
                     messages.add(projectionFactory.createProjection(MessageWithReceiverAndSender.class, message1));
@@ -149,6 +150,13 @@ public class MessageController {
                 messages.add(projectionFactory.createProjection(MessageWithReceiverAndSender.class, message2));
             }
         }
+
+        messages.sort(new Comparator<MessageWithReceiverAndSender>() {
+            @Override
+            public int compare(MessageWithReceiverAndSender o1, MessageWithReceiverAndSender o2) {
+                return o2.getTimestamp().compareTo(o1.getTimestamp());
+            }
+        });
 
         Resources<Resource<MessageWithReceiverAndSender>> messagesResource = Resources.wrap(messages);
 

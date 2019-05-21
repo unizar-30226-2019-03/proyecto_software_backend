@@ -42,7 +42,7 @@ public interface UserRepository extends JpaRepositoryExportedFalse<User, Long> {
 	  return save(entity);
 	}
 
-	@Query("select s.followers from Subject s join User u on u = ?1 and s member of u.subjectsAsProfessor")
+	@Query("select s.followers from Subject s where ?1 member of s.professors")
 	public List<User> findFollowersOfProfessorSubjects(User professor);
 
 	@RestResource(path = "professors", rel = "professors")
