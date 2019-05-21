@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RepositoryRestResource(collectionResourceRel = "messages", path = "messages")
 public interface MessageRepository extends JpaRepositoryExportedFalse<Message, Long> {
+    public Message findTopByReceiverAndSenderOrderByTimestampDesc(User receiver, User sender);
+
     public Page<Message> findByReceiverAndSender(User receiver, User sender, Pageable page);
 
     @Transactional

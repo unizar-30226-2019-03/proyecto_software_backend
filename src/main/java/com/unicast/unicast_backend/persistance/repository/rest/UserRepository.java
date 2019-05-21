@@ -32,7 +32,8 @@ public interface UserRepository extends JpaRepositoryExportedFalse<User, Long> {
 	@RestResource(exported = true)
 	void delete(User subject);
 
-	User findByUsername(String username);
+	@RestResource(path = "byUsername", rel = "byUsername")
+	public User findByUsername(@Param("username") String username);
 
 	@Transactional
 	@Modifying
@@ -41,9 +42,15 @@ public interface UserRepository extends JpaRepositoryExportedFalse<User, Long> {
 	  return save(entity);
 	}
 
+	@Query("select s.followers from Subject s join User u on u = ?1 and s member of u.subjectsAsProfessor")
+	public List<User> findFollowersOfProfessorSubjects(User professor);
+
 	@RestResource(path = "professors", rel = "professors")
 	@Query("select s.professors from Subject s join User u on u.id = ?#{ principal?.id } where u member of s.followers")
 	public Page<User> findProfessors(Pageable page);
+
+	@Query("select s.professors from Subject s join User u on u.id = ?#{ principal?.id } where u member of s.followers")
+	public List<User> findProfessors(User user);
 
 	// Busquedas de usuarios que comienzan con un string dado
 

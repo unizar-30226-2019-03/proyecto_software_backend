@@ -1,32 +1,4 @@
 Messages:
-  get:
-    tags:
-      - message
-    summary: Lista de mensajes del remitente dado
-    operationId: getMessagesOfSender
-    parameters:
-      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
-      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
-      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
-      - name: sender_id
-        in: query
-        description: Id del remitente dado
-        required: true
-        schema:
-          type: integer
-          format: int64
-    responses:
-      200:
-        description: Devuelve una lista de mensajes
-        content:
-          application/json:
-            schema:
-              $ref: 'api-spec.yml#/components/schemas/MessageGetResponse'
-    security:
-      - bearerAuth: []
-      
   post:
     tags:
       - message
@@ -59,3 +31,83 @@ Messages:
               $ref: 'api-spec.yml#/components/schemas/Message'
     security:
       - bearerAuth: []
+
+MessagesFrom:
+  get:
+    tags:
+      - message
+    summary: Lista de mensajes del remitente dado
+    operationId: getMessagesFromSender
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - name: sender_id
+        in: query
+        description: Id del remitente dado
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve una lista de mensajes
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/MessageGetResponse'
+    security:
+      - bearerAuth: []
+
+MessagesTo:
+  get:
+    tags:
+      - message
+    summary: Lista de mensajes enviados al recipiente dado
+    operationId: getMessagesToReceiver
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PageParameter'
+      - $ref: 'api-spec.yml#/components/parameters/SortParameter'
+      - name: receiver_id
+        in: query
+        description: Id del recipiente dado
+        required: true
+        schema:
+          type: integer
+          format: int64
+    responses:
+      200:
+        description: Devuelve una lista de mensajes
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/MessageGetResponse'
+    security:
+      - bearerAuth: []
+
+LastMessages:
+  get:
+    tags:
+      - message
+    summary: Lista de mensajes enviados al recipiente dado
+    operationId: getLastMessages
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+    responses:
+      200:
+        description: Devuelve una lista de mensajes
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/MessageGetEmbedded'
+    security:
+      - bearerAuth: []
+
+      

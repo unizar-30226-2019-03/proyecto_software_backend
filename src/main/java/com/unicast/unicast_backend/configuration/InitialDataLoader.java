@@ -13,8 +13,10 @@ import com.unicast.unicast_backend.persistance.repository.rest.NotificationCateg
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,11 +62,11 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         Privilege deleteUniversityPrivilege = createPrivilegeIfNotFound("DELETE_UNIVERSITY_PRIVILEGE");
 
         Privilege addProfessor2SubjectPrivilege = createPrivilegeIfNotFound("ADD_PROFESSOR2SUBJECT_PRIVILEGE");
-        Privilege removeProfessor2SubjectPrivilege = createPrivilegeIfNotFound("REMOVE_PROFESSOR_FROM_SUBJECT_PRIVILEGE");
+        Privilege removeProfessor2SubjectPrivilege = createPrivilegeIfNotFound(
+                "REMOVE_PROFESSOR_FROM_SUBJECT_PRIVILEGE");
 
         Privilege eraseProfessorPrivilege = createPrivilegeIfNotFound("ERASE_PROFESSOR_PRIVILEGE");
         Privilege makeProfessorPrivilege = createPrivilegeIfNotFound("MAKE_PROFESSOR_PRIVILEGE");
-
 
         Privilege deleteUserPrivilege = createPrivilegeIfNotFound("DELETE_USER_PRIVILEGE");
 
@@ -74,7 +76,8 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
         List<Privilege> adminPrivileges = Arrays.asList(createDegreePrivilege, updateDegreePrivilege,
                 deleteDegreePrivilege, createSubjectPrivilege, updateSubjectPrivilege, deleteSubjectPrivilege,
                 createUniversityPrivilege, updateUniversityPrivilege, deleteUniversityPrivilege, deleteUserPrivilege,
-                addProfessor2SubjectPrivilege, removeProfessor2SubjectPrivilege, makeProfessorPrivilege, eraseProfessorPrivilege);
+                addProfessor2SubjectPrivilege, removeProfessor2SubjectPrivilege, makeProfessorPrivilege,
+                eraseProfessorPrivilege);
 
         List<Privilege> userPrivileges = Arrays.asList();
 
@@ -122,5 +125,10 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
             roleRepository.save(role);
         }
         return role;
+    }
+
+    @Bean
+    public SpelAwareProxyProjectionFactory projectionFactory() {
+        return new SpelAwareProxyProjectionFactory();
     }
 }

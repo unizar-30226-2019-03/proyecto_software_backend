@@ -446,6 +446,31 @@ UsersSearchSurnamesContaining:
     security:
       - bearerAuth: []
 
+UsersSearchUsername:
+  get:
+    tags:
+      - user
+    summary: Busca a un usuario con nombre de usuario exacto (teniendo en cuenta mayusculas y minusculas)
+    operationId: findUserByUsername
+    parameters:
+      - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/PragmaHeaderParameter'
+      - $ref: 'api-spec.yml#/components/parameters/ExpiresHeaderParameter'
+      - in: query
+        name: username
+        schema:
+          type: string
+        description: String a buscar en el nombre de usuario
+    responses:
+      200:
+        description: Devuelve un encontrado si lo habia
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/User'
+    security:
+      - bearerAuth: []
+
 UsersSetDisabled:
   patch:
     tags:

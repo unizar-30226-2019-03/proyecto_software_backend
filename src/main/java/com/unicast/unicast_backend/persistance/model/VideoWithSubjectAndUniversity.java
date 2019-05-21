@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 import org.springframework.data.rest.core.config.Projection;
 
 @Projection(name = "videoWithSubjectAndUniversity", types = { Video.class })
-interface videoWithSubjectAndUniversity {
+interface VideoWithSubjectAndUniversity {
     Long getId();
 
     String getTitle();
