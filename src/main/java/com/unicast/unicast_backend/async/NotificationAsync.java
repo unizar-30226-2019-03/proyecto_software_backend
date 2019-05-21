@@ -14,6 +14,7 @@ import com.unicast.unicast_backend.persistance.model.UserIsNotified;
 import com.unicast.unicast_backend.persistance.model.UserIsNotifiedKey;
 import com.unicast.unicast_backend.persistance.repository.NotificationRepository;
 import com.unicast.unicast_backend.persistance.repository.rest.NotificationCategoryRepository;
+import com.unicast.unicast_backend.persistance.repository.rest.SubjectRepository;
 import com.unicast.unicast_backend.persistance.repository.rest.UserIsNotifiedRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class NotificationAsync {
     private NotificationRepository notificationRepository;
 
     @Autowired
+    private SubjectRepository subjectRepository;
+
+    @Autowired
     private UserIsNotifiedRepository userIsNotifiedRepository;
 
     @Autowired
@@ -34,7 +38,7 @@ public class NotificationAsync {
 
     @Transactional
     @Async
-    public CompletableFuture<Notification> createUserNotificationsVideo(Subject subject, Timestamp now) {
+    public CompletableFuture<Notification> createUserNotificationsVideo(Long subjectId, Timestamp now) {
         NotificationCategory notificationCat = notificationCatRepository.findByName("videos").get();
 
         Notification notification = new Notification();
@@ -46,6 +50,7 @@ public class NotificationAsync {
 
         List<UserIsNotified> usersNotifications = new ArrayList<>();
 
+        Subject subject = subjectRepository.findById(subjectId).get();
         for (User user : subject.getFollowers()) {
             UserIsNotifiedKey userIsNotifiedKey = new UserIsNotifiedKey();
             userIsNotifiedKey.setNotificationId(notification.getId());

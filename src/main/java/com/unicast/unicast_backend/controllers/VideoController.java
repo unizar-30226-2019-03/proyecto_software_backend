@@ -103,7 +103,7 @@ public class VideoController {
 
         videoRepository.saveInternal(video);
 
-        notificationAsync.createUserNotificationsVideo(subject, now);
+        notificationAsync.createUserNotificationsVideo(subject.getId(), now);
         
         Resource<Video> resourceVideo = videoAsssembler.toResource(video);
 
