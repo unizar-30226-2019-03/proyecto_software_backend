@@ -74,7 +74,7 @@ public class RecommenderSystem {
 
     // TODO: cambiar frecuencia de cron, ahora esta cada 10 minutos
     @Transactional
-    @Scheduled(cron = "*/10 * * * * *")
+    @Scheduled(cron = "0 0/10 * * * *")
     public void run() throws LibrecException, IOException {
         Pair<File, List<Long>> fileAndUserIds = generateDataSet();
         File datasetFile = fileAndUserIds.getKey();
