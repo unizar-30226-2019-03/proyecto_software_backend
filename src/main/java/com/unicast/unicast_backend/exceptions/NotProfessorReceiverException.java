@@ -8,15 +8,15 @@
  ******* Ruben Rodriguez Esteban 737215 *******
  **********************************************/
 
- package com.unicast.unicast_backend.exceptions;
+package com.unicast.unicast_backend.exceptions;
 
- /*
-  * Excepcion para controlar que el destinatario de un correo solo pueda
-  * ser un usuario profesor
-  */
+/*
+ * Excepcion de control de eliminado de listas de reproduccion
+ * marcadas como favoritos
+ */
 @SuppressWarnings("serial")
-public class NotProfessorReceiver extends Exception {
-    public NotProfessorReceiver(String errorMessage) {
+public class NotProfessorReceiverException extends Exception {
+    public NotProfessorReceiverException(String errorMessage) {
         super(errorMessage);
     }
 }

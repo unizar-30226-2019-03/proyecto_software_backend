@@ -23,7 +23,7 @@ import java.net.URISyntaxException;
  * Controlador general de todas las excepciones manejadas
  */
 @ControllerAdvice
-public class ErrorHandler {
+public class ErrorHandler<NotProfessorReceiverException> {
 
     /*
      * Esta peticion se ejecuta cuando el cliente realiza un request al servidor
@@ -179,42 +179,17 @@ public class ErrorHandler {
      * mandar mensajes a otros usuarios
      * Devuelve codiog de error 812
      */
-    @ExceptionHandler(NotMp4Exception.class)
+    @ExceptionHandler(NotAdminSenderException.class)
     public ResponseEntity<ErrorInfo> notAdminSender (HttpServletRequest request, NotAdminSenderException e) {
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST.value(),e.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
 
-
     /*
-     * Esta excepcion se usa para controlar que solo los usuarios profesores puedan recibir correos 
-     * de otros usuarios
-     * Devuelve codiog de error 813
-     */
-    @ExceptionHandler(NotMp4Exception.class)
-    public ResponseEntity<ErrorInfo> notProfessorReceiver (HttpServletRequest request, NotProfessorReceiver e) {
+    @ExceptionHandler(NotProfessorReceiverException.class)
+    public ResponseEntity<ErrorInfo> notProfessorReceiver (HttpServletRequest request, NotProfessorReceiverException e) {
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST.value(),e.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
-
-
-
-    // Codigo de error 808
-    // Excepcion de usuario con credenciales identicas -- USER CONTROLLER
-
-    // @ExceptionHandler(java.util.NoSuchElementException.class)
-    // public ResponseEntity<ErrorInfo> favouriteReproductionList (HttpServletRequest request, java.util.NoSuchElementException e) {
-    //     ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST.value(),e.getMessage(), request.getRequestURI());
-    //     return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
-    // }
-
-
-    // Codigo de error 810
-    // Destinatario es profesor de una de las asignaturas del usuario MESSAGE CONTROLLER
-
-    // @ExceptionHandler(java.util.NoSuchElementException.class)
-    // public ResponseEntity<ErrorInfo> favouriteReproductionList (HttpServletRequest request, java.util.NoSuchElementException e) {
-    //     ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST.value(),e.getMessage(), request.getRequestURI());
-    //     return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
-    // }
+    */
 }

@@ -8,7 +8,7 @@
  ******* Ruben Rodriguez Esteban 737215 *******
  **********************************************/
 
- package com.unicast.unicast_backend.controllers;
+package com.unicast.unicast_backend.controllers;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import com.unicast.unicast_backend.exceptions.NotProfessorReceiver;
-import com.unicast.unicast_backend.exceptions.NotAdminSenderException; 
+import com.unicast.unicast_backend.exceptions.NotAdminSenderException;
+import com.unicast.unicast_backend.exceptions.NotProfessorReceiverException;
 import com.unicast.unicast_backend.assemblers.MessageResourceAssembler;
 import com.unicast.unicast_backend.async.NotificationAsync;
 import com.unicast.unicast_backend.persistance.model.Message;
@@ -89,7 +89,8 @@ public class MessageController {
      */
     @PostMapping(value = "/api/messages", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> addMessage(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam("text") String text, @RequestParam("receiver_id") Long receiverId) throws URISyntaxException,NotProfessorReceiver {
+            @RequestParam("text") String text, @RequestParam("receiver_id") Long receiverId) 
+            throws URISyntaxException {
        
         // Extraccion de los datos de usuario
         User user = userAuth.getUser();
@@ -127,7 +128,8 @@ public class MessageController {
         }
         else {
             // Excepcion para control de envio de mensajes a profesores
-            throw new NotProfessorReceiver("El usuario destinatario del mensaje no es un profesor");
+            // throw new NotProfessorReceiverException("El usuario que recibe el mensaje debe ser profesor");
+            throw new Error();
         }
     
     }
@@ -212,7 +214,7 @@ public class MessageController {
         }
         else if (user.getRole().equals("ROLE_ADMIN")){
             // Control de excepcion dado que los administradores no pueden mandar mendajes
-            throw new NotAdminSenderException("El administrador puede mandar mensajes a ningun usuario");
+            throw new NotAdminSenderException("El administrador no puede mandar mensajes a ningun usuario");
         }
 
         // Obtencion de los mensajes en una lista
