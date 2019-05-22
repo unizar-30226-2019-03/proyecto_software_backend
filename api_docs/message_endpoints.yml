@@ -89,11 +89,12 @@ MessagesTo:
               $ref: 'api-spec.yml#/components/schemas/MessageGetResponse'
     security:
       - bearerAuth: []
+      
 
 LastMessages:
   get:
     tags:
-      - message
+      - message 
     summary: Ultimos mensajes enviados segun quien realiza la llamada
     operationId: getLastMessages
     parameters:
