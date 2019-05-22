@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import com.unicast.unicast_backend.exceptions.NotProfessorReceiver;
+import com.unicast.unicast_backend.exceptions.NotAdminSenderException; 
 import com.unicast.unicast_backend.assemblers.MessageResourceAssembler;
 import com.unicast.unicast_backend.async.NotificationAsync;
 import com.unicast.unicast_backend.persistance.model.Message;
@@ -61,7 +63,7 @@ public class MessageController {
 
     @PostMapping(value = "/api/messages", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> addMessage(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam("text") String text, @RequestParam("receiver_id") Long receiverId) throws URISyntaxException {
+            @RequestParam("text") String text, @RequestParam("receiver_id") Long receiverId) throws URISyntaxException,NotProfessorReceiver {
         User user = userAuth.getUser();
 
         Message message = new Message();
@@ -87,11 +89,12 @@ public class MessageController {
 
             return ResponseEntity.created(new URI(message.getId().toString())).body(messageResource);
         }
-
-        // TODO: lanzar excepcion en condiciones
-        throw new Error();
+        else {
+            throw new NotProfessorReceiver("El usuario destinatario del mensaje no es un profesor");
+        }
+    
     }
-
+    
     @GetMapping(value = "/api/messages/fromSender", produces = "application/json")
     public ResponseEntity<?> getMessageFromSender(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam("sender_id") Long senderId, Pageable page) throws URISyntaxException {
@@ -121,18 +124,20 @@ public class MessageController {
     }
 
     @GetMapping(value = "/api/messages/lastMessages", produces = "application/json")
-    public ResponseEntity<?> getLastMessages(@AuthenticationPrincipal UserDetailsImpl userAuth) {
+    public ResponseEntity<?> getLastMessages(@AuthenticationPrincipal UserDetailsImpl userAuth) 
+        throws NotAdminSenderException{
         User user = userAuth.getUser();
 
         List<MessageWithReceiverAndSender> messages = new ArrayList<>();
-        List<User> receivers;
+        List<User> receivers = null;
         if (user.getRole().equals("ROLE_USER")) {
             receivers = userRepository.findProfessors(user);
-        } else if (user.getRole().equals("ROLE_PROFESSOR")) {
+        } 
+        else if (user.getRole().equals("ROLE_PROFESSOR")) { 
             receivers = userRepository.findFollowersOfProfessorSubjects(user);
-        } else {
-            // TODO: lanzar error ya que admin no puede enviar mensajes a nadie
-            throw new Error();
+        }
+        else if (user.getRole().equals("ROLE_ADMIN")){
+            throw new NotAdminSenderException("El administrador puede mandar mensajes a ningun usuario");
         }
 
         for (User receiver : receivers) {

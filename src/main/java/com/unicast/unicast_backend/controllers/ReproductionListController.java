@@ -2,6 +2,8 @@ package com.unicast.unicast_backend.controllers;
 
 import java.net.URI;
 
+import com.unicast.unicast_backend.exceptions.NotOwnerReproductionList;
+import com.unicast.unicast_backend.exceptions.FavouriteListException;
 import com.unicast.unicast_backend.assemblers.ReproductionListAssembler;
 import com.unicast.unicast_backend.persistance.model.Contains;
 import com.unicast.unicast_backend.persistance.model.ContainsKey;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 @RestController
 public class ReproductionListController {
 
@@ -64,20 +65,19 @@ public class ReproductionListController {
 
     @DeleteMapping(value = "/api/reproductionLists/{id}")
     public ResponseEntity<?> deleteReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @PathVariable(name = "id", required = true) Long reproListId) {
+            @PathVariable(name = "id", required = true) Long reproListId) 
+            throws FavouriteListException, NotOwnerReproductionList {
 
         User user = userAuth.getUser();
 
         ReproductionList reproList = reproductionListRepository.findById(reproListId).get();
 
         if (reproList.getUser().getId() != user.getId()) {
-            // TODO: gestionar excepcion en condiciones
-            throw new Error();
+            throw new NotOwnerReproductionList("El usuario no es propietario de la lista de reproduccion a borrar");
         }
 
         if (reproList.getName().equals("Favoritos")) {
-            // TODO: gestionar excepcion en condiciones
-            throw new Error();
+            throw new FavouriteListException("La lista a borrar esta marcada como favoritos");
         }
 
         reproductionListRepository.delete(reproList);
@@ -94,8 +94,7 @@ public class ReproductionListController {
         ReproductionList reproList = reproductionListRepository.findById(reproListId).get();
 
         if (reproList.getUser().getId() != user.getId()) {
-            // TODO: gestionar excepcion en condiciones
-            throw new Error();
+            throw new NotOwnerReproductionList("El usuario no es propietario de la lista de reproduccion a borrar");
         }
 
         // Crear el contains Key
@@ -126,8 +125,7 @@ public class ReproductionListController {
         ReproductionList reproList = reproductionListRepository.findById(reproListId).get();
 
         if (reproList.getUser().getId() != user.getId()) {
-            // TODO: gestionar excepcion en condiciones
-            throw new Error();
+            throw new NotOwnerReproductionList("El usuario no es propietario de la lista de reproduccion a borrar");
         }
 
         ContainsKey ck = new ContainsKey();

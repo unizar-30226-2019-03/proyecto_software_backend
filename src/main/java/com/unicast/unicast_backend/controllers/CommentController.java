@@ -6,6 +6,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 import com.unicast.unicast_backend.assemblers.CommentResourceAssembler;
+import com.unicast.unicast_backend.exceptions.GreaterSecondsException;
 import com.unicast.unicast_backend.persistance.model.Comment;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.Video;
@@ -43,17 +44,20 @@ public class CommentController {
             @RequestParam("text") String text, @RequestParam("secs_from_beg") Integer secondsFromBeginning,
             @RequestParam("video_id") Long videoId,
             @RequestParam(name = "comment_replied_to_id", required = false) Long commentRepliedToId)
-            throws URISyntaxException {
+            throws URISyntaxException,GreaterSecondsException {
         User user = userAuth.getUser();
-        // TODO: comprobar que secs_from_beg sea <= que la duracion del video y sino lance excepcion
+
 
         Comment comment = new Comment();
-
+        Video video = videoRepository.findById(videoId).get();
+        if(video.getSeconds()< secondsFromBeginning){
+            throw new GreaterSecondsException("Instante de comentario mayor que la duracion del video");
+        }
         comment.setText(text);
         comment.setSecondsFromBeginning(secondsFromBeginning);
         comment.setTimestamp(Timestamp.from(Instant.now()));
 
-        Video video = videoRepository.findById(videoId).get();
+      
         comment.setVideo(video);
 
         if (commentRepliedToId != null) {

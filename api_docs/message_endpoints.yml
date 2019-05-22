@@ -94,7 +94,7 @@ LastMessages:
   get:
     tags:
       - message
-    summary: Lista de mensajes enviados al recipiente dado
+    summary: Ultimos mensajes enviados segun quien realiza la llamada
     operationId: getLastMessages
     parameters:
       - $ref: 'api-spec.yml#/components/parameters/NoCacheHeaderParameter'

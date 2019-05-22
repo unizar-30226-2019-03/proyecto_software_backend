@@ -66,12 +66,8 @@ public class UserController {
             @RequestParam("name") String name, @RequestParam("surnames") String surnames,
             @RequestParam("password") String password, @RequestParam("description") String description,
             @RequestParam("email") String email, @RequestParam("university_id") Long universityId,
-            @RequestParam("degree_id") Long degreeId, @RequestPart("photo") MultipartFile photo) {
+            @RequestParam("degree_id") Long degreeId, @RequestPart("photo") MultipartFile photo) throws IOException,URISyntaxException{
 
-        // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un
-        // usuario con nombre/email iguales
-
-        try {
             User user = new User();
             user.setUsername(username);
             user.setName(name);
@@ -100,18 +96,6 @@ public class UserController {
             Resource<User> resourceUser = userAssembler.toResource(user);
 
             return ResponseEntity.created(new URI(resourceUser.getId().getHref())).body(resourceUser);
-        } catch (IOException ioE) {
-            // TODO: hacer algo
-            return ResponseEntity.badRequest().build();
-        } catch (URISyntaxException uriE) {
-            // TODO: hacer algo
-            return ResponseEntity.badRequest().build();
-        }
-        // } catch (org.springframework.dao.DataIntegrityViolationException e) {
-        // ResponseEntity<String> res = new ResponseEntity("El username ya existe",
-        // HttpStatus.BAD_REQUEST);
-        // return res;
-        // }
     }
 
     @PostMapping(value = "/api/users/update", produces = "application/json", consumes = "multipart/form-data")
@@ -126,11 +110,6 @@ public class UserController {
             @RequestParam(name = "degree_id", required = false) Long degreeId,
             @RequestPart(name = "photo", required = false) MultipartFile photo) throws IOException, URISyntaxException {
 
-        // TODO: gestionar foto, descripcion, email etc, y comprobar que no haya un
-        // usuario con nombre/email iguales
-
-        // try {
-        // User user = userRepository.findByUsername(userAuth.getUsername());
         User user = userAuth.getUser();
 
         if (username != null && !StringUtils.isEmpty(username)) {
@@ -168,24 +147,15 @@ public class UserController {
 
         userRepository.saveInternal(user);
         return ResponseEntity.ok(userAssembler.toResource(user));
-        // } catch (org.springframework.dao.DataIntegrityViolationException e) {
-        // ResponseEntity<String> res = new ResponseEntity("El username ya existe",
-        // HttpStatus.BAD_REQUEST);
-        // return res;
-        // }
     }
 
     @PatchMapping(value = "/api/users/setDisabled")
     public ResponseEntity<?> setDisabled(@AuthenticationPrincipal UserDetailsImpl userAuth) {
-        // TODO: gestionar tags y errores
         User user = userAuth.getUser();
 
         user.setEnabled(false);
 
         userRepository.saveInternal(user);
-        // s3ImageHandler.deleteFile(user.getPhoto());
-
-        // userRepository.delete(user);
 
         return ResponseEntity.ok().build();
     }

@@ -18,6 +18,7 @@ Subjects:
           application/hal+json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/SubjectGetResponse'
+
   post:
     tags:
       - subject
@@ -37,6 +38,12 @@ Subjects:
           application/hal+json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/Subject'
+      # 400:
+      #   description: Error al crear 
+      #   content:
+      #     application/json:
+      #       schema:
+      #         $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 
@@ -69,6 +76,12 @@ SubjectsId:
           application/hal+json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/Subject'
+      # 400:
+      #   description: El usuario introducido no es un profesor
+      #   content:
+      #     application/json:
+      #       schema:
+      #         $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
   delete:
@@ -85,8 +98,14 @@ SubjectsId:
           type: integer
           format: int64
     responses:
-      204:
-        description: Se ha eliminado con exito
+      204: 
+        description: Se ha eliminado con exito  
+      # 400:
+      #   description: Fallo
+      #   content:
+      #     application/json:
+      #       schema:
+      #         $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
   get:
@@ -113,6 +132,12 @@ SubjectsId:
           application/hal+json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/Subject'
+      # 400:
+      #   description: Fallo
+      #   content:
+      #     application/json:
+      #       schema:
+      #         $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 
@@ -143,6 +168,12 @@ SubjectsIdUniversity:
     responses:
       204:
         description: Se ha relacionado la universidad con la asignatura
+      # 400:
+      #   description: Fallo
+      #   content:
+      #     application/json:
+      #       schema:
+      #         $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 
@@ -170,6 +201,12 @@ SubjectsIdProfessors:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/UserGetEmbedded'
+      # 400:
+      #   description: Fallo
+      #   content:
+      #     application/json:
+      #       schema:
+      #         $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: [] 
 
@@ -196,6 +233,12 @@ SubjectsSearchNameStartsWith:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/SubjectGetEmbedded'
+      # 400:
+      #   description: Fallo
+      #   content:
+      #     application/json: 
+      #       schema:
+      #         $ref: 'api-spec.yml#/components/schemas/Exception'
   
 SubjectsSearchNameContaining:
   get:
@@ -373,8 +416,15 @@ Professor:
     responses:
       204:
         description: Se ha añadido el profesor a la asignatura
+      400:
+        description: El usuario introducido no es un profesor
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
+
   delete:
     tags:
       - subject

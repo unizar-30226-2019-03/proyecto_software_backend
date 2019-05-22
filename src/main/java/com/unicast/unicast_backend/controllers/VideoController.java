@@ -8,10 +8,14 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.mp4.Mp4Directory;
 import com.unicast.unicast_backend.assemblers.VideoResourceAssembler;
 import com.unicast.unicast_backend.async.NotificationAsync;
+import com.unicast.unicast_backend.exceptions.NotMp4Exception;
+import com.unicast.unicast_backend.exceptions.NotUploaderException;
+import com.unicast.unicast_backend.exceptions.ProfessorNotInSubjectException;
 import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.model.Video;
@@ -42,7 +46,7 @@ public class VideoController {
 
     @Autowired
     private SubjectRepository subjectRepository;
-    
+
     @Autowired
     private VideoResourceAssembler videoAsssembler;
 
@@ -54,23 +58,21 @@ public class VideoController {
 
     @Autowired
     private NotificationAsync notificationAsync;
-    
+
     @PostMapping(value = "/api/videos/upload", produces = "application/json", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('CREATE_VIDEO_PRIVILEGE')")
     public ResponseEntity<?> uploadVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestPart("file") MultipartFile videoFile, @RequestPart("thumbnail") MultipartFile thumbnail,
             @RequestParam("title") String title, @RequestParam("description") String description,
-            @RequestParam("subject_id") Long subjectId)
-            throws Exception, IllegalStateException, IOException, URISyntaxException {
-        // TODO: gestionar tags y errores
+            @RequestParam("subject_id") Long subjectId) throws ProfessorNotInSubjectException, IllegalStateException,
+            IOException, URISyntaxException, ImageProcessingException, NotMp4Exception{
         User user = userAuth.getUser();
         Video video = new Video();
 
         Subject subject = subjectRepository.findById(subjectId).get();
 
-        if (!subject.getProfessors().contains(user) /* y no es profesor el que sube */) {
-            // TODO: hacer eso una nueva clase/loqsea
-            throw new Exception("El que sube video debe pertenecer a la asignatura del video");
+        if (!subject.getProfessors().contains(user) /* TODO: y no es profesor el que sube */) {
+            throw new ProfessorNotInSubjectException("El que sube video debe pertenecer a la asignatura del video");
         }
 
         Timestamp now = Timestamp.from(Instant.now());
@@ -93,7 +95,7 @@ public class VideoController {
         Mp4Directory mp4Directory = metadata.getFirstDirectoryOfType(Mp4Directory.class);
 
         if (mp4Directory == null) {
-            // TODO: excepcion, el fichero no es video
+            throw new NotMp4Exception("No existe el directorio mp4");
         }
         
         video.setSeconds(mp4Directory.getInteger(Mp4Directory.TAG_DURATION));
@@ -113,13 +115,13 @@ public class VideoController {
     @DeleteMapping(value = "/api/videos/delete", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('DELETE_VIDEO_PRIVILEGE')")
     public ResponseEntity<?> deleteVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam("id") Long videoId) {
+            @RequestParam("id") Long videoId) throws NotUploaderException{
         // TODO: gestionar tags y errores
         User user = userAuth.getUser();
         Video video = videoRepository.findById(videoId).get();
 
         if (video.getUploader() != user) {
-            // TODO: lanzar excepcion o algo
+            throw new NotUploaderException("El usuario no el propietario del video");
         }
 
         s3VideoHandler.deleteFile(video.getUrl());

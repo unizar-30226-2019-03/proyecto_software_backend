@@ -31,8 +31,6 @@ import lombok.Data;
 // @NamedQuery(name="Video.getUniversity", query="select u from Subject s join University u on s.university = u where subject = s")
 public class Video {
 
-    // TODO: meter quien ha subido el video
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,5 +1,6 @@
 package com.unicast.unicast_backend.controllers;
 
+import com.unicast.unicast_backend.exceptions.NotProfessorException;
 import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.repository.rest.SubjectRepository;
@@ -52,12 +53,12 @@ public class SubjectController {
     @PutMapping(value = "/api/subjects/professors", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('ADD_PROFESSOR2SUBJECT_PRIVILEGE')")
     public ResponseEntity<?> addProfessorToSubject(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam("subject_id") Long subjectId, @RequestParam("professor_id") Long professorId) {
+            @RequestParam("subject_id") Long subjectId, @RequestParam("professor_id") Long professorId) throws NotProfessorException{
 
         Subject subject = subjectRepository.findById(subjectId).get();
         User user = userRepository.findById(professorId).get();
         if (user.getRole() != "ROLE_PROFESSOR") {
-            // TODO: lanzar excepcion
+            throw new NotProfessorException("El usuario no es profesor");
         }
         subject.getProfessors().add(user);
         subjectRepository.saveInternal(subject);
