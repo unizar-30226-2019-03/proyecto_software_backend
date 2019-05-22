@@ -1,4 +1,14 @@
-package com.unicast.unicast_backend.principal;
+/**********************************************
+ ******* Trabajo de Proyecto Software *********
+ ******* Unicast ******************************
+ ******* Fecha 22-5-2019 **********************
+ ******* Autores: *****************************
+ ******* Adrian Samatan Alastuey 738455 *******
+ ******* Jose Maria Vallejo Puyal 720004 ******
+ ******* Ruben Rodriguez Esteban 737215 *******
+ **********************************************/
+
+ package com.unicast.unicast_backend.principal;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,11 +22,18 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/*
+ * Permite extraer todos los datos de un usuario
+ * a traves de su correspondiente token de sesion
+ */
+
 public class UserDetailsImpl implements UserDetails {
 	private static final long serialVersionUID = 1L;
 
+	// Usuario
 	private User user;
 
+	// Constructor 
 	public UserDetailsImpl(User user) {
 		this.user = user;
 	}
@@ -26,6 +43,11 @@ public class UserDetailsImpl implements UserDetails {
 		return getGrantedAuthorities(getPrivileges(user.getRolesAndPrivileges()));
 	}
 
+	/*
+	 * Coleccion de metodos getters para poder extraer toda la informacion 
+	 * del usuario
+	 */
+	 
 	public User getUser() {
 		return user;
 	}
