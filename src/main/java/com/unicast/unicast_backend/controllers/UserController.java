@@ -1,4 +1,14 @@
-package com.unicast.unicast_backend.controllers;
+/**********************************************
+ ******* Trabajo de Proyecto Software *********
+ ******* Unicast ******************************
+ ******* Fecha 22-5-2019 **********************
+ ******* Autores: *****************************
+ ******* Adrian Samatan Alastuey 738455 *******
+ ******* Jose Maria Vallejo Puyal 720004 ******
+ ******* Ruben Rodriguez Esteban 737215 *******
+ **********************************************/
+
+ package com.unicast.unicast_backend.controllers;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,33 +44,59 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+/*
+ * Controlador REST para los usuarios
+ */
+
 @RestController
 public class UserController {
 
+    // Repositorio para los usuarios
     @Autowired
     private UserRepository userRepository;
 
+    // Repositorio para las universidades
     @Autowired
     private UniversityRepository universityRepository;
 
+    // Repositorio para las listas de reproduccion
     @Autowired
     private ReproductionListRepository reproductionListRepository;
 
+    // Repositorio para las carreras
     @Autowired
     private DegreeRepository degreeRepository;
 
+    // Repositorio de los roles de los usuarios
     @Autowired
     private RoleRepository roleRepository;
 
+    // Ensamblador
     @Autowired
     private UserResourceAssembler userAssembler;
 
+    // Configuracion de seguridad
     @Autowired
     private SecurityConfiguration securityConfiguration;
 
+    // Controlador de rutinas de imagenes
     @Autowired
     private S3ImageHandler s3ImageHandler;
 
+
+    /*
+     * Permite registrar un usuario 
+     * Parametros
+     * @param username: nombre de usuario del usuario
+     * @param name: nombre real del usuario
+     * @param surnames: apellidos del usuario
+     * @param password: contrasenya del usuario
+     * @param description: descripcion del usuario
+     * @param email: correo del usuario
+     * @param universitiyId: identificador de la universidad a la que pertenece
+     * @param degreeId: identificador de la carrera que esta estudiando
+     * @param photo: foto de perfil del usuario
+     */
     @PostMapping(value = "/api/public/register", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> registerNewUser(@RequestParam("username") String username,
             @RequestParam("name") String name, @RequestParam("surnames") String surnames,
@@ -68,6 +104,7 @@ public class UserController {
             @RequestParam("email") String email, @RequestParam("university_id") Long universityId,
             @RequestParam("degree_id") Long degreeId, @RequestPart("photo") MultipartFile photo) throws IOException,URISyntaxException{
 
+            // Creacion de un usuario y asignacion de atributos
             User user = new User();
             user.setUsername(username);
             user.setName(name);
@@ -81,23 +118,38 @@ public class UserController {
             Role userRole = roleRepository.findByName("ROLE_USER");
             user.setRolesAndPrivileges(Arrays.asList(userRole));
 
+            // Cargar la foto de perfil
             URI photoURL = s3ImageHandler.uploadFile(photo);
             user.setPhoto(photoURL);
-
             s3ImageHandler.deleteLastUploadedTmpFile();
             userRepository.saveInternal(user);
 
+            // Iniciar una lista de reproduccion de videos
             ReproductionList reproList = new ReproductionList();
             reproList.setUser(user);
             reproList.setName("Favoritos");
 
+            // Guardar cambios en el repositorio y enviar respuesta
             reproductionListRepository.save(reproList);
-            
             Resource<User> resourceUser = userAssembler.toResource(user);
-
             return ResponseEntity.created(new URI(resourceUser.getId().getHref())).body(resourceUser);
     }
 
+
+     /*
+     * Permite actualizar los datos de un usuario ya registrado
+     * Parametros
+     * param userAuth: token con los datos del usuario loggeado
+     * @param username: nombre de usuario del usuario
+     * @param name: nombre real del usuario
+     * @param surnames: apellidos del usuario
+     * @param password: contrasenya del usuario
+     * @param description: descripcion del usuario
+     * @param email: correo del usuario
+     * @param universitiyId: identificador de la universidad a la que pertenece
+     * @param degreeId: identificador de la carrera que esta estudiando
+     * @param photo: foto de perfil del usuario
+     */
     @PostMapping(value = "/api/users/update", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> updateUser(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam(name = "username", required = false) String username,
@@ -110,7 +162,10 @@ public class UserController {
             @RequestParam(name = "degree_id", required = false) Long degreeId,
             @RequestPart(name = "photo", required = false) MultipartFile photo) throws IOException, URISyntaxException {
 
+        // Extraccion de los datos del usuario
         User user = userAuth.getUser();
+
+        // Actualizacion de los atributos que se desean modificar
 
         if (username != null && !StringUtils.isEmpty(username)) {
             user.setUsername(username);
@@ -145,65 +200,99 @@ public class UserController {
             s3ImageHandler.deleteLastUploadedTmpFile();
         }
 
+        // Guardar cambios en el repositorio y enviar respuesta de la operacion
         userRepository.saveInternal(user);
         return ResponseEntity.ok(userAssembler.toResource(user));
     }
 
+
+    /*
+     * Permite deshabilitar un usuario
+     * @param userAuth: token con los datos del usuario loggeado
+     */
     @PatchMapping(value = "/api/users/setDisabled")
     public ResponseEntity<?> setDisabled(@AuthenticationPrincipal UserDetailsImpl userAuth) {
+
+        // Extraccion de los datos del usuario loggeado
         User user = userAuth.getUser();
 
+        // Deshabilitar al usuario
         user.setEnabled(false);
 
+        // Guardar cambios en el repositorio y enviar la respuesta de la operacion
         userRepository.saveInternal(user);
-
         return ResponseEntity.ok().build();
     }
     
 
+    /*
+     * Permite convertir a un usuario en profesor
+     * @param userId: identificador del usuario que se desea convertir en profesor
+     */
     @PatchMapping(value = "/api/users/makeProfessor", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('MAKE_PROFESSOR_PRIVILEGE')")
     public ResponseEntity<?> makeProfessor(@RequestParam("user_id") Long userId) {
         // TODO: gestionar tags y errores
+
+        // Buscar usuario por id en el repositorio
         User user = userRepository.findById(userId).get();
+
+        // Encontrar el usuario y darle permisos de profesor
         Role professorRole = roleRepository.findByName("ROLE_PROFESSOR");
         ArrayList<Role> l = new ArrayList<>();
         l.add(professorRole);
         user.setRolesAndPrivileges(l);
 
+        // Guardar cambios en el repositorio y devolver respuesta de la operacion
         userRepository.saveInternal(user);
-        
         return ResponseEntity.ok().build();
     }
 
+
+    /*
+     * Permite eliminar a un usuario de profesor
+     * @param userId: identificador del usuario que se desea eliminar de  profesor
+     */
     @PatchMapping(value = "/api/users/eraseProfessor", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('ERASE_PROFESSOR_PRIVILEGE')")
     public ResponseEntity<?> eraseProfessor(@RequestParam("user_id") Long userId) {
         // TODO: gestionar tags y errores
+
+        // Buscar usuario por id en el repositorio
         User user = userRepository.findById(userId).get();
+
+        // Encontrar el usuario y darle permisos de profesor
         Role userRole = roleRepository.findByName("ROLE_USER");
         ArrayList<Role> l = new ArrayList<>();
         l.add(userRole);
         user.setRolesAndPrivileges(l);
 
+        // Guardar cambios en el repositorio y devolver respuesta de la operacion
         userRepository.saveInternal(user);
-        
         return ResponseEntity.ok().build();
     }
 
+
+    /*
+     * Permite borrar un usuario
+     * @param userId: identificador del usuario a borrar
+     */
     @DeleteMapping(value = "/api/users/delete", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('DELETE_USER_PRIVILEGE')")
     public ResponseEntity<?> deleteUser(@RequestParam("id") Long userId)
             throws Exception, IllegalStateException, IOException, URISyntaxException {
         // TODO: gestionar tags y errores
+
+        // Buscar usuario por id en el repositorio
         User user = userRepository.findById(userId).get();
 
+        // Eliminar miniatura del usuario
         if (user.getPhoto() != null) {
             s3ImageHandler.deleteFile(user.getPhoto());
         }
 
+        // Borrar usuario del repositorio
         userRepository.delete(user);
-
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

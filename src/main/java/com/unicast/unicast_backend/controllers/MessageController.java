@@ -1,4 +1,14 @@
-package com.unicast.unicast_backend.controllers;
+/**********************************************
+ ******* Trabajo de Proyecto Software *********
+ ******* Unicast ******************************
+ ******* Fecha 22-5-2019 **********************
+ ******* Autores: *****************************
+ ******* Adrian Samatan Alastuey 738455 *******
+ ******* Jose Maria Vallejo Puyal 720004 ******
+ ******* Ruben Rodriguez Esteban 737215 *******
+ **********************************************/
+
+ package com.unicast.unicast_backend.controllers;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -34,17 +44,26 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/*
+ * Controlador REST de los mensajes 
+ */
+
 @RestController
 public class MessageController {
 
+    // Repositorio para los mensajes
     private final MessageRepository messageRepository;
 
+    // Ensamblador de mensajes
     private final MessageResourceAssembler messageAssembler;
 
+    // Repositorio para los usuarios
     private final UserRepository userRepository;
 
+    // Paginas ensambladas
     private final PagedResourcesAssembler<Message> pagedAssembler;
 
+    // Control de notificaciones asincronas
     private final NotificationAsync notificationAsync;
 
     private final ProjectionFactory projectionFactory;
@@ -61,85 +80,142 @@ public class MessageController {
         this.projectionFactory = projectionFactory;
     }
 
+    /*
+     * Permite anyadir un mensaje a enviar a un profesor
+     * Parametros:
+     *  @param userAuth: token con los datos del usuario loggeado
+     *  @param text: texto del mensaje a enviar
+     *  @param receiverId: codigo identificador del destinatario
+     */
     @PostMapping(value = "/api/messages", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> addMessage(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam("text") String text, @RequestParam("receiver_id") Long receiverId) throws URISyntaxException,NotProfessorReceiver {
+       
+        // Extraccion de los datos de usuario
         User user = userAuth.getUser();
 
+        // Creacion del mensaje
         Message message = new Message();
 
+        // Obtencion del usuario destinatario del repositorio a traves del id
         User receiver = userRepository.findById(receiverId).get();
 
-        // TODO: comprobar que receiver sea un profesor de una de las asignaturas del
+        // comprobar que receiver sea un profesor de una de las asignaturas del
         // usuario
         if ((user.getRole().equals("ROLE_USER") && receiver.getRole().equals("ROLE_PROFESSOR"))
                 || (user.getRole().equals("ROLE_PROFESSOR") && receiver.getRole().equals("ROLE_USER"))) {
+            
+            // Insercion de la estampilla temporar
             Timestamp now = Timestamp.from(Instant.now());
 
+            // Anyadir atributos al mensaje
             message.setTimestamp(now);
             message.setText(text);
             message.setReceiver(receiver);
             message.setSender(user);
 
+            // Guardar cambios en el repositorio
             messageRepository.saveInternal(message);
 
+            // Creacion de la notificacion asincrona
             notificationAsync.createUserNotificationsMessage(message, now);
 
             Resource<Message> messageResource = messageAssembler.toResource(message);
 
+            // Mandar respuesta de la operacion
             return ResponseEntity.created(new URI(message.getId().toString())).body(messageResource);
         }
         else {
+            // Excepcion para control de envio de mensajes a profesores
             throw new NotProfessorReceiver("El usuario destinatario del mensaje no es un profesor");
         }
     
     }
     
+    /*
+     * Permite obtener el mensaje enviado por un usuario
+     * Parametros:
+     *  @param userAuth: token con los datos del usuario loggeado
+     *  @param senderId: identificador del usuario remitente
+     *  @param page: pagina del mensaje
+     */
     @GetMapping(value = "/api/messages/fromSender", produces = "application/json")
     public ResponseEntity<?> getMessageFromSender(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam("sender_id") Long senderId, Pageable page) throws URISyntaxException {
+        
+        // Extraccion de los datos del usuario
         User user = userAuth.getUser();
 
+        // Encontrar usuario remitente en el repositorio por su id
         User sender = userRepository.findById(senderId).get();
 
+        // Encontrar el mensaje recibido
         Page<Message> messagesPage = messageRepository.findByReceiverAndSender(user, sender, page);
 
+        // Respuesta de la operacion
         PagedResources<Resource<Message>> messagesResource = pagedAssembler.toResource(messagesPage);
-
         return ResponseEntity.ok(messagesResource);
     }
 
+
+    /*
+     * Permite obtener el mensaje enviado a un usuario concreto
+     * Parametros:
+     *  @param userAuth: token con los datos del usuario loggeado
+     *  @param senderId: identificador del usuario remitente
+     *  @param page: pagina del mensaje
+     */
     @GetMapping(value = "/api/messages/toReceiver", produces = "application/json")
     public ResponseEntity<?> getMessagesSentTo(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam("receiver_id") Long receiverId, Pageable page) throws URISyntaxException {
+
+        // Extraccion de los datos del usuario
         User user = userAuth.getUser();
 
+        // Encontrar usuario destinatario en el repositorio por su id
         User receiver = userRepository.findById(receiverId).get();
 
+        // Encontrar el mensaje enviado
         Page<Message> messagesPage = messageRepository.findByReceiverAndSender(receiver, user, page);
 
+        // Respuesta de la operacion
         PagedResources<Resource<Message>> messagesResource = pagedAssembler.toResource(messagesPage);
-
         return ResponseEntity.ok(messagesResource);
     }
 
+    
+    /*
+     * Permite obtener un listado de los ultimos mensajes con profesores / alumnos
+     * segun quien el tipo de usuario que realiza la invocacion
+     * Parametros:
+     *  @param userAuth: token con los datos del usuario loggeado
+     */
     @GetMapping(value = "/api/messages/lastMessages", produces = "application/json")
     public ResponseEntity<?> getLastMessages(@AuthenticationPrincipal UserDetailsImpl userAuth) 
         throws NotAdminSenderException{
+        
+        // Extraccion de los datos del usuario
         User user = userAuth.getUser();
 
+        // Lista de mensajes
         List<MessageWithReceiverAndSender> messages = new ArrayList<>();
         List<User> receivers = null;
+
+
         if (user.getRole().equals("ROLE_USER")) {
+            // Busqueda de los usuarios destinatarios si es alumno
             receivers = userRepository.findProfessors(user);
         } 
         else if (user.getRole().equals("ROLE_PROFESSOR")) { 
+            // Busqueda de los usuarios destinatarios si es profesor
             receivers = userRepository.findFollowersOfProfessorSubjects(user);
         }
         else if (user.getRole().equals("ROLE_ADMIN")){
+            // Control de excepcion dado que los administradores no pueden mandar mendajes
             throw new NotAdminSenderException("El administrador puede mandar mensajes a ningun usuario");
         }
 
+        // Obtencion de los mensajes en una lista
         for (User receiver : receivers) {
             Message message1 = messageRepository.findTop1ByReceiverAndSenderOrderByTimestampDesc(receiver, user);
             Message message2 = messageRepository.findTop1ByReceiverAndSenderOrderByTimestampDesc(user, receiver);
@@ -156,6 +232,7 @@ public class MessageController {
             }
         }
 
+        // Ordenacion de los mensajes por valor de estampilla de tiempo
         messages.sort(new Comparator<MessageWithReceiverAndSender>() {
             @Override
             public int compare(MessageWithReceiverAndSender o1, MessageWithReceiverAndSender o2) {
@@ -163,8 +240,8 @@ public class MessageController {
             }
         });
 
+        // Respuesta de la operacion
         Resources<Resource<MessageWithReceiverAndSender>> messagesResource = Resources.wrap(messages);
-
         return ResponseEntity.ok(messagesResource);
     }
 }
