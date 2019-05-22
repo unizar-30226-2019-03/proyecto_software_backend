@@ -36,9 +36,7 @@ public class UniversityController {
     @PostMapping(value = "/api/universities/add", produces = "application/json", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('CREATE_UNIVERSITY_PRIVILEGE')")
     public ResponseEntity<?> addNewUniversity(@RequestParam("name") String name,
-            @RequestPart("photo") MultipartFile photo) {
-
-        try {
+            @RequestPart("photo") MultipartFile photo) throws IOException,URISyntaxException{
 
             University university = new University();
             university.setName(name);
@@ -53,18 +51,6 @@ public class UniversityController {
             Resource<University> resourceUniversity = universityAssembler.toResource(university);
 
             return ResponseEntity.created(new URI(resourceUniversity.getId().getHref())).body(resourceUniversity);
-        } catch (IOException ioE) {
-            // TODO: hacer algo
-            return ResponseEntity.badRequest().build();
-        } catch (URISyntaxException uriE) {
-            // TODO: hacer algo
-            return ResponseEntity.badRequest().build();
-        }
-        // } catch (org.springframework.dao.DataIntegrityViolationException e) {
-        // ResponseEntity<String> res = new ResponseEntity("El username ya existe",
-        // HttpStatus.BAD_REQUEST);
-        // return res;
-        // }
     }
     
     @DeleteMapping(value = "/api/universities/delete", consumes = "multipart/form-data")

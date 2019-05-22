@@ -4,7 +4,9 @@ import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.time.Instant;
 
+
 import com.unicast.unicast_backend.assemblers.DisplayResourceAssembler;
+import com.unicast.unicast_backend.exceptions.GreaterSecondsException;
 import com.unicast.unicast_backend.persistance.model.Display;
 import com.unicast.unicast_backend.persistance.model.DisplayKey;
 import com.unicast.unicast_backend.persistance.model.User;
@@ -44,16 +46,18 @@ public class DisplayController {
     @PostMapping(value = "/api/displays", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> updateDisplay(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam("secs_from_beg") Integer secondsFromBeginning, @RequestParam("video_id") Long videoId)
-            throws URISyntaxException {
+            throws URISyntaxException,GreaterSecondsException{
         User user = userAuth.getUser();
-
-        // TODO: comprobar que secs_from_beg sea <= que la duracion del video y sino lance excepcion
-
+        Video video = videoRepository.findById(videoId).get();
+        if(video.getSeconds() < secondsFromBeginning){
+            throw new GreaterSecondsException("Instante de comentario mayor que la duracion del video");
+        }
+    
         Display display = new Display();
         display.setSecsFromBeg(secondsFromBeginning);
         display.setUser(user);
         display.setTimestampLastTime(Timestamp.from(Instant.now()));
-        Video video = videoRepository.findById(videoId).get();
+       
         display.setVideo(video);
 
         DisplayKey key = new DisplayKey();

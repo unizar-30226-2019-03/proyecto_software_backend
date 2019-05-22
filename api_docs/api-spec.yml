@@ -141,6 +141,17 @@ components:
       required:
         - token
 
+    Exception:
+      type: object
+      properties:
+        codigo:
+          type: integer
+          format: int64
+        info:
+          type: string
+        url:
+          type: string 
+
     Video:
       type: object
       properties:
