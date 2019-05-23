@@ -57,7 +57,7 @@ public class AdminCommandLineRunner implements CommandLineRunner {
      */
     @Override
     public void run(String... args) throws Exception {
-        if (args != null && args.length == 3) {
+        if (args != null && args.length >= 3) {
             // Comprobar que se reciben los tres argumentos
             String username = args[0];
             String password = args[1];
