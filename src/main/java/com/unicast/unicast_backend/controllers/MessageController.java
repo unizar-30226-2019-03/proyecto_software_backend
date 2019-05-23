@@ -18,10 +18,10 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import com.unicast.unicast_backend.exceptions.NotAdminSenderException;
-import com.unicast.unicast_backend.exceptions.NotProfessorReceiverException;
 import com.unicast.unicast_backend.assemblers.MessageResourceAssembler;
 import com.unicast.unicast_backend.async.NotificationAsync;
+import com.unicast.unicast_backend.exceptions.NotAdminSenderException;
+import com.unicast.unicast_backend.exceptions.NotProfessorReceiverException;
 import com.unicast.unicast_backend.persistance.model.Message;
 import com.unicast.unicast_backend.persistance.model.MessageWithReceiverAndSender;
 import com.unicast.unicast_backend.persistance.model.User;
@@ -81,17 +81,19 @@ public class MessageController {
     }
 
     /*
-     * Permite anyadir un mensaje a enviar a un profesor
-     * Parametros:
-     *  @param userAuth: token con los datos del usuario loggeado
-     *  @param text: texto del mensaje a enviar
-     *  @param receiverId: codigo identificador del destinatario
+     * Permite anyadir un mensaje a enviar a un profesor Parametros:
+     * 
+     * @param userAuth: token con los datos del usuario loggeado
+     * 
+     * @param text: texto del mensaje a enviar
+     * 
+     * @param receiverId: codigo identificador del destinatario
      */
     @PostMapping(value = "/api/messages", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> addMessage(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam("text") String text, @RequestParam("receiver_id") Long receiverId) 
+            @RequestParam("text") String text, @RequestParam("receiver_id") Long receiverId)
             throws URISyntaxException, NotProfessorReceiverException {
-       
+
         // Extraccion de los datos de usuario
         User user = userAuth.getUser();
 
@@ -103,10 +105,12 @@ public class MessageController {
 
         // comprobar que receiver sea un profesor de una de las asignaturas del
         // usuario
-        if ((user.getRole().equals("ROLE_USER") && receiver.getRole().equals("ROLE_PROFESSOR"))
-                || (user.getRole().equals("ROLE_PROFESSOR") && receiver.getRole().equals("ROLE_USER"))) {
-            
-            // Insercion de la estampilla temporar
+        List<User> professorsOfUser = userRepository.findProfessors(user);
+        List<User> professorsOfReceiver = userRepository.findProfessors(receiver);
+
+        if (professorsOfUser.contains(receiver) || professorsOfReceiver.contains(user)) {
+
+            // Insercion de la estampilla temporal
             Timestamp now = Timestamp.from(Instant.now());
 
             // Anyadir atributos al mensaje
@@ -125,26 +129,26 @@ public class MessageController {
 
             // Mandar respuesta de la operacion
             return ResponseEntity.created(new URI(message.getId().toString())).body(messageResource);
-        }
-        else {
+        } else {
             // Excepcion para control de envio de mensajes a profesores
-            // throw new NotProfessorReceiverException("El usuario que recibe el mensaje debe ser profesor");
             throw new NotProfessorReceiverException("El administrador no puede mandar mensajes a ningun usuario");
         }
-    
+
     }
-    
+
     /*
-     * Permite obtener el mensaje enviado por un usuario
-     * Parametros:
-     *  @param userAuth: token con los datos del usuario loggeado
-     *  @param senderId: identificador del usuario remitente
-     *  @param page: pagina del mensaje
+     * Permite obtener el mensaje enviado por un usuario Parametros:
+     * 
+     * @param userAuth: token con los datos del usuario loggeado
+     * 
+     * @param senderId: identificador del usuario remitente
+     * 
+     * @param page: pagina del mensaje
      */
     @GetMapping(value = "/api/messages/fromSender", produces = "application/json")
     public ResponseEntity<?> getMessageFromSender(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam("sender_id") Long senderId, Pageable page) throws URISyntaxException {
-        
+
         // Extraccion de los datos del usuario
         User user = userAuth.getUser();
 
@@ -159,13 +163,14 @@ public class MessageController {
         return ResponseEntity.ok(messagesResource);
     }
 
-
     /*
-     * Permite obtener el mensaje enviado a un usuario concreto
-     * Parametros:
-     *  @param userAuth: token con los datos del usuario loggeado
-     *  @param senderId: identificador del usuario remitente
-     *  @param page: pagina del mensaje
+     * Permite obtener el mensaje enviado a un usuario concreto Parametros:
+     * 
+     * @param userAuth: token con los datos del usuario loggeado
+     * 
+     * @param senderId: identificador del usuario remitente
+     * 
+     * @param page: pagina del mensaje
      */
     @GetMapping(value = "/api/messages/toReceiver", produces = "application/json")
     public ResponseEntity<?> getMessagesSentTo(@AuthenticationPrincipal UserDetailsImpl userAuth,
@@ -185,17 +190,16 @@ public class MessageController {
         return ResponseEntity.ok(messagesResource);
     }
 
-    
     /*
      * Permite obtener un listado de los ultimos mensajes con profesores / alumnos
-     * segun quien el tipo de usuario que realiza la invocacion
-     * Parametros:
-     *  @param userAuth: token con los datos del usuario loggeado
+     * segun quien el tipo de usuario que realiza la invocacion Parametros:
+     * 
+     * @param userAuth: token con los datos del usuario loggeado
      */
     @GetMapping(value = "/api/messages/lastMessages", produces = "application/json")
-    public ResponseEntity<?> getLastMessages(@AuthenticationPrincipal UserDetailsImpl userAuth) 
-        throws NotAdminSenderException{
-        
+    public ResponseEntity<?> getLastMessages(@AuthenticationPrincipal UserDetailsImpl userAuth)
+            throws NotAdminSenderException {
+
         // Extraccion de los datos del usuario
         User user = userAuth.getUser();
 
@@ -203,16 +207,13 @@ public class MessageController {
         List<MessageWithReceiverAndSender> messages = new ArrayList<>();
         List<User> receivers = null;
 
-
         if (user.getRole().equals("ROLE_USER")) {
             // Busqueda de los usuarios destinatarios si es alumno
             receivers = userRepository.findProfessors(user);
-        } 
-        else if (user.getRole().equals("ROLE_PROFESSOR")) { 
+        } else if (user.getRole().equals("ROLE_PROFESSOR")) {
             // Busqueda de los usuarios destinatarios si es profesor
             receivers = userRepository.findFollowersOfProfessorSubjects(user);
-        }
-        else if (user.getRole().equals("ROLE_ADMIN")){
+        } else if (user.getRole().equals("ROLE_ADMIN")) {
             // Control de excepcion dado que los administradores no pueden mandar mendajes
             throw new NotAdminSenderException("El administrador no puede mandar mensajes a ningun usuario");
         }

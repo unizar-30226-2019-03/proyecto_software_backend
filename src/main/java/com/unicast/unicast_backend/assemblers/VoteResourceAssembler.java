@@ -32,7 +32,6 @@ public class VoteResourceAssembler implements ResourceAssembler<Vote, Resource<V
 
     @Override
     public Resource<Vote> toResource(Vote vote) {
-        // TODO: a;adir links a otros sitios
         return new Resource<>(vote,
                 entityLinks.linkToSingleResource(VoteRepository.class, vote.getId()).withSelfRel());
     }

@@ -32,7 +32,6 @@ public class UserIsNotifiedResourceAssembler implements ResourceAssembler<UserIs
 
     @Override
     public Resource<UserIsNotified> toResource(UserIsNotified userIsNotified) {
-        // TODO: a;adir links a otros sitios
         return new Resource<>(userIsNotified,
                 entityLinks.linkToSingleResource(UserIsNotifiedRepository.class, userIsNotified.getId()).withSelfRel());
     }

@@ -34,6 +34,18 @@ CommentsAdd:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/Comment'
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 

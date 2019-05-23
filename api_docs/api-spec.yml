@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.3.6
+  version: 1.3.7
   title: Swagger Unicast
 
 servers:
@@ -144,13 +144,14 @@ components:
     Exception:
       type: object
       properties:
-        codigo:
+        status:
           type: integer
           format: int64
-        info:
+        message:
           type: string
-        url:
-          type: string 
+        path:
+          type: string
+          format: url
 
     Video:
       type: object
@@ -276,6 +277,9 @@ components:
         notificationCategory:
           type: string
           enum: [messages, videos]
+        creator_id:
+          type: integer
+          format: int64
 
     UserIsNotified:
       type: object
@@ -807,6 +811,10 @@ paths:
   
   /videos/search/reproductionList:
     $ref: 'video_endpoints.yml#/FindVideoByReproductionList'
+    
+  /videos/search/mostPopularLastWeek:
+    $ref: 'video_endpoints.yml#/MostPopularVideo'
+
 
   #Comment endpoints
 

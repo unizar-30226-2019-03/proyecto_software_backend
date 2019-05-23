@@ -31,7 +31,6 @@ public class UniversityResourceAssembler implements ResourceAssembler<University
 
     @Override
     public Resource<University> toResource(University university) {
-        // TODO: a;adir links a otros sitios
         return new Resource<>(university,
                 entityLinks.linkToSingleResource(UniversityRepository.class, university.getId()).withSelfRel());
     }

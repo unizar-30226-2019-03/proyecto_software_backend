@@ -162,7 +162,6 @@ public class VideoController {
     @PreAuthorize("hasAuthority('DELETE_VIDEO_PRIVILEGE')")
     public ResponseEntity<?> deleteVideo(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam("id") Long videoId) throws NotUploaderException{
-        // TODO: gestionar tags y errores
 
         // Extraccion de los datos del usuario
         User user = userAuth.getUser();

@@ -73,6 +73,7 @@ public class NotificationAsync {
         notification.setText("Notificacion de video");
         notification.setTimestamp(now);
         notification.setCategory(notificationCat);
+        notification.setCreatorId(subjectId);
 
         // Guardar la notificacion creada en el repositorio
         notificationRepository.save(notification);
@@ -117,6 +118,7 @@ public class NotificationAsync {
         notification.setText("Notificacion de mensaje");
         notification.setTimestamp(now);
         notification.setCategory(notificationCat);
+        notification.setCreatorId(message.getSender().getId());
 
         // Guardar notificacion en el repositorio
         notificationRepository.save(notification);

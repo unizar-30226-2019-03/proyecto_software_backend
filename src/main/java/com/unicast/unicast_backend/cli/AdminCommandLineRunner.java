@@ -86,15 +86,15 @@ public class AdminCommandLineRunner implements CommandLineRunner {
                     // Activacion del usuario
                     user.setEnabled(true);
 
+                    // Guardar el nuevo usuario en el repositorio
+                    userRepository.saveInternal(user);
+                    
                     // Crear por defecto una lista de reproduccion de videos
                     ReproductionList reproList = new ReproductionList();
                     reproList.setUser(user);
                     reproList.setName("Favoritos");
-        
-                    reproductionListRepository.save(reproList);
                     
-                    // Guardar el nuevo usuario en el repositorio
-                    userRepository.saveInternal(user);
+                    reproductionListRepository.save(reproList);
                 }
             }
         }

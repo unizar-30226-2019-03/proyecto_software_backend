@@ -32,7 +32,6 @@ public class ReproductionListAssembler implements ResourceAssembler<Reproduction
 
     @Override
     public Resource<ReproductionList> toResource(ReproductionList reproList) {
-        // TODO: a;adir links a otros sitios
         return new Resource<>(reproList,
                 entityLinks.linkToSingleResource(ReproductionListRepository.class, reproList.getId()).withSelfRel());
     }

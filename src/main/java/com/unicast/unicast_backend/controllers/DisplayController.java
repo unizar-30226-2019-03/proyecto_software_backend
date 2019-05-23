@@ -14,7 +14,6 @@ import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.time.Instant;
 
-
 import com.unicast.unicast_backend.assemblers.DisplayResourceAssembler;
 import com.unicast.unicast_backend.exceptions.GreaterSecondsException;
 import com.unicast.unicast_backend.persistance.model.Display;
@@ -82,7 +81,7 @@ public class DisplayController {
         Video video = videoRepository.findById(videoId).get();
         if(video.getSeconds() < secondsFromBeginning){
             // Excepcion si los segundos del display superan duracion del video
-            throw new GreaterSecondsException("Instante de comentario mayor que la duracion del video");
+            throw new GreaterSecondsException("Instante de visualizacion mayor que la duracion del video");
         }
     
         // Creacion del display
