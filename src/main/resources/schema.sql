@@ -8,6 +8,7 @@ CREATE TABLE notification_category (
 CREATE TABLE notification (
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
+    creator_id INTEGER NOT NULL,
     timestamp TIMESTAMP NOT NULL,
     fk_category INTEGER NOT NULL,
     CONSTRAINT fk_notification_category FOREIGN KEY (fk_category) REFERENCES notification_category(id) ON DELETE CASCADE
@@ -49,7 +50,6 @@ CREATE TABLE reproduction_list (
     CONSTRAINT fk_reproduction_list_app_user FOREIGN KEY (fk_app_user) REFERENCES app_user(id) ON DELETE CASCADE
 );
 
--- TODO: Alumnos solo pueden enviar mensajes a profesores que den alguna de sus asignaturas y viceversa
 CREATE TABLE message (
     id SERIAL PRIMARY KEY,
     text TEXT NOT NULL,
@@ -82,11 +82,6 @@ CREATE TABLE video (
     fk_uploader INTEGER NOT NULL,
     CONSTRAINT fk_video_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE,
     CONSTRAINT fk_video_user FOREIGN KEY (fk_uploader) REFERENCES app_user(id) ON DELETE CASCADE
-);
-
-CREATE TABLE video_tag (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE comment (
@@ -191,14 +186,6 @@ CREATE TABLE app_professor_subject (
     CONSTRAINT fk_app_professor_subject_subject FOREIGN KEY (fk_subject) REFERENCES subject(id) ON DELETE CASCADE,
     CONSTRAINT fk_app_professor_subject_app_user FOREIGN KEY (fk_professor) REFERENCES app_user(id) ON DELETE CASCADE,
     CONSTRAINT pk_app_professor_subject PRIMARY KEY (fk_subject, fk_professor)
-);
-
-CREATE TABLE video_video_tag (
-    fk_video INTEGER NOT NULL,
-    fk_video_tag INTEGER NOT NULL,
-    CONSTRAINT fk_video_video_tag_video FOREIGN KEY (fk_video) REFERENCES video(id) ON DELETE CASCADE,
-    CONSTRAINT fk_video_video_tag_video_tag FOREIGN KEY (fk_video_tag) REFERENCES video_tag(id) ON DELETE CASCADE,
-    CONSTRAINT pk_video_video_tag PRIMARY KEY (fk_video, fk_video_tag)
 );
 
 CREATE TABLE degree_university(

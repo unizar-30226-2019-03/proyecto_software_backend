@@ -25,7 +25,6 @@ public class MessageResourceAssembler implements ResourceAssembler<Message, Reso
 
     @Override
     public Resource<Message> toResource(Message message) {
-        // TODO: a;adir links a otros sitios
         return new Resource<>(message);
     }
 }

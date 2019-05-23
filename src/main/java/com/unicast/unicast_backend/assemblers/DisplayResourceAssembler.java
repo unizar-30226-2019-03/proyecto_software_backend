@@ -32,7 +32,6 @@ public class DisplayResourceAssembler implements ResourceAssembler<Display, Reso
 
     @Override
     public Resource<Display> toResource(Display display) {
-        // TODO: a;adir links a otros sitios
         return new Resource<>(display,
                 entityLinks.linkToSingleResource(DisplayRepository.class, display.getId()).withSelfRel());
     }

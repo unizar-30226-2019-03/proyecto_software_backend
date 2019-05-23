@@ -107,7 +107,7 @@ public class SubjectController {
 
         // Buscar usuario a anyadir a la asignatura y controlar que sea un profesor
         User user = userRepository.findById(professorId).get();
-        if (user.getRole() != "ROLE_PROFESSOR") {
+        if (!user.getRole().equals("ROLE_PROFESSOR")) {
             throw new NotProfessorException("El usuario no es profesor");
         }
 

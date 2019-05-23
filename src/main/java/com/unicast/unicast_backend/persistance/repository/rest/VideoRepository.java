@@ -60,6 +60,10 @@ public interface VideoRepository extends JpaRepositoryExportedFalse<Video, Long>
     @Query("select c.video from Contains c where c.list.id = ?1 and c.list.user.id = ?#{ principal?.id }")
     public Page<Video> findByReproductionList(@Param("repro_list_id") Long reproListId, Pageable page);
 
+    @RestResource(path = "mostPopularLastWeek", rel = "mostPopularLastWeek")
+    @Query("select v from Video v where v.timestamp between current_date() - 7 and current_date() + 1 order by size(v.displays) desc nulls last")
+    public Page<Video> findByMostPopularLastWeek(Pageable page);
+
     @Query("select v from Video v order by size(v.displays) desc nulls last")
     public List<Video> findOrderBySizeDisplays();
 }

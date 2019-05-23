@@ -194,7 +194,7 @@ public class UserController {
         user.setEnabled(true);
 
         if (photo != null && !photo.isEmpty()) {
-            // TODO: borrar foto antigua o lo que sea
+            s3ImageHandler.deleteFile(user.getPhoto());
             URI photoURL = s3ImageHandler.uploadFile(photo);
             user.setPhoto(photoURL);
             s3ImageHandler.deleteLastUploadedTmpFile();
@@ -232,7 +232,6 @@ public class UserController {
     @PatchMapping(value = "/api/users/makeProfessor", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('MAKE_PROFESSOR_PRIVILEGE')")
     public ResponseEntity<?> makeProfessor(@RequestParam("user_id") Long userId) {
-        // TODO: gestionar tags y errores
 
         // Buscar usuario por id en el repositorio
         User user = userRepository.findById(userId).get();
@@ -256,7 +255,6 @@ public class UserController {
     @PatchMapping(value = "/api/users/eraseProfessor", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('ERASE_PROFESSOR_PRIVILEGE')")
     public ResponseEntity<?> eraseProfessor(@RequestParam("user_id") Long userId) {
-        // TODO: gestionar tags y errores
 
         // Buscar usuario por id en el repositorio
         User user = userRepository.findById(userId).get();
@@ -281,7 +279,6 @@ public class UserController {
     @PreAuthorize("hasAuthority('DELETE_USER_PRIVILEGE')")
     public ResponseEntity<?> deleteUser(@RequestParam("id") Long userId)
             throws Exception, IllegalStateException, IOException, URISyntaxException {
-        // TODO: gestionar tags y errores
 
         // Buscar usuario por id en el repositorio
         User user = userRepository.findById(userId).get();

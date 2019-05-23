@@ -29,6 +29,18 @@ Messages:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/Message'
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 
@@ -58,6 +70,18 @@ MessagesFrom:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/MessageGetResponse'
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 
@@ -87,6 +111,18 @@ MessagesTo:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/MessageGetResponse'
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
       
@@ -108,6 +144,18 @@ LastMessages:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/MessageGetEmbedded'
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 

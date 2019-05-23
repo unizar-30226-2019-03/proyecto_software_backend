@@ -11,10 +11,11 @@
 package com.unicast.unicast_backend.controllers;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 
-import com.unicast.unicast_backend.exceptions.NotOwnerReproductionList;
-import com.unicast.unicast_backend.exceptions.FavouriteListException;
 import com.unicast.unicast_backend.assemblers.ReproductionListAssembler;
+import com.unicast.unicast_backend.exceptions.FavouriteListException;
+import com.unicast.unicast_backend.exceptions.NotOwnerReproductionList;
 import com.unicast.unicast_backend.persistance.model.Contains;
 import com.unicast.unicast_backend.persistance.model.ContainsKey;
 import com.unicast.unicast_backend.persistance.model.ReproductionList;
@@ -76,7 +77,7 @@ public class ReproductionListController {
      */
     @PostMapping(value = "/api/reproductionLists/add", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> addReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam("name") String name) throws Exception {
+            @RequestParam("name") String name) throws FavouriteListException,URISyntaxException {
 
         // Obtencion de los datos del usuario loggeado
         User user = userAuth.getUser();
@@ -136,7 +137,7 @@ public class ReproductionListController {
      */
     @PostMapping(value = "/api/reproductionLists/addVideo", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> anyadirVideoReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam("repro_list_id") Long reproListId, @RequestParam("video_id") Long videoId) throws Exception {
+            @RequestParam("repro_list_id") Long reproListId, @RequestParam("video_id") Long videoId) throws NotOwnerReproductionList {
         
         // Extraccion de los datos del usuario
         User user = userAuth.getUser();
@@ -179,7 +180,7 @@ public class ReproductionListController {
      */
     @DeleteMapping(value = "/api/reproductionLists/deleteVideo", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> deleteReproductionList(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam("repro_list_id") Long reproListId, @RequestParam("video_id") Long videoId) throws Exception {
+            @RequestParam("repro_list_id") Long reproListId, @RequestParam("video_id") Long videoId) throws NotOwnerReproductionList {
 
         // Obtencion de los datos del usuario loggeado
         User user = userAuth.getUser();

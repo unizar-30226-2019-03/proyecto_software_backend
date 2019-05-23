@@ -65,6 +65,12 @@ Register:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/User'
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
 
 Authenticate:
   post:
@@ -156,6 +162,12 @@ UsersUpdate:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/User'
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 
@@ -504,7 +516,19 @@ DeleteUser:
               - id
     responses:
       204:
-        description: Usuario eliminada con exito
+        description: Usuario eliminado con exito
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 

@@ -25,6 +25,18 @@ AddReproductionList:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/ReproductionList'
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 
@@ -65,6 +77,18 @@ DeleteReproductionList:
     responses:
       204:
         description: La lista ha sido borrada
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 
@@ -94,6 +118,18 @@ DeleteVideo:
     responses:
       204:
         description: Video eliminado con exito de la lista
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 
@@ -123,6 +159,18 @@ AddVideo:
     responses:
       200:
         description: Video añdido con exito de la lista
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
 

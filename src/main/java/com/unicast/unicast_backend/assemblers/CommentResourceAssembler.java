@@ -32,7 +32,6 @@ public class CommentResourceAssembler implements ResourceAssembler<Comment, Reso
 
     @Override
     public Resource<Comment> toResource(Comment comment) {
-        // TODO: a;adir links a otros sitios
         return new Resource<>(comment,
                 entityLinks.linkToSingleResource(CommentRepository.class, comment.getId()).withSelfRel());
     }

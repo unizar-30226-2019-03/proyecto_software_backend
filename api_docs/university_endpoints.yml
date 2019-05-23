@@ -49,42 +49,20 @@ AddUniversity:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/University'
+      400:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []
-
-  
-
-# TODO: gestionar que la foto es un fichero
-# /universities/{id}:
-# patch:
-#   tags:
-#     - university
-#   summary: Actualizar una universidad
-#   operationId: updateUniversity
-#   parameters:
-#     - name: id
-#       in: path
-#       description: Id de la universidad
-#       required: true
-#       schema:
-#         type: integer
-#         format: int64
-#   requestBody:
-#     description: Contenido a editar
-#     required: true
-#     content:
-#       application/json:
-#         schema:
-#           $ref: 'api-spec.yml#/components/schemas/University'
-#   responses:
-#     200:
-#       description: Devuelve la universidad que se ha actualizado
-#       content:
-#         application/hal+json:
-#           schema:
-#             $ref: 'api-spec.yml#/components/schemas/University'
-#   security:
-#     - bearerAuth: []
 
 UniversitiesIdSubjects:
   get:

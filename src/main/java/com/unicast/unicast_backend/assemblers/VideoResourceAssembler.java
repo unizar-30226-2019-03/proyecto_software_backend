@@ -31,7 +31,6 @@ public class VideoResourceAssembler implements ResourceAssembler<Video, Resource
 
     @Override
     public Resource<Video> toResource(Video video) {
-        // TODO: a;adir links a otros sitios
         return new Resource<>(video,
                 entityLinks.linkToSingleResource(VideoRepository.class, video.getId()).withSelfRel());
     }

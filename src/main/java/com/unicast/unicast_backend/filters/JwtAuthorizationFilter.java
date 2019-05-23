@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.unicast.unicast_backend.configuration.SecurityConstants;
+import com.unicast.unicast_backend.exceptions.InvalidTokenException;
 import com.unicast.unicast_backend.services.UserDetailsServiceImpl;
 
 import org.apache.commons.lang3.StringUtils;
@@ -82,9 +83,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                         return new UsernamePasswordAuthenticationToken(user, null, authorities);
                     }
 
-                    // TODO: lanzar error en condiciones
-                    throw new Error();
-
+                    throw new InvalidTokenException("El token no es valido");
                 }
             } catch (ExpiredJwtException exception) {
                 log.warn("Request to parse expired JWT : {} failed : {}", token, exception.getMessage());

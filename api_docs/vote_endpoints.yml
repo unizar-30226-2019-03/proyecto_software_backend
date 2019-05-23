@@ -37,5 +37,17 @@ Votes:
           application/json:
             schema:
               $ref: 'api-spec.yml#/components/schemas/Vote'
+      400:
+        description: Fallo 
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
+      500:
+        description: Fallo
+        content:
+          application/json:
+            schema:
+              $ref: 'api-spec.yml#/components/schemas/Exception'
     security:
       - bearerAuth: []

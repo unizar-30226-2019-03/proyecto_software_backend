@@ -32,7 +32,6 @@ public abstract class S3FileHandler {
 
         final String s3Key = getFileFolder() + "/" + getFilePrefix()
                 + RandomStringUtils.randomAlphanumeric(FILE_KEY_LENGTH);
-        // TODO: excepcion sin tratar
         s3Constants.s3.putObject(s3Constants.BUCKET_NAME, s3Key, file);
 
         lastFile = file;

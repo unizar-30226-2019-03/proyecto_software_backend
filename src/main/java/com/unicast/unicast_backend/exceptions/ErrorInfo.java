@@ -28,9 +28,11 @@ public class ErrorInfo {
 
    @JsonProperty("message")
    private String message;
-   @JsonProperty("status_code")
+
+   @JsonProperty("status")
    private int statusCode;
-   @JsonProperty("uri")
+
+   @JsonProperty("path")
    private String uriRequested;
 
    /* Constructores de la clase */

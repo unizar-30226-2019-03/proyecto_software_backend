@@ -31,7 +31,6 @@ public class UserResourceAssembler implements ResourceAssembler<User, Resource<U
     
     @Override
     public Resource<User> toResource(User user) {
-        // TODO: a;adir links a otros sitios
         return new Resource<>(user, 
             entityLinks.linkToSingleResource(UserRepository.class, user.getId()).withSelfRel());
     }
