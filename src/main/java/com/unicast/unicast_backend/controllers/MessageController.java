@@ -90,7 +90,7 @@ public class MessageController {
     @PostMapping(value = "/api/messages", produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<?> addMessage(@AuthenticationPrincipal UserDetailsImpl userAuth,
             @RequestParam("text") String text, @RequestParam("receiver_id") Long receiverId) 
-            throws URISyntaxException {
+            throws URISyntaxException, NotProfessorReceiverException {
        
         // Extraccion de los datos de usuario
         User user = userAuth.getUser();
@@ -129,7 +129,7 @@ public class MessageController {
         else {
             // Excepcion para control de envio de mensajes a profesores
             // throw new NotProfessorReceiverException("El usuario que recibe el mensaje debe ser profesor");
-            throw new Error();
+            throw new NotProfessorReceiverException("El administrador no puede mandar mensajes a ningun usuario");
         }
     
     }
