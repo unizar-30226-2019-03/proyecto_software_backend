@@ -11,8 +11,8 @@
 package com.unicast.unicast_backend.exceptions;
 
 /*
- * Excepcion para gestionar que las estampillas temporales de los
- * comentarios esten dentro de la duracion del video
+ * Excepcion para gestionar los fallos en el token de sesion 
+ * del usuario
  */
 
 @SuppressWarnings("serial")

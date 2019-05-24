@@ -173,18 +173,29 @@ public class ErrorHandler {
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
 
+    /*
+     * Esta excepcion se usa para poder gestionar todos los posibles fallos del servicio de Amazon
+     */
     @ExceptionHandler(AmazonServiceException.class)
     public ResponseEntity<ErrorInfo> amazonFail(HttpServletRequest request, AmazonServiceException e) {
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST.value(),"Fallo en amazon", request.getRequestURI());
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
 
+    /*
+     * Esta excepcion salta cuando se desea llevar a cabola subida de un fichero que no es una imagen
+     */
     @ExceptionHandler(NotImageException.class)
     public ResponseEntity<ErrorInfo> notImage(HttpServletRequest request, NotImageException e) {
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST.value(),e.getMessage(), request.getRequestURI());
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
 
+
+    /*
+     * Esta excepcion se emplea para gestionar posibles fallos en la gestion del token
+     * de sesion del usuario
+     */
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<ErrorInfo> invalidToken(HttpServletRequest request, InvalidTokenException e) {
         ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST.value(),e.getMessage(), request.getRequestURI());
