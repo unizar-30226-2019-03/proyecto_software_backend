@@ -1,3 +1,13 @@
+/**********************************************
+ ******* Trabajo de Proyecto Software *********
+ ******* Unicast ******************************
+ ******* Fecha 22-5-2019 **********************
+ ******* Autores: *****************************
+ ******* Adrian Samatan Alastuey 738455 *******
+ ******* Jose Maria Vallejo Puyal 720004 ******
+ ******* Ruben Rodriguez Esteban 737215 *******
+ **********************************************/
+
 package com.unicast.unicast_backend.recommender_processor;
 
 import java.io.File;
@@ -34,23 +44,41 @@ import net.librec.recommender.item.RecommendedItem;
 import net.librec.similarity.PCCSimilarity;
 import net.librec.similarity.RecommenderSimilarity;
 
+/*
+ * Sistema de recomendaciones para proporcionar videos
+ * de interes para los usuarios
+ */
+
 @Component
 public class RecommenderSystem {
+
+    // Repositorio de usuarios
     @Autowired
     private UserRepository userRepository;
 
+    // Repositorio para los videos
     @Autowired 
 	private VideoRepository videoRepository;
 
+    // Repositorio para los displays
     @Autowired
     private DisplayRepository displayRepository;
 
+    // Repositorio para el sistema de recomendaciones
     @Autowired
     private RecommendationRepository recommendationRepository;
 
+    /*
+     * Permite procesar las visualizaciones de cada video almacenadas en la base
+     * de datos extrayendo los datos de un fichero para poder llevar a cabo las recomendaciones a los usuarios
+     */
     public Pair<File, List<Long>> generateDataSet() throws IOException {
+
+        // Creacion del fichero de procesamiento de los datos
         File tempFile = File.createTempFile("recommender", "system.txt");
 
+        // Procesamieto de las visualizaciones de los videos segun la informacion de la bas de datos
+        // para posteriormente volcarla en el fichero
         List<Long> userIds = new ArrayList<>();
 
         Files.write(tempFile.toPath(), () -> displayRepository.findAll().stream().<CharSequence>map(d -> {
@@ -63,18 +91,23 @@ public class RecommenderSystem {
             }
 
             result *= 5;
-
             userIds.add(d.getId().getUserId());
-
             return d.getId().getUserId().toString() + " " + d.getId().getVideoId().toString() + " " + result.toString();
+
         }).iterator());
 
         return Pair.of(tempFile, userIds);
     }
 
+    /*
+     * Permite ejecutar el sistema de recomendaciones de forma automatica cada 10 minutos
+     * para que procese los datos del fichero y realice las recomendaciones de videos a los 
+     * usuarios
+     */
     @Transactional
     @Scheduled(cron = "0 0/10 * * * *")
     public void run() throws LibrecException, IOException {
+
         Pair<File, List<Long>> fileAndUserIds = generateDataSet();
         File datasetFile = fileAndUserIds.getKey();
         Resource resource = new Resource("librec.properties");

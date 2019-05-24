@@ -48,44 +48,73 @@ public class UserDetailsImpl implements UserDetails {
 	 * del usuario
 	 */
 	 
+	/*
+	 * Devolver el uusario
+	 */
 	public User getUser() {
 		return user;
 	}
 
+	/*
+	 * Devolver el identificador del usuario
+	 */
 	public Long getId() {
 		return user.getId();
 	}
 
+	/*
+	 * Devolver la contrasenya del usuario
+	 */
 	@Override
 	public String getPassword() {
 		return user.getPassword();
 	}
 
+	/*
+	 * Retorno del nombre real del usuario
+	 */
 	@Override
 	public String getUsername() {
 		return user.getUsername();
 	}
 
+	/*
+	 * Retorno de si la cuenta del usuario ha expirado o no
+	 */
 	@Override
 	public boolean isAccountNonExpired() {
 		return true;
 	}
 
+	/*
+	 * Devuelve si la cuenta esta o no bloqueada
+	 */
 	@Override
 	public boolean isAccountNonLocked() {
 		return true;
 	}
 
+	/*
+	 * Devuelve si las credenciales de la cuenta han expirado
+	 */
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
 	}
 
+	/*
+	 * Retorno de si la cuenta del usuario esta o no deshabilitada
+	 */
 	@Override
 	public boolean isEnabled() {
 		return user.isEnabled();
 	}
 
+	/*
+	 * Permite obtener una lista con todos los privilegios del usuario segun los posibles
+	 * roles que puede tomar
+	 * @param roles: la coleccion de roles posibles que puede desempeñar un usuario
+	 */
 	private List<String> getPrivileges(Collection<Role> roles) {
 
 		List<String> privileges = new ArrayList<>();
@@ -99,6 +128,11 @@ public class UserDetailsImpl implements UserDetails {
 		return privileges;
 	}
 
+	/*
+	 * Devuelve una lista con los permisos de funcionalidad del usuario
+	 * segun los privilegios que posee
+	 * @param privileges: lista de privilegios del usuario
+	 */
 	private List<GrantedAuthority> getGrantedAuthorities(List<String> privileges) {
 		List<GrantedAuthority> authorities = new ArrayList<>();
 		for (String privilege : privileges) {

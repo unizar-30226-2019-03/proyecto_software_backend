@@ -11,8 +11,8 @@
 package com.unicast.unicast_backend.exceptions;
 
 /*
- * Excepcion para controlar que los videos subidos tiene formato exclusivo
- * mp4
+ * Excepcion para controlar que el fichero que se desea subir es si o si 
+ * una imagen
  */
 
 @SuppressWarnings("serial")

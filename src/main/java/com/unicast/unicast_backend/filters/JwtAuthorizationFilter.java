@@ -1,4 +1,14 @@
-package com.unicast.unicast_backend.filters;
+/**********************************************
+ ******* Trabajo de Proyecto Software *********
+ ******* Unicast ******************************
+ ******* Fecha 22-5-2019 **********************
+ ******* Autores: *****************************
+ ******* Adrian Samatan Alastuey 738455 *******
+ ******* Jose Maria Vallejo Puyal 720004 ******
+ ******* Ruben Rodriguez Esteban 737215 *******
+ **********************************************/
+
+ package com.unicast.unicast_backend.filters;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,12 +42,18 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.SignatureException;
 
+/*
+ * Control de filtro de autorizaciones para los usuarios
+ */
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JwtAuthorizationFilter.class);
     private final SecurityConstants securityConstants;
     private final UserDetailsServiceImpl userDetailsService;
 
+    /*
+     * Constructor de la clase
+     */
     public JwtAuthorizationFilter(AuthenticationManager authenticationManager, SecurityConstants securityConstants,
             UserDetailsServiceImpl userDetailsService) {
         super(authenticationManager);
@@ -46,6 +62,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         this.userDetailsService = userDetailsService;
     }
 
+    /*
+     * Permite la creacion de filtros
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
@@ -61,6 +80,9 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         filterChain.doFilter(request, response);
     }
 
+    /*
+     * Permite determinar si el token de sesion de un usuario es o no correcto
+     */
     private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
         String token = request.getHeader(securityConstants.TOKEN_HEADER);
         if (StringUtils.isNotEmpty(token)) {
