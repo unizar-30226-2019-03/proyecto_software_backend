@@ -131,7 +131,7 @@ public class MessageController {
             return ResponseEntity.created(new URI(message.getId().toString())).body(messageResource);
         } else {
             // Excepcion para control de envio de mensajes a profesores
-            throw new NotProfessorReceiverException("El administrador no puede mandar mensajes a ningun usuario");
+            throw new NotProfessorReceiverException("El remitente no se encuentra en la misma asignatura que el destinatario");
         }
 
     }

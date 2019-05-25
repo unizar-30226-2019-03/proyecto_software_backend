@@ -377,6 +377,6 @@ MostPopularVideo:
         content:
           application/json:
             schema:
-              $ref: 'api-spec.yml#/components/schemas/VideoGetEmbedded'
+              $ref: 'api-spec.yml#/components/schemas/VideoGetResponse'
     security:
       - bearerAuth: []

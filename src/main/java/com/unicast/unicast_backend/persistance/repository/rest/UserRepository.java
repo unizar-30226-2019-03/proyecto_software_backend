@@ -49,7 +49,7 @@ public interface UserRepository extends JpaRepositoryExportedFalse<User, Long> {
 	@Query("select distinct s.professors from Subject s join User u on u.id = ?#{ principal?.id } where u member of s.followers")
 	public Page<User> findProfessors(Pageable page);
 
-	@Query("select distinct s.professors from Subject s join User u on u.id = ?#{ principal?.id } where u member of s.followers")
+	@Query("select distinct s.professors from Subject s where ?1 member of s.followers")
 	public List<User> findProfessors(User user);
 
 	// Busquedas de usuarios que comienzan con un string dado

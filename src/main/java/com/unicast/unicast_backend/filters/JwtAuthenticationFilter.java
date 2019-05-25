@@ -1,3 +1,13 @@
+/**********************************************
+ ******* Trabajo de Proyecto Software *********
+ ******* Unicast ******************************
+ ******* Fecha 22-5-2019 **********************
+ ******* Autores: *****************************
+ ******* Adrian Samatan Alastuey 738455 *******
+ ******* Jose Maria Vallejo Puyal 720004 ******
+ ******* Ruben Rodriguez Esteban 737215 *******
+ **********************************************/
+
 package com.unicast.unicast_backend.filters;
 
 import java.io.IOException;
@@ -26,6 +36,10 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 
+/*
+ * Permite el control de autentificacion de los flitros de los usuarios
+ */
+
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
@@ -39,6 +53,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         } catch (NoSuchAlgorithmException e) {}
     }
 
+    /*
+     * Constructor de la clase
+     */
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager, SecurityConstants securityConstants) {
         this.authenticationManager = authenticationManager;
         this.securityConstants = securityConstants;
@@ -46,12 +63,23 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         setFilterProcessesUrl(securityConstants.AUTH_LOGIN_URL);
     }
 
+    /*
+     * Permite la obtencion del Hash del usuario
+     * Parametros
+     * @param string: contrasenya a cifrar y obtener el valor de hash
+     */
     public static String getSHA(String string) {
         byte[] hashedString = mdSha256.digest(string.getBytes());
 
         return (new BigInteger(1, hashedString)).toString(16);
     }
 
+    /*
+     * Permite llevar a cabo la autentificacion de un usuario
+     * Parametros
+     * @param request: peticion del cliente al servidor
+     * @param response: respuesta del servidor al cliente
+     */
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
@@ -64,6 +92,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         return authenticationManager.authenticate(authenticationToken);
     }
 
+
+    /*
+     * Permite determinar si la peticion de registro del cliente se ha llevado a cabo correctamente
+     * Parametros
+     * @param request: peticion del cliente al servidor
+     * @param response: respuesta del servidor al cliente
+     */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain, Authentication authentication) throws IOException {
