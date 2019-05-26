@@ -2,7 +2,7 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.3.9
+  version: 1.3.11
   title: Swagger Unicast
 
 servers:
@@ -277,7 +277,7 @@ components:
         notificationCategory:
           type: string
           enum: [messages, videos]
-        creator_id:
+        creatorId:
           type: integer
           format: int64
 
