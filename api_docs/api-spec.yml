@@ -2,14 +2,14 @@ openapi: 3.0.0
 
 info:
   description: Documento de la API de Unicast
-  version: 1.3.8
+  version: 1.3.9
   title: Swagger Unicast
 
 servers:
   - url: "{protocol}://{host}:{port}/{basePath}"
     variables:
       host:
-        default: ec2-35-181-26-7.eu-west-3.compute.amazonaws.com
+        default: ec2-35-181-76-150.eu-west-3.compute.amazonaws.com
       protocol:
         enum:
           - http
@@ -327,7 +327,7 @@ components:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
         - $ref: '#/components/schemas/UniversityGetEmbedded'
-        
+
     SubjectGetEmbedded:
       type: object
       properties:
@@ -365,7 +365,7 @@ components:
           type: string
           default: ROLE_USER
           enum: [ROLE_USER, ROLE_PROFESSOR, ROLE_ADMIN]
-          
+
 
     UserGetEmbedded:
       type: object
@@ -377,7 +377,7 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/User'
-      
+
     UserGetResponse:
       allOf:
         - $ref: '#/components/schemas/GetResponse'
@@ -700,7 +700,7 @@ paths:
 
   /subjects/{id}/professors:
     $ref: 'subject_endpoints.yml#/SubjectsIdProfessors'
-  
+
   /subjects/{id}/university:
     $ref: 'subject_endpoints.yml#/SubjectsIdUniversity'
 
@@ -808,10 +808,10 @@ paths:
 
   /videos/delete:
     $ref: 'video_endpoints.yml#/DeleteVideo'
-  
+
   /videos/search/reproductionList:
     $ref: 'video_endpoints.yml#/FindVideoByReproductionList'
-    
+
   /videos/search/mostPopularLastWeek:
     $ref: 'video_endpoints.yml#/MostPopularVideo'
 
@@ -837,10 +837,10 @@ paths:
 
   /displays/search/user:
     $ref: 'display_endpoints.yml#/DisplaysSearchUser'
-  
+
   /displays/{video_id}:
     $ref: 'display_endpoints.yml#/DisplaysDelete'
-  
+
   /displays/search/userAndVideo:
     $ref: 'display_endpoints.yml#/FindByUserIdAndVideoId'
 
@@ -853,10 +853,10 @@ paths:
 
   /messages:
     $ref: 'message_endpoints.yml#/Messages'
-  
+
   /messages/fromSender:
     $ref: 'message_endpoints.yml#/MessagesFrom'
-  
+
   /messages/toReceiver:
     $ref: 'message_endpoints.yml#/MessagesTo'
 

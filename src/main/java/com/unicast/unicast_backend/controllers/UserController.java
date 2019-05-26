@@ -194,7 +194,9 @@ public class UserController {
         user.setEnabled(true);
 
         if (photo != null && !photo.isEmpty()) {
-            s3ImageHandler.deleteFile(user.getPhoto());
+            if (user.getPhoto() != null) {
+                s3ImageHandler.deleteFile(user.getPhoto());
+            }
             URI photoURL = s3ImageHandler.uploadFile(photo);
             user.setPhoto(photoURL);
             s3ImageHandler.deleteLastUploadedTmpFile();
