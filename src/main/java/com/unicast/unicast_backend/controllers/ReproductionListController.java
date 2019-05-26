@@ -114,7 +114,7 @@ public class ReproductionListController {
         ReproductionList reproList = reproductionListRepository.findById(reproListId).get();
 
         // Comprobacion de que el usuario es el propietario
-        if (reproList.getUser().getId() != user.getId()) {
+        if (!reproList.getUser().getId().equals(user.getId())) {
             throw new NotOwnerReproductionList("El usuario no es propietario de la lista de reproduccion a borrar");
         }
 
@@ -147,7 +147,7 @@ public class ReproductionListController {
         ReproductionList reproList = reproductionListRepository.findById(reproListId).get();
 
         // Comprobar que el usuario es el propietario de la lista
-        if (reproList.getUser().getId() != user.getId()) {
+        if (!reproList.getUser().getId().equals(user.getId())) {
             throw new NotOwnerReproductionList("El usuario no es propietario de la lista de reproduccion a borrar");
         }
 
@@ -189,7 +189,7 @@ public class ReproductionListController {
         ReproductionList reproList = reproductionListRepository.findById(reproListId).get();
 
         // Comprobar que es propietario
-        if (reproList.getUser().getId() != user.getId()) {
+        if (!reproList.getUser().getId().equals(user.getId())) {
             throw new NotOwnerReproductionList("El usuario no es propietario de la lista de reproduccion a borrar");
         }
 

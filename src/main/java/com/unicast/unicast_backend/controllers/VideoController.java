@@ -170,8 +170,8 @@ public class VideoController {
         Video video = videoRepository.findById(videoId).get();
 
         // Comprobar que es propietario
-        if (video.getUploader() != user) {
-            throw new NotUploaderException("El usuario no el propietario del video");
+        if (!video.getUploader().equals(user)) {
+            throw new NotUploaderException("El usuario no es el propietario del video");
         }
 
         // Borrar URL y miniatura
