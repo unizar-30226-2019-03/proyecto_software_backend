@@ -105,19 +105,10 @@ public class InitialDataLoader implements ApplicationListener<ContextRefreshedEv
     }
 
     @Bean
-    public TaskScheduler taskScheduler() {
-        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler() {
-            private static final long serialVersionUID = -1L;
-
-            @Override
-            public void destroy() {
-                this.getScheduledThreadPoolExecutor().setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
-                super.destroy();
-            }
-        };
-        scheduler.setWaitForTasksToCompleteOnShutdown(false);
-
-        return scheduler;
+    public ThreadPoolTaskScheduler taskScheduler(){
+        ThreadPoolTaskScheduler taskScheduler = new ThreadPoolTaskScheduler();
+        taskScheduler.setPoolSize(20);
+        return  taskScheduler;
     }
 
     @Transactional
