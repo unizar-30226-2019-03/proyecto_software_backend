@@ -15,6 +15,7 @@ import java.net.URISyntaxException;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -37,6 +38,8 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.Resources;
+import org.springframework.hateoas.core.EmbeddedWrapper;
+import org.springframework.hateoas.core.EmbeddedWrappers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -243,8 +246,15 @@ public class MessageController {
             }
         });
 
+        Resources messagesResource;
+        if (messages.isEmpty()) {
+            EmbeddedWrappers wrappers = new EmbeddedWrappers(false);
+            EmbeddedWrapper wrapper = wrappers.emptyCollectionOf(MessageWithReceiverAndSender.class);
+            messagesResource = new Resources<>(Arrays.asList(wrapper));
+        } else {
+            messagesResource = Resources.wrap(messages);
+        }
         // Respuesta de la operacion
-        Resources<Resource<MessageWithReceiverAndSender>> messagesResource = Resources.wrap(messages);
         return ResponseEntity.ok(messagesResource);
     }
 }
