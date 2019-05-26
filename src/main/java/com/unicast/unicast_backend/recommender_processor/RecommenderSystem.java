@@ -100,12 +100,12 @@ public class RecommenderSystem {
     }
 
     /*
-     * Permite ejecutar el sistema de recomendaciones de forma automatica cada 10 minutos
+     * Permite ejecutar el sistema de recomendaciones de forma automatica cada 5 minutos
      * para que procese los datos del fichero y realice las recomendaciones de videos a los 
      * usuarios
      */
     @Transactional
-    @Scheduled(cron = "0 0/10 * * * *")
+    @Scheduled(cron = "0 0/5 * * * *")
     public void run() throws LibrecException, IOException {
 
         Pair<File, List<Long>> fileAndUserIds = generateDataSet();
