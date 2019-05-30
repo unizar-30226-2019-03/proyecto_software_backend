@@ -115,7 +115,7 @@ DegreesIdUniversities:
     security:
       - bearerAuth: []
 
-  put:
+  patch:
     tags:
       - degree
     summary: Relacionar una carrera con una universidad
