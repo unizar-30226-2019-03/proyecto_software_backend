@@ -8,9 +8,10 @@
  ******* Ruben Rodriguez Esteban 737215 *******
  **********************************************/
 
- package com.unicast.unicast_backend.controllers;
+package com.unicast.unicast_backend.controllers;
 
 import com.unicast.unicast_backend.exceptions.NotProfessorException;
+import com.unicast.unicast_backend.exceptions.ProfessorNotInUniException;
 import com.unicast.unicast_backend.persistance.model.Subject;
 import com.unicast.unicast_backend.persistance.model.User;
 import com.unicast.unicast_backend.persistance.repository.rest.SubjectRepository;
@@ -42,9 +43,10 @@ public class SubjectController {
     private SubjectRepository subjectRepository;
 
     /*
-     * Permite a un usuario seguir una asignatura
-     * Parametros
+     * Permite a un usuario seguir una asignatura Parametros
+     * 
      * @param userAuth: token con los datos del usuario loggeado
+     * 
      * @param subjectId: identificador de la asignatura a seguir
      */
     @PutMapping(value = "/api/subjects/follow", consumes = "multipart/form-data")
@@ -57,7 +59,8 @@ public class SubjectController {
         // Extraccion de los datod del usuario
         User user = userAuth.getUser();
 
-        // Anyadir al usuario a la lista de seguidores y guardar cambios en el repositorio
+        // Anyadir al usuario a la lista de seguidores y guardar cambios en el
+        // repositorio
         subject.getFollowers().add(user);
         subjectRepository.saveInternal(subject);
 
@@ -66,9 +69,10 @@ public class SubjectController {
     }
 
     /*
-     * Permite a un usuario dejar de seguir una asignatura
-     * Parametros
+     * Permite a un usuario dejar de seguir una asignatura Parametros
+     * 
      * @param userAuth: token con los datos del usuario loggeado
+     * 
      * @param subjectId: identificador de la asignatura a dejar de seguir
      */
     @DeleteMapping(value = "/api/subjects/unfollow", consumes = "multipart/form-data")
@@ -81,7 +85,8 @@ public class SubjectController {
         // Extraccion de los datos del usuario
         User user = userAuth.getUser();
 
-        // Eliminar usuario de la lista de seguidores y actualizar cambios en el repositorio
+        // Eliminar usuario de la lista de seguidores y actualizar cambios en el
+        // repositorio
         subject.getFollowers().remove(user);
         subjectRepository.saveInternal(subject);
 
@@ -89,18 +94,20 @@ public class SubjectController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
     /*
-     * Permite anyadir un profesor a una asignatura
-     * Parametros
+     * Permite anyadir un profesor a una asignatura Parametros
+     * 
      * @param userAuth: token con los datos del usuario loggeado
+     * 
      * @param subjectId: identificador de la asignatura
+     * 
      * @param professorId: identificador del profesor a anayadir a la asignatura
      */
     @PutMapping(value = "/api/subjects/professors", consumes = "multipart/form-data")
     @PreAuthorize("hasAuthority('ADD_PROFESSOR2SUBJECT_PRIVILEGE')")
     public ResponseEntity<?> addProfessorToSubject(@AuthenticationPrincipal UserDetailsImpl userAuth,
-            @RequestParam("subject_id") Long subjectId, @RequestParam("professor_id") Long professorId) throws NotProfessorException{
+            @RequestParam("subject_id") Long subjectId, @RequestParam("professor_id") Long professorId)
+            throws NotProfessorException, ProfessorNotInUniException {
 
         // Encontrar asignatura en el repositorio por su id
         Subject subject = subjectRepository.findById(subjectId).get();
@@ -111,7 +118,13 @@ public class SubjectController {
             throw new NotProfessorException("El usuario no es profesor");
         }
 
-        // Anyadir profesor a la lista de profesores asociados y guardar cambios en el repositorio
+        // Se comprueba que el profesor se encuentre en la misma universidad que la asignatura
+        if (!user.getUniversity().getId().equals(subject.getUniversity().getId())) {
+            throw new ProfessorNotInUniException("El profesor no se encuentra en la universidad de la asignatura dada");
+        }
+
+        // Anyadir profesor a la lista de profesores asociados y guardar cambios en el
+        // repositorio
         subject.getProfessors().add(user);
         subjectRepository.saveInternal(subject);
 
@@ -119,12 +132,13 @@ public class SubjectController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
     /*
-     * Permite borrar un profesor de una asignatura
-     * Parametros
+     * Permite borrar un profesor de una asignatura Parametros
+     * 
      * @param userAuth: token con los datos del usuario loggeado
+     * 
      * @param subjectId: identificador de la asignatura
+     * 
      * @param professorId: identificador del profesor a eliminar de la asignatura
      */
     @DeleteMapping(value = "/api/subjects/professors", consumes = "multipart/form-data")
@@ -138,10 +152,11 @@ public class SubjectController {
         // Buscar el usuario profesor a quitar por su id en el repositorio
         User user = userRepository.findById(professorId).get();
 
-        // Eliminar profesor de la lista de seguidores de la asignatura y guardar cambios en el repositorio
+        // Eliminar profesor de la lista de seguidores de la asignatura y guardar
+        // cambios en el repositorio
         subject.getProfessors().remove(user);
         subjectRepository.saveInternal(subject);
-        
+
         // Envio de respuesta de operacion
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }

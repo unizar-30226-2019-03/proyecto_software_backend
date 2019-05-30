@@ -202,4 +202,13 @@ public class ErrorHandler {
         return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
     }
 
+    /*
+     * Esta excepcion se utiliza para gestionar los fallos al añadir un profesor a una asignatura
+     */
+    @ExceptionHandler(ProfessorNotInUniException.class)
+    public ResponseEntity<ErrorInfo> professorNotInUni(HttpServletRequest request, ProfessorNotInUniException e) {
+        ErrorInfo errorInfo = new ErrorInfo(HttpStatus.BAD_REQUEST.value(),e.getMessage(), request.getRequestURI());
+        return new ResponseEntity<>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
+
 }
